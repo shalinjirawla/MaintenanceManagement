@@ -1,0 +1,71 @@
+<div class="mt-2">  
+    <!-- Add Item Button -->    
+    <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+        <div class="d-flex">
+            <div class="dropdown me-2">
+              <button class="btn btn-sm filterbtn dropdown-toggle" type="button" id="assetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Filters
+              </button>
+            
+            </div>
+          </div>
+        <div class="d-flex align-items-center">
+          <input
+              type="text"
+              class="search me-2"
+              placeholder="Search"
+              style="width: 150px"                
+            />            
+        </div>
+    </div>
+    <div class="card card-body p-4 mx-2" *ngIf="!filteredinventory || filteredinventory.length === 0">
+      <div class="d-flex justify-content-between align-items-center">
+          <!-- Work Order Title and Status -->
+          <div class="">
+              <h4 class="card-title mb-1"></h4>
+          </div>            
+      </div>  
+      <div class="pt-2 text-center">
+          <p class="text-muted h5">No Data Found !</p>
+      </div>
+      <div class="pt-5 text-center">
+      </div>      
+  </div>
+    <!-- Inventory Items Table -->
+    <table class="table" *ngIf="filteredinventory.length>0">
+      <thead>
+        <tr class="text-center">
+          <th class="pl-50">Item Name</th>       
+          <th>Available Qty</th>
+          <th>Allocated Qty</th>
+          <th>On Hand Qty</th>
+          <th>Cost</th>
+          <th>Category</th>
+          <th>Location</th>         
+          <th>Unit of Measure</th>          
+          <th class="pr-50">Status</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredinventory"  class="text-center">
+          <td class="pl-50">{{item.name}}</td>       
+          <td>{{item.availableQuantity}}</td>
+          <td>{{ item.allocatedQuantity ?? 0 }}</td>
+          <td>{{item.onHandQuantity}}</td>
+          <td>{{item.price}}</td>
+          <td>{{item.inventoryCategori}}</td>          
+          <td>{{item.location}}</td>        
+          <td>{{item.unit}}</td>
+          <td class="pr-50"><span class="badge-accepted">{{item.status}}</span>           
+            </td>
+         
+        </tr>
+
+
+
+      </tbody>
+    </table>
+  </div>
+
+  

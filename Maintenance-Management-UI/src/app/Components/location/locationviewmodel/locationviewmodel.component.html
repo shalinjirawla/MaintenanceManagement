@@ -1,0 +1,34 @@
+<div class="modal-overlay" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Location</h5>
+                <button type="button" class="btn-close col-1" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form >
+            <div class="modal-body">
+                    <input type="text" id="userID" formControlName="userID" hidden />
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-3">Location Name :</label>
+                        <label for="username" class="form-labelp col-lg-3">{{item.name}}</label>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-3">Description :</label>
+                        <label for="username" class="form-labelp col-lg-3">{{item.description}}</label>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-3">Status :</label>
+                        <label for="username" class="form-labelp col-lg-3">{{ item.status == 1 ? 'Active' : 'Inactive' }}</label>
+                    </div>                   
+                </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+<app-layout *ngIf="isAuthenticated"></app-layout>
+
+<app-login *ngIf="!isAuthenticated" (loginSuccess)="onLoginSuccess()"></app-login>
+ 
+<router-outlet></router-outlet>

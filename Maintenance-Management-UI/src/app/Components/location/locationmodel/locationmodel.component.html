@@ -1,0 +1,41 @@
+<div class="modal-overlay" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">                
+                <h5 class="modal-title">{{ isedit ? 'Edit Location' : 'Add Location' }}</h5>
+                <button type="button" class="btn-close col-1" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="locationForm" (ngSubmit)="onSubmit()">
+                <div class="modal-body formdiv">            
+                    <input type="text" id="id" formControlName="id" hidden />            
+                    <div class="form-group">
+                        <label for="name" class="form-label">Location Name <span class="text-danger">*</span></label>
+                        <input type="text" id="name" formControlName="name" class="form-control" placeholder="Enter location name" />
+                        <div *ngIf="locationForm.get('name')?.invalid && locationForm.get('name')?.touched" class="text-danger">
+                            <label class="form-label-invalid">Location name is required.</label>
+                        </div>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="description" class="form-label">Location Description <span class="text-danger">*</span></label>
+                        <input type="text" id="description" formControlName="description" class="form-control" placeholder="Enter location description" />
+                        <div *ngIf="locationForm.get('description')?.invalid && locationForm.get('description')?.touched" class="text-danger">
+                            <label class="form-label-invalid">Location description is required.</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="status" class="form-label col-lg-2">Status</label>                  
+                      <div class="col-lg-2"><input type="checkbox" formControlName="status"></div> 
+                    </div>                    
+                </div>
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success btn-sm btn-block">Save</button>
+                </div>
+            </form>            
+        </div>
+    </div>
+</div>

@@ -1,0 +1,165 @@
+
+<div class="mt-2">
+    <div
+    class="d-flex justify-content-between align-items-center pb-2 px-2"
+  >
+    <div class="d-flex">
+      <div class="dropdown me-2">
+        <button
+          class="btn btn-sm filterbtn dropdown-toggle"
+          type="button"
+          id="assetDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Filters
+        </button>
+        <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+          <li>
+            <div>
+              <form #filterForm="ngForm">
+                <div class="form-group row">
+                  <div class="col-lg-6 form-group m-0">
+                    <label for="assetName" class="form-label">Name</label>
+                    <input
+                      type="text" id="assetName" name="assetName" 
+                      class="form-control"
+                      [(ngModel)]="filters.name"
+                    />
+              
+                  </div>
+
+                  <div class="col-lg-6 form-group m-0">
+                    <label for="location" class="form-label"
+                      >Description</label
+                    >
+                    <input
+                      type="text" name="location" 
+                      class="form-control"
+                      [(ngModel)]="filters.description"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-lg-6 form-group m-0">
+                    <label for="serialNumber" class="form-label"
+                      >Status</label
+                    >
+                    <input
+                      type="text" name="serialNumber" 
+                      class="form-control"
+                      [(ngModel)]="filters.status"
+                    />
+                  </div>
+                  <div class="col-lg-6 form-group m-0 pt-4">
+                    
+                  <button
+                    type="button" 
+                    class="btn btn-sm btn-primary mt-2"
+                    (click)="applyFilters()"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+                </div>
+              </form>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="d-flex align-items-center">
+      <input
+        type="text"
+        class="search me-2"
+        placeholder="Search"
+        style="width: 150px" 
+        [(ngModel)]="searchTerm"
+        (keyup)="searchlocation()"     
+      />
+
+      <button
+        class="btn btn-sm  btn-themecolor d-none d-md-inline"
+        (click)="openModal()"
+      >
+      <i class="fa fa-plus fa-xs"></i> New
+      </button>
+      
+    </div>
+  </div>
+    <div class="card card-body p-4 mx-2" *ngIf="!filteredlocation || filteredlocation.length === 0">
+        <div class="d-flex justify-content-between align-items-center">
+         
+        </div>  
+        <div class="pt-2 text-center">
+            <p class="text-muted h5">No Data Found !</p>
+        </div>
+        <div class="pt-5 text-center">
+            <button class="btn btn-themecolor"(click)="openModal()">Add Location</button>
+        </div>
+    </div>
+    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="Deletelocation()" style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>
+    <div *ngIf="!isLoading">
+    <div class="table-responsive" *ngIf="filteredlocation && filteredlocation.length > 0">
+        <table class="table table-hover m-0">
+          <thead>
+            <tr>    
+              <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /></th>        
+              <th (click)="sortBy('assetName')" style="cursor: pointer;padding-left: 10px !important;">
+                 Name
+              </th>
+              <th>Path</th>
+              <th>Address
+              </th>            
+              <!-- <th (click)="sortBy('category')" style="cursor: pointer">
+                Status
+              </th> -->
+              <th class="pr-50" style="text-align: center;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let item of filteredlocation | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" 
+              style="cursor: pointer; vertical-align: middle"
+            >            
+            <th class="pl-50"><input type="checkbox" [(ngModel)]="item.selected" (change)="updateSelection()" /> </th>                         
+              <td style="padding-left: 10px !important;">{{ item.name }}</td>      
+              <td  style="cursor: pointer;" (click)="openviewModal(item)"><a class="link">{{item.name}}</a></td>                           
+              <td>{{ item.description }}</td>
+              <!-- <td>{{ item.status == 1 ? 'Active' : 'Inactive' }}</td> -->
+
+              <td class="pr-50" style="text-align: center;">                           
+               
+              <button class="btn btn-sm2 btn-primary me-1" (click)="openviewModal(item)"> <i class="fa fa-eye"></i></button>
+              <button class="btn btn-sm2 btn-success me-1"  (click)="openModal(item)"> <i class="fa fa-pen" ></i></button>
+              <button class="btn btn-sm2 btn-danger me-1"  (click)="Deletelocation(item.id)"> <i class="fa fa-trash"></i></button>
+            </td>
+            </tr>
+          </tbody>
+        </table>
+        <pagination-controls
+        (pageChange)="pageChanged($event)"
+        [maxSize]="5"
+        [directionLinks]="true"
+        [autoHide]="true"
+        ></pagination-controls>
+      </div>
+</div>
+
+    <app-locationmodel
+    [item]="selectedItem"
+    (close)="closeModal()"
+    *ngIf="isModalOpen"
+  >
+  </app-locationmodel>
+  <app-locationviewmodel
+  [item]="selectedItem"
+  (close)="closeModal()"
+  *ngIf="isViewModalOpen">
+  </app-locationviewmodel>
+</div>
+<div class="full-screen-loader" *ngIf="isLoading">
+  <div class="spinner-border text-dark" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>

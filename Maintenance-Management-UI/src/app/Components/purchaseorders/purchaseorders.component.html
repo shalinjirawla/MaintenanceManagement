@@ -1,0 +1,114 @@
+<div class="mt-2"  *ngIf="!isModalOpen && !isViewModalOpen">  
+    <!-- Add Item Button -->    
+    <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+        <div class="d-flex">
+            <div class="dropdown me-2">
+              <button class="btn btn-sm filterbtn dropdown-toggle" type="button" id="assetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Filters
+              </button>
+            
+            </div>
+          </div>
+        <div class="d-flex align-items-center">
+          <input
+              type="text"
+              class="search me-2"
+              placeholder="Search"
+              style="width: 150px"    
+              [(ngModel)]="searchTerm"
+              (keyup)="searchWorkOrder()"            
+            />
+            <button class="btn btn-sm btn-themecolor d-none d-md-inline" (click)="openModal()"><i class="fa fa-plus fa-xs"></i> New</button>
+        </div>
+    </div>
+    <div class="card card-body p-4 mx-2" *ngIf="!filteredpurchaseorder || filteredpurchaseorder.length === 0">
+      <div class="d-flex justify-content-between align-items-center">
+          <!-- Work Order Title and Status -->
+          <div class="">
+              <h4 class="card-title mb-1"></h4>
+          </div>            
+      </div>  
+      <div class="pt-2 text-center">
+          <p class="text-muted h5">No Data Found !</p>
+      </div>
+      <div class="pt-5 text-center">
+          <button class="btn btn-themecolor d-none d-md-inline" (click)="openModal()">Create PO</button>
+         
+          <button class="btn btn-sm btn-outline-themecolor d-md-none"  (click)="openModal()"><i class="fa fa-plus"></i></button>
+      </div>      
+  </div>
+    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0"  style="cursor: pointer;" (click)="DeletepurchseOrder()"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+    <!-- Inventory Items Table -->
+    <div *ngIf="!isLoading">
+      <div class="table-responsive d-none d-md-block" *ngIf="filteredpurchaseorder.length > 0">
+        <div class="table-scroll">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
+          <th >Title</th>        
+          <th>PO Number</th>
+          <th>Vendor</th>
+          <th>Date Created</th>
+          <th class="text-center"># of Items</th>
+          <th  class="text-center">Total Qty</th>
+          <th>Total Cost</th>         
+          <th>Status</th>
+          <th class="pr-50">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredpurchaseorder" (click)="OpenViewmodel(item.id)" style="cursor: pointer;">
+          <th class="pl-50"><input type="checkbox" [(ngModel)]="item.selected"  (click)="$event.stopPropagation()" (change)="updateSelection()" /> </th>                         
+          <td >{{item.title}}</td>          
+          <td>{{item.orderNumber}}</td>
+          <td>{{item.vendorname}}</td>
+          <td>{{item.dateCreated | date:'dd-MM-yyy'}}</td>
+          <td class="text-center">{{item.items}}</td>
+          <td class="text-center">{{item.quantity}}</td>
+          <td>{{item.totalAmount| currency: 'INR': 'symbol'}}</td>
+          <td>  <span
+            class="badge-pending p-1 m-0"
+            *ngIf="item.status === 'Awaiting'"
+            >{{ item.status }}</span
+          >
+          <span
+            class="badge-complate p-1 m-0"
+            *ngIf="item.status === 'Approved'"
+            >{{ item.status }}</span
+          >
+          <span
+            class="badge-accepted p-1 m-0"
+            *ngIf="item.status === 'Fulfilled'"
+            >{{ item.status }}</span
+          >
+            </td>
+          <td class="pr-50 text-center">
+            <!-- <button class="btn btn-sm2 btn-primary me-1"> <i class="fa fa-eye"></i></button> -->
+            <button (click)="$event.stopPropagation()"  *ngIf="item.status === 'Awaiting'" class="btn btn-sm2 btn-success me-1" > <i class="fa fa-pen" ></i></button>
+            <button (click)="$event.stopPropagation()" *ngIf="item.status=='Awaiting'" class="btn btn-sm2 btn-danger me-1" (click)="DeletepurchseOrder(item.id)"> <i class="fa fa-trash"></i></button>
+            <span *ngIf="item.status!='Awaiting'">-</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+</div>
+<div class="full-screen-loader" *ngIf="isLoading">
+  <div class="spinner-border text-dark" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<app-purchaseordersmodel
+*ngIf="isModalOpen"
+(close)="closeModal()"> 
+</app-purchaseordersmodel>
+<app-purchaseordersviewmodel
+[item]="selectedItem"
+*ngIf="isViewModalOpen"
+(close)="closeModal()">
+</app-purchaseordersviewmodel>
+
+  

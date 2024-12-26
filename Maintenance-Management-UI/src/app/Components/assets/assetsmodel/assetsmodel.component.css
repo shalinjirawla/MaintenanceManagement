@@ -1,0 +1,7 @@
+.formdiv{
+    max-height: 75vh;           /* Set maximum height */
+    overflow-y: auto;  
+  }
+  .form-labelp{
+    font-size: 14px;
+  }

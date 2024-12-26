@@ -1,0 +1,100 @@
+<div class="sidebar" [ngClass]="{'collapsed': isSidebarCollapsed}">
+  <div class="nav-top">
+    <p class="logo-title"  [routerLink]="['/dashboard']" style="cursor: pointer;"><i class="la la-tools fx-m"></i>CMMS</p>
+  </div>
+    <ul class="nav nav-pills flex-column">
+      <li *ngFor="let item of navItems" class="nav-item px-1" style="padding-top: 2px;">
+        <a class="nav-link" 
+           [ngClass]="{'active': activeModule === item.module,'text-primary activehover': isChildActive(item.children)}"
+           (click)="item.children ? toggleCollapse() : selectModule(item.module)"           
+           [routerLink]="!item.children ? item.route : null">
+          <i class="{{ item.icon }} me-2"></i>{{ item.label }}
+          <i *ngIf="item.children"  [ngClass]="{'active': isCollapsed}" [ngClass]="{'la-caret-right': isCollapsed, 'fa-caret-down': !isCollapsed}"  class=" float-end pt-08 fa-2xs fa"></i>
+        </a>
+         <!-- Child Menu Items (Collapsible) -->
+         <ul *ngIf="!isCollapsed" class="nav flex-column">
+          <li *ngFor="let child of item.children" class="nav-item">
+            <a class="nav-link" [ngClass]="{'active': activeModule === child.module}" (click)="selectModules(child.module)" [routerLink]="child.route">
+              <i class="{{ child.icon }} me-3 text-blue"></i>
+              {{ child.label }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+<!-- Top Bar -->
+<div class="topbar d-flex justify-content-between align-items-center p-0"> 
+    <div class="d-flex align-items-center">
+        <span class="px-3" style="color: 212529; cursor: pointer;" (click)="toggleSidebar()"><i class="la la-angle-double-left
+          "></i></span>
+        <div class="vertical-line mx-2"></div> <!-- Vertical line div -->
+        <div class="h5 p-2 m-0" style="color: #212529;">
+          {{ title }}
+        </div>
+    </div>        
+    <div class="px-3">     
+        <div class="d-flex dropdown align-items-center">
+        
+              
+               <!-- notification Icon (Mini) -->
+               <div class="notification-icon  position-relative topimport" (click)="showNotifications()">
+                <i class="la la-bell" style="color: #000b24e0;"></i>
+                <!-- <span class="badge position-absolute top-0 start-100 translate-middle">{{ notifications.length }}</span> -->
+              </div> 
+               <!-- Profile Icon (Mini) -->
+               <div class="profile-icon mx-2" (click)="openprofilemodel()">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 20px; height: 20px;">
+                  <span class="text-muted">{{ username }}</span>
+                </div>
+              </div>
+
+           <!-- Notification Container -->
+           <div class="notification-container">
+            <div *ngFor="let notification of notifications">
+              <div class="notification" *ngIf="notification.isRead">
+                <div class="notification-content">
+                  <!-- Sender and Message -->
+                  <div class="notification-message">
+                    <span class="h6"> {{ notification.senderName }}</span>
+                    <p>{{ notification.message }}</p>
+                  </div>
+                  <!-- Action Buttons -->
+                  <div class="notification-actions justify-content-between d-flex">
+                    <button class="btn btn-primary btn-sm me-2" (click)="markasread(notification.id)">Mark as Read</button>
+                    <button class="btn btn-secondary btn-sm" (click)="ignoreRequest(notification.id)">Ignore</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
+            
+          <!-- Dropdown for logout -->
+          <a class="topimport" id="assignedToDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="la la-braille pl-5" style="color: #000b24e0;"></i>
+          </a>
+            <ul class="dropdown-menu " aria-labelledby="assignedToDropdown">
+              <li>
+                <a class="dropdown-item" (click)="Logout()">Logout</a> <!-- Call updateStatus on click -->
+              </li>
+            </ul>           
+          </div>    
+    </div>
+</div>  
+
+<!-- Main Content Area -->
+<div class="content" [ngClass]="{'collapsed': isSidebarCollapsed}">
+    <div class="container px-0">
+        <!-- Login Modal -->
+        <!-- <app-login *ngIf="showLoginModal" (loginSuccess)="onLoginSuccess()"></app-login> -->
+
+        <router-outlet></router-outlet> 
+    </div>
+</div>
+<app-profilemodel
+(close)="closeModal()"
+*ngIf="profilemodel">
+
+</app-profilemodel>
+

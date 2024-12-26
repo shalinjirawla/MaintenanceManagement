@@ -1,0 +1,60 @@
+<div *ngIf="showModal" class="card card p-4"> 
+      <form class="checkout-form" [formGroup]="paymentForm"> 
+
+        <label class="form-label">Email</label>
+        <div class="stripe-element" style="padding: 7px 10px;">
+          <label class="form-labelp">
+            {{ paymentForm.get('email')?.value }}
+          </label>
+        </div>
+        <label class="form-label">Amount to pay</label>
+        <div class="stripe-element" style="padding: 7px 10px;">
+          <label class="form-labelp">
+            {{ paymentForm.get('amount')?.value }}
+          </label>
+        </div>
+        <label class="form-label">Card Information</label>
+          <div class="stripe-element">
+            <ngx-stripe-card
+            #cardRef
+            [options]="cardOptions"
+            [elementsOptions]="elementsOptions"
+            (loaded)="onCardLoaded($event)"
+          ></ngx-stripe-card>
+          
+          </div>
+          <!-- <label class="form-label">Card number</label> 
+          <div class="stripe-element">
+            <ngx-stripe-card-number
+              [options]="cardOptions"  
+                 
+            ></ngx-stripe-card-number>
+          </div>
+      
+          <label class="form-label">Expiration date</label>
+          <div fxLayout="row" fxLayoutGap="10px">
+            <div class="w-full stripe-element">
+              <ngx-stripe-card-expiry
+                [options]="cardOptions"
+              ></ngx-stripe-card-expiry>
+            </div>
+            <label class="form-label">Security code</label>
+            <div class="w-full stripe-element">
+              <ngx-stripe-card-cvc
+                [options]="cardOptions"
+              ></ngx-stripe-card-cvc>
+            </div>
+          </div>          -->
+        <!-- </div> -->
+   
+        <button
+        type="submit"
+        [disabled]="loading"
+        (click)="pay()"
+        class="pay-now-btn">
+        <div *ngIf="loading" class="spinner"></div>
+        <span *ngIf="!loading">Pay Now &nbsp;{{ paymentForm.get('amount')?.value| currency: 'INR': 'symbol' }}</span>
+      </button>
+  
+      </form>
+</div>

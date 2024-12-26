@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Maintenance-Management-API/MaintenanceManagementApi/obj
+/Maintenance-Management-API/MaintenanceManagementApi.Bussiness/obj
+/Maintenance-Management-API/MaintenanceManagementApi.Common/obj
+/Maintenance-Management-API/MaintenanceManagementApi.Data/obj
+/Maintenance-Management-API/.vs
+/Maintenance-Management-API/MaintenanceManagementApi/bin/Debug/net8.0
+/Maintenance-Management-API/MaintenanceManagementApi.Bussiness/bin/Debug/net8.0
+/Maintenance-Management-API/MaintenanceManagementApi.Common/bin/Debug/net8.0
+/Maintenance-Management-API/MaintenanceManagementApi.Data/bin/Debug/net8.0

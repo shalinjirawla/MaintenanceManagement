@@ -1,0 +1,232 @@
+<div class="mt-2">
+    <!-- <div class="full-screen-loader" *ngIf="isLoading">
+      <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div> -->
+    <!-- Data Content-->
+    <div
+      class="d-flex justify-content-between align-items-center pb-2 px-2"
+    >
+      <div class="d-flex">
+        <div class="dropdown me-2">
+          <button
+            class="btn btn-sm filterbtn dropdown-toggle"
+            type="button"
+            id="assetDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Filters
+          </button>
+          <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+            <li>
+              <div>
+                <!-- <form #filterForm="ngForm">
+                  <div class="form-group row">
+                    <div class="col-lg-6 form-group">
+                      <label for="id" class="form-label">WO#</label>
+                      <input
+                        type="text"
+                        id="id"
+                        name="id"
+                        class="form-control"
+                        [(ngModel)]="filters.id"
+                      />
+                    </div>
+  
+                    <div class="col-lg-6 form-group">
+                      <label for="title" class="form-label">Title</label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        class="form-control"
+                        [(ngModel)]="filters.title"
+                      />
+                    </div>
+                  </div>
+  
+                  <div class="form-group row">
+                    <div class="col-lg-6 form-group">
+                      <label for="status" class="form-label">Status</label>
+                      <input
+                        type="text"
+                        id="status"
+                        name="status"
+                        class="form-control"
+                        [(ngModel)]="filters.status"
+                      />
+                    </div>
+                    <div class="col-lg-6 form-group">
+                      <label for="dueDate" class="form-label">Due Date</label>
+                      <input
+                        type="date"
+                        id="dueDate"
+                        class="form-control"
+                        [(ngModel)]="filters.dueDate"
+                        name="dueDate"
+                      />
+                    </div>
+                  </div>
+  
+                  <div class="form-group row">
+                    <div class="col-lg-6 form-group">
+                      <label for="startDate" class="form-label"
+                        >Start Date</label
+                      >
+                      <input
+                        type="date"
+                        id="startDate"
+                        class="form-control"
+                        [(ngModel)]="filters.startDate"
+                        name="startDate"
+                      />
+                    </div>
+                    <div class="col-lg-6 form-group">
+                      <label for="priority" class="form-label">Priority</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="filters.priority"
+                        name="priority"
+                      />
+                    </div>
+                  </div>
+  
+                  <div class="form-group row">
+                    <div class="form-group col-lg-6">
+                      <label for="assignedTo" class="form-label"
+                        >Assigned To</label
+                      >
+                      <input
+                        type="text"
+                        id="assignedTo"
+                        class="form-control"
+                        [(ngModel)]="filters.assignedTo"
+                        name="assignedTo"
+                      />
+                    </div>
+                    <div class="form-group col-lg-6">
+                     <p></p>                  
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-primary mt-3"
+                        (click)="applyFilters()"
+                      >
+                        Apply Filters
+                      </button>
+                    </div>
+                  </div>
+                </form> -->
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+       
+     
+        <input
+          type="text"
+          class="search"
+          placeholder="Search"
+          style="width: 150px"
+          
+        />
+      </div>
+    </div>
+    <div
+        class="card card-body p-4 mx-2"
+        *ngIf="!filteredpayment || filteredpayment.length === 0"
+      >
+        <div class="d-flex justify-content-between align-items-center">
+          <!-- Work Order Title and Status -->
+          <div class="">
+            <h4 class="card-title mb-1"></h4>
+          </div>
+        </div>
+        <div class="pt-2 text-center">
+          <p class="text-muted h5">No Data Found !</p>
+        </div>
+        <div class="pt-5 text-center">
+        
+        </div>
+       
+      </div>
+    <div  *ngIf="payment && payment.length > 0">    
+      <div>
+      <div class="table-responsive d-none d-md-block">
+        <div class="table-scroll">
+          <table class="table table-hover">
+            <thead>
+              <tr>                                   
+                <th style="cursor: pointer;" class="pl-50">
+                  Transaction ID                  
+                </th>
+                <th   style="cursor: pointer">
+                  Amount                 
+                </th>
+                <th  style="cursor: pointer">
+                  Date                  
+                </th>               
+                <!-- <th style="cursor: pointer">
+                  Payment Method                  
+                </th> -->
+                <th  style="cursor: pointer">
+                  Email        
+                </th>              
+                <th  style="cursor: pointer">
+                  Request ID           
+                </th>
+                <th  style="cursor: pointer">
+                  Work Order ID           
+                </th>
+                <th class="pr-50" style="cursor: pointer">
+                  Status                  
+                </th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of payment">
+                <!-- <td style="cursor: pointer; padding-left: 10px !important;">{{ item.paymentId | slice:0:12 }}...</td> -->
+                <td class="pl-50"
+                style="cursor: pointer;"
+                   (click)="copyToClipboard(item.paymentId)"
+                   (mouseenter)="hover = true"
+                   (mouseleave)="hover = false"
+                 >
+                  {{ item.paymentId | slice:0:12 }}...
+                   <span *ngIf="hover" class="tooltip">{{ copied ? 'Copied' : 'Copy' }}</span>
+                </td> 
+
+                <td> {{item.amount | currency: 'INR': 'symbol' }}</td>                
+                <td class="pl-9">
+                 {{item.datetime  | date : "dd-MM-yyyy hh:mm a"}}
+                </td>
+                <td> {{item.email}}</td>               
+                <td> {{item.requestId}}</td>
+                <td> {{item.workorderId}}</td>                
+                <td class="pr-50"> 
+                <span class="badge-accepted p-1 m-0"  *ngIf="item.status === 'Succeeded'">{{ item.status }} &nbsp;<i class="fa fa-check"></i></span>
+                <span class="badge-declined p-1 m-0"  *ngIf="item.status === 'failed'">{{ item.status }} &nbsp;<i class="fa fa-times"></i></span>
+              </td>
+              </tr>
+            </tbody>
+            <!-- Pagination Controls -->
+          </table>
+          <!-- <pagination-controls
+          (pageChange)="pageChanged($event)"
+          [maxSize]="5"
+          [directionLinks]="true"
+          [autoHide]="true"
+          ></pagination-controls> -->
+        </div>
+      </div>
+      </div>
+        
+    </div>
+
+  </div>
+  

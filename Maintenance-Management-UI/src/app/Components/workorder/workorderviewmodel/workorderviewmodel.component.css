@@ -1,0 +1,19 @@
+.form-labelp{
+    font-size: 14px !important;
+    color: #555 !important;
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end !important; /* Align items to the right */
+    padding: 10px; /* Adjust padding as needed */
+  }
+  .bg-due{
+    background-color: rgb(194, 98, 81);
+    vertical-align: middle;
+  }
+  .bold{
+    font-weight: 700;
+  }
+  .titledue{
+    color: white !important;
+}

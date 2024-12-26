@@ -1,0 +1,253 @@
+<div class="mt-2">
+    <div class="full-screen-loader" *ngIf="isLoading">
+        <div class="spinner-border text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+        <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+            <div class="d-flex">
+                <div class="dropdown me-2">
+                    <button class="btn btn-sm filterbtn dropdown-toggle" type="button" id="assetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Filters
+                    </button>
+                    <ul class="dropdown-menu p-3 menufilter" aria-labelledby="filterDropdown">
+                        <li>
+                            <div>
+                                <form #filterForm="ngForm">
+                                    <div class="form-group row">
+                                        <div class="col-lg-6 form-group m-0">
+                                            <label for="name" class="form-label">Name</label>
+                                            <input type="text" id="name" name="name" [(ngModel)]="filters.name" class="form-control" />
+                                        </div>
+                                        <div class="col-lg-6 form-group m-0">
+                                            <label for="assetName" class="form-label">Assets</label>
+                                            <input type="text" id="assetName" name="assetName" [(ngModel)]="filters.assetName" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-6 form-group m-0">
+                                            <label for="scheduleType" class="form-label">	Schedules</label>
+                                            <input type="text" id="scheduleType" name="scheduleType" [(ngModel)]="filters.scheduleType" class="form-control" />
+                                        </div>
+                                        <div class="col-lg-6 form-group m-0">
+                                            <label for="assignedTo" class="form-label">Assign To</label>
+                                            <input type="text" id="assignedTo" name="assignedTo" [(ngModel)]="filters.assignedTo" class="form-control" />
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                      <div class="col-lg-6 form-group m-0">
+                                          <label for="priority" class="form-label">	Priority</label>
+                                          <input type="text" id="priority" name="priority" [(ngModel)]="filters.priority" class="form-control" />
+                                      </div>
+                                      <div class="col-lg-6 form-group m-0">
+                                          <label for="category" class="form-label">Category</label>
+                                          <input type="text" id="category" name="category" [(ngModel)]="filters.category" class="form-control" />
+                                      </div>
+                                    </div>
+
+                                      <div class="form-group m-0 text-center">                                     
+                                        <button type="button" class="btn btn-sm btn-primary mt-2" (click)="applyFilters()">
+                                            Apply Filters
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <input type="text" class="search me-2"   [(ngModel)]="searchTerm"
+                (keyup)="searchPM()" placeholder="Search" style="width: 150px;" />
+                <button class="btn btn-sm btn-themecolor d-none d-md-inline" (click)="openModal(null)">
+                   <i class="fa fa-plus fa-xs"></i> New
+                </button>
+            </div>
+        </div>
+
+      <div class="card card-body p-4 mx-2" *ngIf="!filteredPM || filteredPM.length === 0">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="">
+          <h4 class="card-title mb-1"></h4>
+        </div>
+      </div>
+      <div class="pt-2 text-center">
+        <p class="text-muted h5">No Data Found !</p>
+      </div>
+      <div class="pt-5 text-center">
+        <button
+          class="btn btn-themecolor d-none d-md-inline"          
+          (click)="openModal(null)">         
+        Create PM
+        </button>
+        <button
+          class="btn btn-sm btn-outline-themecolor d-md-none"          
+        >
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+    </div>
+    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deletePreventiveMaintenance(0)"  style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+    <div *ngIf="!isLoading">
+        <div class="table-responsive d-none d-md-block" *ngIf="filteredPM && filteredPM.length > 0">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                      <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
+                        <th (click)="sortBy('title')" style="cursor: pointer;padding-left: 9px !important;">Name</th>
+                       
+                        <th (click)="sortBy('assetName')" style="cursor: pointer">
+                            Assets
+                        </th>
+                        <!-- <th>Location</th> -->
+                        <th style="cursor: pointer;">
+                            Schedules
+                        </th>
+                        <th (click)="sortBy('category')" style="cursor: pointer">
+                          Category
+                        </th>
+                        <th (click)="sortBy('priority')" style="cursor: pointer">
+                          Priority
+                        </th>
+                        <th (click)="sortBy('assignToName')" style="cursor: pointer">
+                            Assign To
+                        </th>
+                        <th class="text-center pr-50">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr  style="cursor: pointer; vertical-align: middle;" *ngFor="let item of filteredPM| paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+                      <th class="pl-50"><input type="checkbox" [(ngModel)]="item.selected" (change)="updateSelection()" /> </th>                         
+                        <td class="pl-9">{{item.title}}</td>
+                        <td>{{item.assetName}}</td>
+                        <!-- <td>{{item.location}}</td> -->
+                        <td>{{item.scheduleType}}</td>
+                        <!-- <td>{{item.scheduleType}},{{item.frequencyInterval}}-{{item.frequencyType}}{{item.daysOfWeek}},{{item.advanceCreationPeriod}}-{{item.workOrderDue}}</td> -->
+                        <td>{{item.category}}</td>               
+                        <!-- <td>{{item.priority}}</td> -->
+                        <td>
+                          <i
+                            class="fa-solid fa-flag text-danger"
+                            *ngIf="item.priority === 'High'"
+                          ></i>
+                          <i
+                            class="fa-solid fa-flag text-success"
+                            *ngIf="item.priority === 'Low'"
+                          ></i>
+                          <i
+                            class="fa-solid fa-flag text-warning"
+                            *ngIf="item.priority === 'Medium'"
+                          ></i>
+                          &nbsp;{{ item.priority }}
+                        </td>
+                        <td>{{item.assignToName}}</td>
+                        <td class="text-center pr-50">                           
+                            <!-- <a
+                            class="topimport"
+                            id="assignedToDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            <i class=" text-themecolor fa fa-ellipsis-v actionicon"></i>
+                          </a>
+                          <ul class="dropdown-menu " aria-labelledby="assignedToDropdown">
+                            <li>
+                                <a class="dropdown-item" (click)="openViewModal(item)"> <i class="fa fa-eye text-primary  pe-2"></i>View</a>
+                              <a class="dropdown-item" (click)="openModal(item)"> <i class="fa fa-pen text-success pe-2" ></i>Edit</a>
+                              <a class="dropdown-item" (click)="deletePreventiveMaintenance(item.id)"> <i class="fa fa-trash text-danger pe-2"></i>Delete</a>
+                            </li>
+                          </ul> -->
+                          <button class="btn btn-sm2 btn-primary me-1" (click)="openViewModal(item)"> <i class="fa fa-eye"></i></button>
+                          <button class="btn btn-sm2 btn-success me-1"  (click)="openModal(item)"> <i class="fa fa-pen" ></i></button>
+                          <button class="btn btn-sm2 btn-danger me-1"  (click)="deletePreventiveMaintenance(item.id)"> <i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr> 
+                </tbody>
+            </table>
+            <pagination-controls
+            (pageChange)="pageChanged($event)"
+            [maxSize]="5"
+            [directionLinks]="true"
+            [autoHide]="true"
+            ></pagination-controls>
+        </div>
+</div>
+        <ul class="list-group mt-3 d-block d-md-none">
+            <li
+              *ngFor="let item of filteredPM"
+              class="list-group-item d-flex justify-content-between align-items-start border rounded shadow-sm mb-2"
+          
+              style="cursor: pointer; background-color: #f8f9fa"
+            >
+           
+              <div class="flex-grow-1 me-2">            
+                <div class="form-group row">                 
+                    <b class="col-lg-6">Name:</b> 
+                    <p class="col-lg-6">{{ item.title }}</p>                    
+                </div>      
+                <div class="form-group row">
+                    <b class="col-lg-6">Assets:</b>
+                    <p class="col-lg-6">{{ item.assetName }}</p> 
+                </div>
+                <div class="form-group row">
+                    <b class="col-lg-6">Schedules:</b>
+                    <p class="col-lg-6">{{item.scheduleType}},{{item.frequencyInterval}}-{{item.frequencyType}}{{item.daysOfWeek}},{{item.advanceCreationPeriod}}-{{item.workOrderDue}}</p> 
+                </div>
+                <div class="form-group row">
+                    <b class="col-lg-6">Assign To:</b>
+                    <p class="col-lg-6">{{ item.assignToName }}</p> 
+                </div>
+                <div class="form-group row">
+                  <div class="col-6">
+                    <strong>Priority:</strong>
+                    <p class="mb-1">
+                        <i
+                          class="fa-solid fa-flag"
+                          [ngClass]="{
+                            'text-danger': item.priority === 'High',
+                            'text-success': item.priority === 'Low',
+                            'text-warning': item.priority === 'Medium'
+                          }"
+                        ></i>
+                        &nbsp;{{ item.priority }}
+                      </p>
+                  </div>
+                  
+                </div>
+                
+              </div>
+              <div class="align-self-start">              
+                <a
+                class="topimport"
+                id="assignedToDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+              <i class="fa-solid fa-chevron-right text-dark"></i>
+                
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="assignedToDropdown">
+                <li>
+                    <a class="dropdown-item" (click)="openViewModal(item)"> <i class="fa fa-eye text-primary  pe-2"></i>View</a>
+                  <a class="dropdown-item" (click)="openModal(item)"> <i class="fa fa-pen text-success pe-2" ></i>Edit</a>
+                  <a class="dropdown-item" (click)="deletePreventiveMaintenance(item.id)"> <i class="fa fa-trash text-danger pe-2"></i>Delete</a>
+                </li>
+              </ul>
+             
+              </div>
+            </li>
+          </ul>
+
+    <app-preventivemodel
+    (close)="closeModal()"
+    [item]="selectedItem"
+    *ngIf="isModalOpen"
+  >
+  </app-preventivemodel>
+  <app-preventiveviewmodel
+  [item]="selectedItem"
+  (close)="closeviewModal()"
+  *ngIf="isViewModalOpen"
+>
+</app-preventiveviewmodel>
+</div>

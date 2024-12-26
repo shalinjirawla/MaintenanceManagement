@@ -1,0 +1,185 @@
+<!-- Modal for Creating Request -->
+<div class="modal-overlay" tabindex="-1" [ngClass]="{ show: true }">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">WO#00{{ item.id }}</h5>
+        <button type="button" class="btn-close col-1" (click)="closeModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <form #requestForm="ngForm">
+        <div class="modal-body formdiv">
+          <div class="" *ngIf="!employee">
+            <!-- Main content column -->
+            <div class="form-group">
+              <label for="title" class="form-label"
+                >Title<span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                id="title"
+                name="title"
+                class="form-control"
+                disabled="true"
+                [(ngModel)]="item.title"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="description" class="form-label"
+                >Description<span class="text-danger">*</span></label
+              >
+              <textarea
+                id="description"
+                name="description"
+                class="form-control"
+                disabled="true"
+                [(ngModel)]="item.description"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="priority" class="form-label"
+                >Priority<span class="text-danger">*</span></label
+              >
+              <select
+                id="priority"
+                name="priority"
+                class="form-control"
+                disabled="true"
+                [(ngModel)]="item.priority"
+                required
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="location" class="form-label"
+                >Location<span class="text-danger">*</span></label
+              >
+              <select id="location"  name="location" disabled="true" #locationModel="ngModel" required class="form-control" [(ngModel)]="workorder.location" required>
+                <option [ngValue]="''" >Select Location</option>
+                <option *ngFor="let location of location" [ngValue]="location.id">{{location.description}}</option>
+            </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label"
+                >Start Date & Time<span class="text-danger">*</span></label
+              >
+              <input
+                type="datetime-local"
+                class="form-control"
+                [(ngModel)]="item.startDate"
+                name="startDateTime"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label"
+                >Due Date & Time<span class="text-danger">*</span></label
+              >
+              <input
+                type="datetime-local"
+                class="form-control"
+                [(ngModel)]="item.dueDate"
+                name="dueDateTime"
+                [min]="workorder.startDate"
+                (change)="Checkawailable()"
+              />
+            </div>
+            <div class="form-group">
+              <label for="category" class="form-label"
+                >Category<span class="text-danger">*</span></label
+              >
+              <select
+                id="category"
+                name="category"
+                class="form-control"
+                [(ngModel)]="item.category"
+                required
+              >
+                <option value="1">Damage</option>
+                <option value="2">Electrical</option>
+                <option value="3">Inspection</option>
+                <option value="4">Meter Reading</option>
+                <option value="5">Safety</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="assets" class="form-label"
+                >Assets </label
+              >
+              <select id="assets" name="assets" class="form-control" [(ngModel)]="workorder.asset">
+                <option [ngValue]="''">Select assets</option>
+                <option *ngFor="let asset of assets" [ngValue]="asset.assetName">{{ asset.assetName }}</option>
+            </select>
+            </div>
+            <div class="form-group">
+              <label for="assignedTo" class="form-label"
+                >Primary Employee<span class="text-danger">* </span
+                ><span
+                  class="form-label"
+                  (click)="Checkawailable()"
+                  style="cursor: pointer"
+                  >&nbsp;assignedTo another</span
+                ></label
+              >
+              <select
+                *ngIf="availableEmployees.length > 0"
+                class="form-control"
+                id="assignedTo"
+                name="assignedTo"
+                [(ngModel)]="item.assignedTo"
+                required
+              >
+                <!-- <option value="null" disabled>Select Employee</option> -->
+                <option
+                  *ngFor="let employee of availableEmployees"
+                  [value]="employee.userID"
+                >
+                  {{ employee.username }}
+                </option>
+              </select>
+              <input
+                *ngIf="availableEmployees.length === 0"
+                type="text"
+                class="form-control"
+                [(ngModel)]="item.assignedToUser"
+                name="assignedTo"
+              />
+            </div>
+            <!-- End Approved time -->
+          </div>
+
+        </div>
+
+        <div class="modal-footer mt-3">
+          <ng-container>
+            <button
+              type="button"
+              class="btn btn-sm btn-danger"
+              (click)="closeModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-success"
+              (click)="editworkorder()" *ngIf="!employee"
+            >
+              Save Changes
+            </button>
+           
+          </ng-container>
+        </div>
+     
+      </form>
+    </div>
+  </div>
+
+</div>

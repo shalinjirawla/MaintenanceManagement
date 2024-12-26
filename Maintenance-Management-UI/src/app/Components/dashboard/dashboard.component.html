@@ -1,0 +1,173 @@
+<div class="container pt-4 px-4">
+  <div class="row justify-content-center pt-2 px-2">
+    <div class="col-md-2 flex-grow-1 mb-3 px-3">
+      <a [routerLink]="['/requesttraking']" routerLinkActive="router-link-active" class="text-decoration-none">
+        <div class="card text-center shadow-sm custom-card">
+          <div class="card-body">
+            <h4>{{ requestCount }}</h4>            
+            <h6>Requests </h6>
+          </div>
+        </div>
+      </a>
+    </div>  
+    <div class="col-md-2 flex-grow-1 mb-3 px-3">
+      <a [routerLink]="['/workorder']" routerLinkActive="router-link-active" class="text-decoration-none">
+        <div class="card text-center shadow-sm custom-card">
+          <div class="card-body">
+            <h4>{{ workorderCount }}</h4>
+            <h6>Work Orders</h6>
+          </div>
+        </div>
+      </a>
+    </div>
+  
+    <div class="col-md-2 flex-grow-1 mb-3 px-3">
+      <a [routerLink]="['/people']" routerLinkActive="router-link-active" class="text-decoration-none">
+        <div class="card text-center shadow-sm custom-card">
+          <div class="card-body">
+            <h4>{{ employeeCount }}</h4>
+            <h6>People</h6>
+          </div>
+        </div>
+      </a>
+    </div>
+  
+    <div class="col-md-2 flex-grow-1 mb-3 px-3">
+      <a [routerLink]="['/feedback']" routerLinkActive="router-link-active" class="text-decoration-none">
+        <div class="card text-center shadow-sm custom-card">
+          <div class="card-body">
+            <h4>{{ feedbackCount }}</h4>
+            <h6>Feedback</h6>
+          </div>
+        </div>
+      </a>
+    </div>
+  
+    <div class="col-md-2 flex-grow-1 mb-3 px-3">
+      <a [routerLink]="['/complaint']" routerLinkActive="router-link-active" class="text-decoration-none">
+        <div class="card text-center shadow-sm custom-card ">
+          <div class="card-body">
+            <h4>{{ complaintCount }}</h4>
+            <h6>Complaint</h6>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Progress bar row -->
+  <div class="row mt-3 px-2">
+    <div class="col-md-4 px-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title">Pending Request Progress</h6>
+          <!-- Circular progress bar -->
+          <div class="circular-progress-container pt-3">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle class="circular-progress-background" cx="50" cy="50" r="45" stroke-width="5" fill="none"></circle>
+              <circle 
+                class="circular-progress-bar" 
+                cx="50" cy="50" r="45" 
+                stroke-width="8" 
+                [attr.stroke-dasharray]="circumference"
+                [attr.stroke-dashoffset]="circumference - (currentreqProgress / 100) * circumference"
+                fill="none">
+              </circle>
+            </svg>
+            <div class="progress-text">{{ currentreqProgress | number: '1.0-0' }}%</div>
+          </div>
+          <div>
+            <span class="form-label">Totle Request : </span>{{requestCount}}
+          </div>
+          <div>
+            <span class="form-label">Pending Request : </span>{{pendingrequest}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 px-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title">Work Order Progress</h6>
+          <!-- Circular progress bar -->
+          <div class="circular-progress-container pt-3">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle class="circular-progress-background" cx="50" cy="50" r="45" stroke-width="5" fill="none"></circle>
+              <circle 
+                class="circular-progress-bar" 
+                cx="50" cy="50" r="45" 
+                stroke-width="8" 
+                [attr.stroke-dasharray]="circumference"
+                [attr.stroke-dashoffset]="circumference - (currentProgress / 100) * circumference"
+                fill="none">
+              </circle>
+            </svg>
+            <div class="progress-text">{{ currentProgress | number: '1.0-0' }}%</div>
+          </div>
+          <div>
+            <span class="form-label">Totle Work Order : </span>{{workorderCount}}
+          </div>
+          <div>
+            <span class="form-label">Complete Work Order : </span>{{completedWorkOrders}}
+          </div>
+        </div>
+      </div>
+    </div>
+   
+    <div class="col-md-4 px-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title">Satisfied Customers</h6>
+          <!-- Circular progress bar -->
+          <div class="circular-progress-container pt-3">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle class="circular-progress-background" cx="50" cy="50" r="45" stroke-width="5" fill="none"></circle>
+              <circle 
+                class="circular-progress-bar" 
+                cx="50" cy="50" r="45" 
+                stroke-width="8" 
+                [attr.stroke-dasharray]="circumference"
+                [attr.stroke-dashoffset]="circumference - (currentsatcusProgress / 100) * circumference"
+                fill="none">
+              </circle>
+            </svg>
+            <div class="progress-text">{{ currentsatcusProgress | number: '1.0-0' }}%</div>
+          </div>
+          <div>
+            <span class="form-label">Totle Feedback : </span>{{feedbackCount}}
+           
+          </div>
+          <div>
+            <span class="form-label">Satisfied Customers : </span>{{satisfiedcustomer}}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="row px-2" style="margin-top: 2.1rem !important;">
+    <div class="col-md-8 px-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <div class="container">
+            <h6>Inventory </h6>
+            <!-- Bar Chart -->
+            <canvas id="inventoryChart"></canvas>
+          </div>       
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 px-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h6>Payment </h6>
+          <div style="width: 60%; margin: auto;">
+            <canvas id="paymentChart"></canvas>
+          </div>        
+        </div>
+      </div>
+    </div>
+  </div>  
+  </div>
+  

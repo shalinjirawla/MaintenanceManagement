@@ -1,0 +1,46 @@
+.custom{  
+  width: 350px;
+  border: none !important;
+}
+.customtop{
+  border-bottom: 0px !important;
+  background-color: white !important;
+}
+.btn-them{
+  background-color:  #2a4646!important;
+  color: white;
+  width:30%;
+}
+.custombg{
+  background-color: #f3f3f3;
+  max-width: 100% !important;
+}
+.card-shadow {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+@keyframes flipIn {
+  0% {
+    transform: rotateX(90deg); /* Start rotated */
+    opacity: 1; /* Start invisible */
+  }
+  50% {
+    transform: rotateX(-10deg); /* Bounce back slightly */
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(0deg); /* End at normal position */
+    opacity: 1; /* Fully visible */
+  }
+}
+
+.card.custom {
+  animation: flipIn 1.5s ease-out; /* Apply the animation */
+  transform-origin: center; /* Rotate from the center */
+}
+.form-select{
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(80, 80, 80);
+}

@@ -1,0 +1,109 @@
+<div class="modal-overlay" [ngClass]="{ show: true }">
+    <div class="modal-dialog">
+      <div class="modal-content" >
+        <div class="modal-header">
+          <h5 class="modal-title">Profile | {{userdata.username}}</h5>
+          <button type="button" class="btn-close col-1" (click)="closeModal()">
+            <span>&times;</span>
+          </button>
+        </div>
+        <form  >
+          <div class="modal-body"> 
+            <div class="d-flex align-items-center">
+              <!-- Profile Icon -->
+              <div class="profile-icon">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 20px; height: 20px;">
+                  <span class="text-white h4 m-0">{{ getFirstLetter(userdata.username) }}</span>
+                </div>
+              </div>            
+              <!-- Username -->
+              <b class="m-3">{{ userdata.username }}</b>
+            </div>
+            
+          <br>
+            <p class="form-label bold">Details</p>
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label class="form-label">UserId</label>
+                </div>
+                <div class="col-lg-3">
+                    <label class="form-labelp">{{userdata.userID}}</label>
+                </div>
+            </div>        
+            <!-- <div class="form-group row">
+                <div class="col-lg-3">
+                    <label class="form-label">Username :</label>
+                </div>
+                <div class="col-lg-3">
+                    <label class="form-labelp">{{userdata.username}}</label>
+                </div>
+            </div> -->
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label class="form-label">Email </label>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-labelp">{{userdata.email}}</label>
+                </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-lg-3">
+                  <label class="form-label">Work Orders</label>
+              </div>
+              <div class="col-lg-6">
+                  <label class="form-labelp">Can be Assigned</label>
+              </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-3">
+                <label class="form-label">Regular rate</label>
+            </div>
+            <div class="col-lg-6">
+                <label class="form-labelp">₹0.00 INR/hr</label>
+            </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-3">
+              <label class="form-label">Overtime 1</label>
+          </div>
+          <div class="col-lg-6">
+              <label class="form-labelp">₹0.00 INR/hr</label>
+          </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-lg-3">
+            <label class="form-label">Overtime 2</label>
+        </div>
+        <div class="col-lg-6">
+            <label class="form-labelp">₹0.00 INR/hr</label>
+        </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-lg-3">
+          <label class="form-label">Last visit</label>
+      </div>
+      <div class="col-lg-6">
+          <label class="form-labelp">
+            12/09/2024</label>
+      </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-lg-3">
+        <label class="form-label">Entities</label>
+    </div>
+    <div class="col-lg-6">
+        <label class="form-labelp">
+          Default Entity - Admin</label>
+    </div>
+</div>
+           
+          </div>
+          <!-- <div class="modal-footer">
+          
+          </div> -->
+        </form>
+      </div>     
+  
+    </div>
+  </div>
+  

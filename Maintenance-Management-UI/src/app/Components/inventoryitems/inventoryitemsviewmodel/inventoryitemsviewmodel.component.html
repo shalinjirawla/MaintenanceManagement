@@ -1,0 +1,45 @@
+<!-- Modal for Creating Request -->
+<div class="modal-overlay" tabindex="-1" [ngClass]="{ show: true }">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">View Inventory Category</h5>
+          <button type="button" class="btn-close col-1" (click)="closeModal()">
+            <span>&times;</span>
+          </button>
+        </div>
+  
+        <div class="modal-body">
+          <div class="formdiv">
+            <div class="p-4">
+              <div>
+                <!-- Overview Content -->
+                <div
+                  *ngFor="
+                    let field of [
+                      {
+                        label: 'Item Name',
+                        value: selectedItem.name
+                      },                      
+                      { label: 'Sku', value: selectedItem.sku },
+                      { label: 'Unit', value: selectedItem.unit },
+                      { label: 'Location', value: selectedItem.location }
+                    ]
+                  "
+                >
+                  <div class="form-group">
+                    <label class="col-lg-3 form-label">{{ field.label }}:</label>
+                    <label class="reviewlbl col-lg-8">{{ field.value }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-sm btn-danger" (click)="closeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

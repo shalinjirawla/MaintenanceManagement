@@ -1,0 +1,15 @@
+.pl-9{
+    padding-left: 9px !important;
+  }
+  .menufilter{
+    width: 600px;
+  }
+  
+  @media (max-width: 768px) {
+    .menufilter {
+      width: 220px;
+    }
+  }
+  .form-group {
+    margin-bottom: 0.2rem !important;
+  }

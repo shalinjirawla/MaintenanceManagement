@@ -1,0 +1,62 @@
+<div class="modal-overlay" [ngClass]="{ show: true }">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">We appreciate your feedback!</h5>
+        <button type="button" class="btn-close col-1" (click)="closeModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="feedbackMessage" class="form-label"
+              >How satisfied were you overall with the service you received from
+              our team?</label
+            ><br />
+            <input type="radio" formControlName="satisfied" value="Very Satisfied" /><label class="form-label2 ml-2">Very Satisfied</label><br />
+            <input type="radio" formControlName="satisfied" value="Satisfied"  /><label class="form-label2 ml-2">Satisfied</label><br />
+            <input type="radio" formControlName="satisfied" value="Neutral"  /><label class="form-label2 ml-2">Neutral</label><br />
+            <input type="radio" formControlName="satisfied" value="Dissatisfied"/><label class="form-label2 ml-2">Dessatified</label><br />
+            <input type="radio" formControlName="satisfied" value="Very Dissatisfied" /><label class="form-label2 ml-2">Very Dessatified</label><br />
+
+           
+            <div class="form-group">
+              <label for="feedbackMessage" class="form-label"
+                >Would you use our customer service in the future?</label
+              ><br />
+            <input type="radio" formControlName="inFuture" value="Yes" /><label class="form-label2 ml-2">Yes</label><br />
+            <input type="radio" formControlName="inFuture" value="No"  /><label class="form-label2 ml-2">No</label><br />
+            <input type="radio" formControlName="inFuture" value="Maybe" /><label class="form-label2 ml-2">Maybe</label><br />
+            </div>
+            <div class="form-group">
+              <label for="feedbackMessage" class="form-label"
+                >Any comments, questions or suggestions?</label
+              >
+              <textarea
+                class="form-control2"
+                formControlName="comments"
+                placeholder="Type here..."
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <!-- <div class="form-group mt-3" *ngIf="isadmin">
+            <label class="form-label">Resolution Notes</label>
+            <input type="text" class="form-control" readonly formControlName="resolutionNotes">
+          </div> -->
+
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
+          </div>
+          <div class="text-center">           
+            <button type="submit" class="btn btn-success mt-3">
+              Submit Feedback
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,155 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column; /* Ensure the form is vertically centered */
+}
+.card{
+  width: 400px;
+}
+/* .checkout-form {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-sizing: border-box;
+} */
+
+/* Form Title */
+h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333333;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+}
+
+/* Stripe Elements */
+.stripe-card {
+  margin: 20px 0;
+  margin-top: 5px;
+}
+
+.stripe-element {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+/* Buttons */
+button {
+  display: inline-block;
+  width: 100%;
+  padding: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Flex Layout for Expiry and CVC */
+.fxLayout {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.w-full {
+  flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .checkout-form {
+    padding: 15px;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+  }
+}
+
+.modal-dialog {
+  background: white !important;
+  border-radius: 0 !important;
+  width: 375px !important;
+}
+
+.form-labelp {
+  font-size: 14px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top: 3px solid #3085d6; /* Spinner color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 8px; /* Space between spinner and text */
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.pay-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+.align-items-center {
+  display: flex;               /* Enable Flexbox */
+  justify-content: center;     /* Horizontally center the button */
+  align-items: center;         /* Vertically center the button (optional) */
+  width: 100%;                 /* Ensure the div takes the full width */
+}

@@ -1,0 +1,90 @@
+
+<div class="mt-1">
+    <div class="">
+         <!-- No Data Found -->
+        <div >         
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 px-2">
+                    <div class="d-flex">
+                        <div class="dropdown me-2">
+                          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="assetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filters
+                          </button>
+                         
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <input
+                          type="text"
+                          class="search me-2"
+                          placeholder="Search"
+                          style="width: 150px"
+                          [(ngModel)]="searchTerm"
+                          (keyup)="searchWorkOrder()"
+                        />                     
+                        <button class="btn btn-sm btn-outline-themecolor d-none d-md-inline" *ngIf="!isadmin" (click)="openModal()">Add Feedback</button>
+                    </div>
+                </div>  
+                <div
+                class="card card-body p-4 mx-2"
+                *ngIf="!feedback || feedback.length === 0"
+              >
+                <div class="d-flex justify-content-between align-items-center">
+                  <!-- Work Order Title and Status -->
+                  <div class="">
+                    <h4 class="card-title mb-1"></h4>
+                  </div>
+                </div>
+                <div class="pt-2 text-center">
+                  <p class="text-muted h5">No Data Found !</p>
+                </div>
+                <div class="pt-5 text-center">
+                
+                </div>
+               
+              </div>         
+                <div *ngIf="!isLoading">
+            <div class="table-responsive"  *ngIf="feedback.length > 0">
+                <table class="table table-hover">    
+                    <thead>
+                        <tr>                                                    
+                            <th class="pl-50">Customer ID</th>
+                            <th>WorkRequest ID</th>
+                            <th>Satisfied</th>
+                            <th>Comment</th>
+                            <!-- <th>In Future</th> -->
+                            <th class="pr-50">Feedback Date</th>
+                            <!-- <th>Status</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="cursor: pointer;" *ngFor="let item of feedback">                                           
+                            <td class="pl-50">{{item.customerID}}</td>
+                            <td>{{item.workRequestID}}</td>
+                            <td>{{item.satisfied}}</td>
+                            <td>{{item.comments}}</td>
+                            <!-- <td>{{item.inFuture}}</td> -->
+                            <td class="pr-50">{{item.feedbackDate|date:'dd-MM-yyyy'}}</td>
+                            <!-- <td *ngIf="item.resolvedStatus==0"><span class="badge-pending" >Pending</span></td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <app-feedbackmodel
+    [item]="selectedItem"
+    (close)="closeModal()"
+    *ngIf="isModalOpen">
+  </app-feedbackmodel>
+</div>
+<div class="full-screen-loader" *ngIf="isLoading">
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  
+
+

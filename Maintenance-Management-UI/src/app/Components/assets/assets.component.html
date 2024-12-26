@@ -1,0 +1,247 @@
+<div class="mt-2">
+  <div class="">
+    <!-- Data Content-->
+    <div>
+      <div
+        class="d-flex justify-content-between align-items-center pb-2 px-2"
+      >
+        <div class="d-flex">
+          <div class="dropdown me-2">
+            <button
+              class="btn btn-sm filterbtn dropdown-toggle"
+              type="button"
+              id="assetDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Filters
+            </button>
+            <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+              <li>
+                <div>
+                  <form #filterForm="ngForm">
+                    <div class="form-group row">
+                      <div class="col-lg-6 form-group m-0">
+                        <label for="assetName" class="form-label">Name</label>
+                        <input
+                          type="text" id="assetName" name="assetName" 
+                          class="form-control"
+                          [(ngModel)]="filters.assetName"
+                        />
+                  
+                      </div>
+
+                      <div class="col-lg-6 form-group m-0">
+                        <label for="location" class="form-label"
+                          >Location</label
+                        >
+                        <input
+                          type="text" name="location" 
+                          class="form-control"
+                          [(ngModel)]="filters.location"
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-lg-6 form-group m-0">
+                        <label for="serialNumber" class="form-label"
+                          >Serial Number</label
+                        >
+                        <input
+                          type="text" name="serialNumber" 
+                          class="form-control"
+                          [(ngModel)]="filters.serialNumber"
+                        />
+                      </div>
+                      <div class="col-lg-6 form-group m-0">
+                        <label for="category" class="form-label"
+                          >Category</label
+                        >
+                        <input
+                          type="text" name="category"
+                          class="form-control"
+                          [(ngModel)]="filters.category"
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group pt-3 text-center">
+                      <button
+                        type="button" 
+                        class="btn btn-sm btn-primary mt-2"
+                        (click)="applyFilters()"
+                      >
+                        Apply Filters
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+       
+        <div class="d-flex align-items-center">
+          <input
+            type="text"
+            class="search me-2"
+            placeholder="Search"
+            style="width: 150px"
+            [(ngModel)]="searchTerm"
+            (keyup)="searchasset()"
+          />
+
+          <button
+            class="btn btn-sm btn-themecolor d-none d-md-inline"
+            (click)="openModal(null, 'add')"
+          >
+          <i class="fa fa-plus fa-xs"></i> New
+          </button>
+         
+        </div>
+      </div>
+
+      <div class="card card-body p-4 mx-2" *ngIf="!filteredassets || filteredassets.length === 0">
+        <div class="d-flex justify-content-between align-items-center">
+          <!-- Work Order Title and Status -->
+          <div class="">
+            <h4 class="card-title mb-1"></h4>
+          </div>
+        </div>
+        <div class="pt-2 text-center">
+          <p class="text-muted h5">No Data Found !</p>
+        </div>
+        <div class="pt-5 text-center">
+          <button
+            class="btn btn-themecolor d-none d-md-inline"
+            (click)="openModal(null, 'add')"
+          >
+            Add Assets
+          </button>
+          <button
+            class="btn btn-sm btn-outline-themecolor d-md-none"
+            (click)="openModal(null, 'add')"
+          >
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deleteassets()" style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>
+      <div *ngIf="!isLoading">
+      <div class="table-responsive" *ngIf="filteredassets && filteredassets.length > 0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th class="text-center pl-50">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="selectAll"
+                  (change)="toggleAll()"
+                  (change)="updateSelection()"
+                />
+              </th>
+              <th (click)="sortBy('assetName')" style="cursor: pointer">
+                Name
+              </th>
+              <!-- <th>Image</th> -->
+              <th (click)="sortBy('location')" style="cursor: pointer">
+                Location
+              </th>
+              <th (click)="sortBy('serialNumber')" style="cursor: pointer">
+                Serial Number
+              </th>
+              <th (click)="sortBy('category')" style="cursor: pointer">
+                Asset Type
+              </th>
+              <th class="text-center pr-50">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- *ngFor="let item of filteredassets" (click)="openModal(item, 'view')" -->
+            <tr
+              *ngFor="let item of filteredassets | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" 
+              style="cursor: pointer; vertical-align: middle"  [class.checked]="item.selected"
+            >
+            <td class="pl-50" style="position: relative; width: 40px; height: 40px;">
+              <!-- Default Image - Visible unless Checkbox is Checked -->
+              <img
+                [src]="item.assetImage"
+                class="mini-image"
+                [class.hidden]="item.selected"
+                (click)="$event.stopPropagation()"
+              />
+      
+              <!-- Checkbox - Visible when Image is Hovered or Checked -->
+              <input
+                type="checkbox"
+                [(ngModel)]="item.selected"
+                (change)="updateSelection()"
+                class="checkbox"
+              />
+            </td>
+            
+            
+              <!-- <td style="padding-left: 10px !important;">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="item.selected"
+                  (change)="updateSelection()"
+                  (click)="$event.stopPropagation()"
+                />
+              </td> -->
+              <td>{{ item.assetName }}</td>
+              <!-- <td>
+                <img
+                  [src]="item.assetImage"
+                  style="height: 60px; width: 60px"
+                  (click)="openImageModal(item.assetImage)"
+                />
+              </td> -->
+              <td>{{ item.location }}</td>
+              <td>{{ item.serialNumber }}</td>
+              <td>{{ item.category }}</td>
+               <td class="text-center pr-50">                          
+
+              <button class="btn btn-sm2 btn-primary me-1" (click)="openModal(item,'view')"> <i class="fa fa-eye"></i></button>
+              <button class="btn btn-sm2 btn-success me-1"  (click)="openModal(item,'edit')"> <i class="fa fa-pen" ></i></button>
+              <button class="btn btn-sm2 btn-danger me-1"  (click)="deleteassets(item.id)"> <i class="fa fa-trash"></i></button>
+            </td>
+            </tr>
+          </tbody>
+        </table>
+        <pagination-controls
+        (pageChange)="pageChanged($event)"
+        [maxSize]="5"
+        [directionLinks]="true"
+        [autoHide]="true"
+        ></pagination-controls>
+      </div>
+    </div>
+      <div
+        class="fixed-bottom d-flex justify-content-center p-3"
+        *ngIf="selectedItems.length > 0"
+      >
+      </div>
+    </div>
+  </div>
+
+  <app-assetsmodel
+    [item]="selectedItem"
+    [mode]="modalMode"
+    (close)="closeModal()"
+    *ngIf="isModalOpen"
+  >
+  </app-assetsmodel>
+</div>
+<div class="full-screen-loader" *ngIf="isLoading">
+  <div class="spinner-border text-dark" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<!-- Inline Modal -->
+<div 
+  class="image-modal" 
+  *ngIf="selectedImage" 
+  (click)="closeImageModal()"
+>
+  <img [src]="selectedImage" class="modal-image" />
+</div>

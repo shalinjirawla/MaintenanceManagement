@@ -1,0 +1,29 @@
+
+.nav-link.active{
+    /* border-color: transparent !important; */
+    border-bottom: 2px solid #2a4646 !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+.nav-link{
+    border-color: transparent !important;
+    color: black !important;
+    padding-bottom: 1px;
+    cursor: pointer;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+.tab-content{
+    height: 380px;
+}
+.form-label{
+    padding: 0;
+}
+.nav-tabs{
+    border-bottom: 0px !important;
+    padding-left: 34px !important;
+}
+.mx-50{
+    margin-left: 125px;
+    margin-right: 125px;
+}

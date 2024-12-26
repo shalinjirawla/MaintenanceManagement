@@ -1,0 +1,47 @@
+.dropdown-menu{
+  width: 600px;
+}
+
+@media (max-width: 768px) {
+  .dropdown-menu {
+    width: 200px;
+  }
+}
+.form-group {
+  margin-bottom: 0.2rem !important;
+}
+.list-group-item {
+  transition: transform 0.2s;
+}
+
+.list-group-item:hover {
+  transform: scale(1.02);
+  background-color: #e9ecef; /* Slightly darker background on hover */
+}
+
+.pl-9{
+  padding-left: 9px !important;
+}
+
+.themecolor{
+  color: white;
+  background-color: #2a4646;
+}
+.themecolor:hover{
+  color: white;
+  background-color: #2a4646c2;
+}
+.btn-warning{
+  background-color: rgb(199, 153, 4) !important;
+  border-color:  rgb(199, 153, 4) !important;
+  color: white;
+}
+.pr-20 i {
+  visibility: hidden;
+  transition: visibility 0.2s, opacity 0.2s;
+  opacity: 0;
+}
+tr:hover .pr-20 i {
+  visibility: visible;
+  opacity: 1;
+}

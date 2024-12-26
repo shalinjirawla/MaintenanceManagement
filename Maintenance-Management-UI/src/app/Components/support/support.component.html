@@ -1,0 +1,17 @@
+<div class="support-container ">
+    <div class="support-card" *ngFor="let supportType of supportTypes">
+      <i [class]="supportType.icon"></i>
+      <h4>{{ supportType.title }}</h4>
+      <p>{{ supportType.description }}</p> 
+      <!-- <button class="btn-themcolor btn-sm" [routerLink]="supportType.route">Learn More</button>     -->
+      <button class="btn-themcolor btn-sm" [routerLink]="supportType.route">
+        {{ supportType.title === 'Technical Support' ? 'Get Help' 
+          : supportType.title === 'Customer Complaints' ? 'File Complaint' 
+          : supportType.title === 'Knowledge Base' ? 'Browse Articles' 
+          : 'Explore' }}
+      </button>
+      
+    </div>
+    
+  </div>
+  

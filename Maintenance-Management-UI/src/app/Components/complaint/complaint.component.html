@@ -1,0 +1,152 @@
+<div class="mt-2">
+  <div class="">
+
+    <!-- Data Content-->
+    <div
+      class="d-flex justify-content-between align-items-center pb-2 px-2"
+    >
+      <div class="d-flex">
+        <div class="dropdown me-2">
+          <button
+            class="btn btn-sm btn-outline-secondary dropdown-toggle"
+            type="button"
+            id="assetDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Filters
+          </button>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <input
+          type="text"
+          class="search me-2"
+          placeholder="Search"
+          style="width: 150px"
+          [(ngModel)]="searchTerm"
+          (keyup)="searchWorkOrder()"
+        />
+        <button
+          class="btn btn-sm btn-themecolor d-none d-md-inline"
+          *ngIf="!isadmin"
+          (click)="openModal()"
+        >
+          Add Complaint
+        </button>
+      </div>
+    </div>
+        <!-- No Data Found -->
+        <div class="card card-body p-4 mx-2" *ngIf="complaint.length <= 0">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="">
+              <h4 class="card-title mb-1"></h4>
+            </div>
+          </div>
+          <div class="pt-2 text-center">
+            <p class="text-muted h5">No Data Found !</p>
+          </div>
+          <div class="pt-5 text-center">
+            <button
+              class="btn btn-themecolor d-none d-md-inline"
+              (click)="openModal()"
+              *ngIf="!isadmin" >
+              Add Complaint
+            </button>
+            <button
+              class="btn btn-sm btn-outline-themecolor d-md-none"
+              (click)="openModal()"
+            >
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+    <div *ngIf="complaint.length > 0">
+      <div *ngIf="!isLoading">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th class="pl-50">Customer ID</th>
+              <th>WorkRequest ID</th>
+              <th>Attachment</th>
+              <th>Title</th>
+              <th>Complaint Date</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th class="pr-50" *ngIf="isadmin">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="cursor: pointer; vertical-align: middle" *ngFor="let item of complaint">
+              <td class="pl-50">{{ item.customerID }}</td>
+              <td>{{ item.workRequestID }}</td>
+              <td style="cursor: pointer;"> <img [src]="item.attachment"style="width: 50px; height: 50px;" *ngIf="item.attachment" (click)="openImageModal(item.attachment)"  /></td>                        
+              <td>{{ item.title }}</td>
+              <td>{{ item.complaintDate | date : "dd-MM-yyyy" }}</td>
+              <td>{{ item.priority }}</td>
+              <td>
+                <!-- Display different statuses based on item.status value -->
+                <span class="badge-pending" *ngIf="item.status === 0"
+                  >Pending</span
+                >
+                <span class="badge-declined" *ngIf="item.status === 1"
+                  >Review</span
+                >
+                <span  class="badge-accepted"  *ngIf="item.status === 2">In Progress</span>
+                <span  class="badge-complate"  *ngIf="item.status === 3">Resolved</span>
+                <!-- Add more status options as needed -->
+              </td>
+              <td *ngIf="isadmin" class="pr-50">
+                <a
+                  class="topimport"
+                  id="assignedToDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class=" text-themecolor fa fa-ellipsis-v actionicon"></i>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="assignedToDropdown">
+                  <li>
+                    <a class="dropdown-item" *ngIf="item.status!=3" (click)="openModal(item)">Review</a>
+                    <a class="dropdown-item" *ngIf="item.status!=3" (click)="openModalworkorder(item)">Reassign</a>
+                    <a class="dropdown-item" (click)="openResolveModal(item)">Resolved</a>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <app-complaintmodel
+    [item]="selectedItem"
+    (close)="closeModal()"
+    *ngIf="isModalOpen"
+  >
+  </app-complaintmodel>
+  <app-workorderreassign
+  [item]="selectedItem"
+  (close)="EditworkorderModalOpen = false"
+  (close)="closeModal()"
+  *ngIf="EditworkorderModalOpen"
+>
+</app-workorderreassign>
+</div>
+<div class="full-screen-loader" *ngIf="isLoading">
+  <div class="spinner-border text-dark" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<!-- Inline Modal -->
+<div 
+  class="image-modal" 
+  *ngIf="selectedImage" 
+  (click)="closeImageModal()"
+>
+  <img [src]="selectedImage" class="modal-image" />
+</div>
+

@@ -1,0 +1,136 @@
+<div class="mt-2">  
+    <!-- Add Item Button -->    
+    <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+        <div class="d-flex">
+            <div class="dropdown me-2">
+              <button class="btn btn-sm filterbtn dropdown-toggle" type="button" id="assetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Filters
+              </button>
+              <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+                <li>
+                    <div>
+                        <form #filterForm="ngForm">
+                          <div class="form-group row">
+                        
+                              <div class="col-lg-6 form-group m-0">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" name="name" class="form-control" [(ngModel)]="filters.name">              
+                              </div> 
+                        
+                            <div class="col-lg-6 form-group m-0">
+                              <label for="companyname" class="form-label">Company Name</label>
+                              <input type="text" class="form-control" [(ngModel)]="filters.companyname" name="companyname">
+                            </div>
+                                                                
+                          </div>
+                          <div class="form-group row">
+                        
+                              <div class="col-lg-6 form-group m-0">
+                                <label for="contact" class="form-label">Contact</label>
+                                <input type="text" id="contact" name="contact" class="form-control" [(ngModel)]="filters.contact">             
+                              </div>   
+                              <div class="col-lg-6 form-group m-0">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" id="email" name="email" class="form-control" [(ngModel)]="filters.email">             
+                              </div>                                     
+
+                            </div>
+                            <div class="form-group row">
+                        
+                              <div class="col-lg-6 form-group m-0">
+                                <label for="username" class="form-label">Contact Person</label>
+                                <input type="text" id="username" name="username" class="form-control" [(ngModel)]="filters.username">             
+                              </div>   
+                             
+                              <div class="col-lg-6 form-group pt-2">
+                                <button type="button" class="btn btn-sm btn-primary mt-2" (click)="applyFilters()">Apply Filters</button>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+            </div>
+          </div>
+        <div class="d-flex align-items-center">
+          <input
+              type="text"
+              class="search me-2"
+              placeholder="Search"
+              style="width: 150px"
+              [(ngModel)]="searchTerm"
+              (keyup)="searchlocation()"               
+            />
+            <button class="btn btn-sm btn-themecolor d-none d-md-inline" (click)="OpenModal()"><i class="fa fa-plus fa-xs"></i> New</button>
+        </div>
+    </div>
+    <div class="card card-body p-4 mx-2" *ngIf="!filteredvendor || filteredvendor.length === 0">
+      <div class="d-flex justify-content-between align-items-center">
+          <!-- Work Order Title and Status -->
+          <div class="">
+              <h4 class="card-title mb-1"></h4>
+          </div>            
+      </div>  
+      <div class="pt-2 text-center">
+          <p class="text-muted h5">No Data Found !</p>
+      </div>
+      <div class="pt-5 text-center">
+          <button class="btn btn-themecolor d-none d-md-inline" (click)="OpenModal()">Add Vendor</button>
+         
+          <button class="btn btn-sm btn-outline-themecolor d-md-none"  (click)="OpenModal()"><i class="fa fa-plus"></i></button>
+      </div>      
+  </div>
+    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="Deletevendor()"  style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+    <!-- Inventory Items Table -->
+    <div *ngIf="!isLoading">
+    <table class="table"  *ngIf="filteredvendor.length > 0">
+      <thead>
+        <tr>
+          <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /></th>
+          <th >Name</th>
+          <th  >Company Name</th>
+          <th>Contact</th>
+          <th>Email</th>
+          <th>Contact Person</th>
+          <th class="pr-50">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredvendor">
+          <td class="pl-50"><input type="checkbox" [(ngModel)]="item.selected" (change)="updateSelection()" /> </td>
+          <td>{{item.name}}
+          </td>
+          <td>{{item.companyName}}</td>
+          <td>{{item.contactNumber}}</td>
+          <td>{{item.email}}</td>
+          <td>{{item.contactPerson}}</td>
+        
+          <td class="pr-50">
+            <button class="btn btn-sm2 btn-primary me-1" (click)="Viewvendor(item)"> <i class="fa fa-eye"></i></button>
+            <button class="btn btn-sm2 btn-success me-1" (click)="OpenModal(item)"> <i class="fa fa-pen" ></i></button>
+            <button class="btn btn-sm2 btn-danger me-1" (click)="Deletevendor(item.id)"> <i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+
+
+
+      </tbody>
+    </table>
+    </div>
+</div>
+<app-vendormodel
+[item]="selectedItem"
+*ngIf="isModalOpen"
+(close)="closeModal()"> 
+</app-vendormodel>
+<app-vendorviewmodel
+[item]="selectedItem"
+*ngIf="isViewModalOpen"
+(close)="closeModal()">
+</app-vendorviewmodel>
+
+<div class="full-screen-loader" *ngIf="isLoading">
+  <div class="spinner-border text-dark" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>

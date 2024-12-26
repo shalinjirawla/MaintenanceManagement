@@ -1,0 +1,48 @@
+.card{
+    border-radius: 0px;
+}
+.btn-part{
+    color: rgb(31, 134, 230); 
+    font-size: 13px;
+    background-color: rgb(238, 238, 238);   
+    border-radius: 0px;
+}
+.btn-part:hover{
+    background-color: rgb(231, 231, 231);  
+    border-radius: 0px;
+
+}
+.pt-18rem{
+    padding-top: 1.8rem;
+}
+
+
+@keyframes slideInFromRight {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .slide-in-right {
+    animation: slideInFromRight 0.6s ease-out forwards;
+  }
+  
+  @keyframes borderSlideIn {
+    0% {
+      border-right-width: 0;
+    }
+    100% {
+      border-right-width: 5px; /* You can adjust the border width */
+    }
+  }
+  
+  .animate-border-right {
+    animation: borderSlideIn 0.1s ease-out forwards;
+    border-right: 5px solid transparent; /* Initial state of the border */
+  }
+  

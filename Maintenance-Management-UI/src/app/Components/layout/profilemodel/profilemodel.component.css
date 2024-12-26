@@ -1,0 +1,20 @@
+.form-labelp{
+    font-size: 14px;
+}
+.modal-dialog {
+    width: 480px !important;
+}
+.profile-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #2a4646;
+    background-color: #2a4646;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .bold{
+    font-weight: 700 !important;
+  }

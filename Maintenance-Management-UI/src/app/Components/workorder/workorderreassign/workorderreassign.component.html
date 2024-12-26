@@ -1,0 +1,168 @@
+<!-- Modal for Creating Request -->
+<div class="modal-overlay" tabindex="-1" [ngClass]="{ show: true }">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reassign Work</h5>
+        <button type="button" class="btn-close col-1" (click)="closeModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="workorderForm" (ngSubmit)="onSubmit(item.id)">
+        <div class="modal-body formdiv">
+          <div class="">
+            <!-- Main content column -->
+            <div class="form-group">
+              <label for="title" class="form-label"
+                >Title<span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                formControlName="title"
+                class="form-control"        
+                required
+                [readOnly]="true"
+              />              
+            </div>
+            <div class="form-group">
+              <label for="description" class="form-label"
+                >Description<span class="text-danger">*</span></label
+              >
+              <textarea
+                formControlName="description"
+                class="form-control"
+                required
+                [readOnly]="true"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="priority" class="form-label"
+                >Priority<span class="text-danger">*</span></label
+              >
+              <select
+                id="priority"
+                formControlName="priority"
+                class="form-control"
+                required
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+                <label for="category" class="form-label"
+                >Category<span class="text-danger">*</span></label
+                >
+                <select
+                id="category"
+                formControlName="category"
+                class="form-control"
+                required
+                >
+                <option value="1">Damage</option>
+                <option value="2">Electrical</option>
+                <option value="3">Inspection</option>
+                <option value="4">Meter Reading</option>
+                <option value="5">Safety</option>
+            </select>
+            </div>
+            <div class="form-group">
+            <label for="location" class="form-label"
+            >Location<span class="text-danger">*</span></label
+            >
+            <select id="location"  name="location"  required class="form-control" formControlName="location" required>
+              <option [ngValue]="''" >Select Location</option>
+              <option *ngFor="let location of location" [ngValue]="location.id">{{location.description}} ,{{location.name}}</option>
+          </select>
+        
+            </div>
+            <div class="form-group">
+                <label for="asset" class="form-label"
+                >Assets </label
+                >
+                <select id="assets" name="assets" class="form-control" formControlName="asset">
+                  <option [ngValue]="null">Select assets</option>
+                  <option *ngFor="let asset of assets" [ngValue]="asset.assetName">{{ asset.assetName }}</option>
+              </select>
+            </div>
+    
+            <div class="form-group">
+              <label class="form-label"
+                >Start Date & Time<span class="text-danger">*</span></label
+              >
+              <input
+                type="datetime-local"
+                class="form-control"
+                formControlName="startDate"
+              />
+              <div *ngIf="workorderForm.get('startDate')?.touched && workorderForm.get('startDate')?.invalid">
+                <small class="text-danger" *ngIf="workorderForm.get('startDate')?.hasError('required')">Start date is required.</small>
+              </div>
+            </div>
+   
+            <div class="form-group">
+              <label class="form-label"
+                >Due Date & Time<span class="text-danger">*</span></label
+              >
+              <input
+                type="datetime-local"
+                class="form-control"
+                formControlName="dueDate"
+                (change)="Checkawailable()"
+              />
+              <div *ngIf="workorderForm.get('dueDate')?.touched && workorderForm.get('dueDate')?.invalid">
+                <small class="text-danger" *ngIf="workorderForm.get('dueDate')?.hasError('required')">Due date is required.</small>
+                <small class="text-danger" *ngIf="workorderForm.hasError('invalidDateRange')">Due date must be after the start date.</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label for="assignedTo" class="form-label"
+                  >Primary Employee<span class="text-danger">* </span
+                  ></label
+                >
+                <select        
+                  class="form-control"
+                  formControlName="assignedTo"
+                  required
+                >
+                  <!-- <option value="null" disabled>Select Employee</option> -->
+                  <option
+                    *ngFor="let employee of availableEmployees"
+                    [value]="employee.userID"
+                  >
+                    {{ employee.username }}
+                  </option>
+                </select>
+              
+              </div>
+            <div class="form-group">
+                <label class="form-label ">Comment<span class="text-danger">*</span></label>
+                <textarea formControlName="comment" class="form-control"></textarea>
+                <div *ngIf="workorderForm.get('comment')?.touched && workorderForm.get('comment')?.invalid">
+                  <small class="text-danger" *ngIf="workorderForm.get('comment')?.hasError('required')">Comment is required.</small>
+                  <small class="text-danger" *ngIf="workorderForm.get('comment')?.hasError('minlength')">Comment must be at least 5 characters long.</small>
+                </div>
+            </div>
+    <!-- End Approved time -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <ng-container>
+            <button
+              type="button"
+              class="btn btn-sm btn-danger"
+              (click)="closeModal()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-sm btn-success">
+              Submit
+            </button>
+          </ng-container>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

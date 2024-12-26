@@ -1,0 +1,30 @@
+  /* Modal Dialog */
+  .modal-dialog {
+    background: white;
+    border-radius: 0px !important;
+    width: 800px !important;
+    max-width: 90%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+    /* Modal Dialog */
+    .modal-dialog2 {
+      background: white;
+      border-radius: 0px !important;
+      width: 400px !important;
+      max-width: 90%;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .modal-dialog2 {
+      animation: slideIn 0.5s ease; /* Smooth slide-in animation */
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px); /* Start slightly above */
+        opacity: 0; /* Start invisible */
+      }
+      to {
+        transform: translateY(0); /* End at original position */
+        opacity: 1; /* Fully visible */
+      }
+    }

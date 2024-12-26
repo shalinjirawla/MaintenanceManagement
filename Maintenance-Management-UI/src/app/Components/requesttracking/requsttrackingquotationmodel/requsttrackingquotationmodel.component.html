@@ -1,0 +1,72 @@
+<!-- Modal for Creating Request -->
+<div *ngIf="QuotationModalOpen" class="modal-overlay" tabindex="-1" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send Service Estimate</h5>
+               
+                <button type="button" class="btn-close col-1" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form  #requestForm="ngForm">
+                <div class="modal-body">
+                    <div class=""> <!-- Main content column -->
+                        <div class="form-group">
+                            <label for="title" class="form-label">Title<span class="text-danger">*</span></label>
+                            <input type="text" id="title" name="title" class="form-control" disabled="true" [(ngModel)]="workorder.title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                            <input type="text" id="description" name="description" class="form-control" disabled="true" [(ngModel)]="workorder.description" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="priority" class="form-label">Priority<span class="text-danger">*</span></label>
+                            <select id="priority" name="priority" class="form-control" disabled="true" [(ngModel)]="workorder.priority" required>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                            <input type="email" id="email" name="email" disabled="true" class="form-control" [(ngModel)]="quotation.email" required>
+                        </div>  
+                        <div class="form-group">
+                            <label for="location" class="form-label">Location<span class="text-danger">*</span></label>
+                            <select id="location"  name="location" #locationModel="ngModel"  disabled="true" required class="form-control" [(ngModel)]="workorder.location" required>
+                                <option [ngValue]="''" >Select Location</option>
+                                <option *ngFor="let location of location" [ngValue]="location.id">{{location.description}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="estimatedCost" class="form-label">Estimated Cost<span class="text-danger">*</span></label>
+                            <input type="text" id="estimatedCost" maxlength="6" (input)="onCostNumberInput($event)" #estimatedCost="ngModel" placeholder="Enter Estimated Cost" name="estimatedCost" [ngClass]="{'is-invalid': estimatedCost.invalid && estimatedCost.touched}" class="form-control" [(ngModel)]="quotation.estimatedCost" required>
+                            <div *ngIf="estimatedCost.invalid && estimatedCost.touched" class="text-danger">
+                                <small *ngIf="estimatedCost.errors?.['required']">Estimated Cost is required.</small>                                
+                              </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="time" class="form-label">Estimated Time<span class="text-danger">*</span></label>
+                            <input type="text" id="time" name="time" placeholder="Enter Estimated Time (e.g., 2 hr, 3 days)" class="form-control"  #time="ngModel" [ngClass]="{'is-invalid': time.invalid && time.touched}" [(ngModel)]="quotation.time" pattern="^\d+\s?(hr|days)$"  required>
+                            <div *ngIf="time.invalid && time.touched" class="text-danger">
+                                <small *ngIf="time.errors?.['required']">Estimated Time is required.</small>
+                                <small *ngIf="time.errors?.['pattern']">Please enter a valid time format (e.g., 2 hr, 3 days).</small>
+                              </div>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="modal-footer">                
+                        <ng-container>
+                            <button type="button" class="btn btn-sm btn-danger" (click)="closeModal()">Close</button>                            
+                            <button type="button" class="btn btn-sm btn-success" (click)="sendQuotation(workorder.id,workorder.createdBy)" [disabled]="requestForm.invalid">Send Estimate</button>
+                        </ng-container>                    
+                
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+

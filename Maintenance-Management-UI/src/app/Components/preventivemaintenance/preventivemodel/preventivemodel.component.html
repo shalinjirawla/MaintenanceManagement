@@ -1,0 +1,305 @@
+<div class="modal-overlay" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- <div class="modal-header">
+                <h5 class="modal-title">Create PM</h5>
+                <button type="button" class="btn-close col-1" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div> -->
+            <form [formGroup]="preventiveForm" (ngSubmit)="onSubmit()">
+                <div class="modal-header d-flex justify-content-center border-bottom pb-0">
+                      <!-- Tab Titles -->
+                      <ul class="nav nav-tabs">
+                        <li class="nav-item me-3">
+                            <a class="nav-link" [class.active]="selectedTab === 'details'" (click)="selectedTab = 'details'">Details</a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link" [class.active]="selectedTab === 'schedule'" (click)="selectedTab = 'schedule'">Schedule</a>
+                        </li>
+                    </ul>
+                </div>      
+                <div class="modal-body formdiv"> 
+                    <!-- Tab Content -->
+                    <div *ngIf="selectedTab === 'details'">
+                        <div class="px-5 pt-4">
+                            <h5>PM Details</h5>
+                            <div class="form-group row pt-4">
+                                <label for="title" class="form-label col-lg-3">Title<span class="text-danger">*</span></label>
+                                <div class=" col-lg-9">
+                                <input type="text" id="title" formControlName="title" class="form-control" placeholder="Enter Title" />
+                                <div *ngIf="preventiveForm.get('title')?.invalid && preventiveForm.get('title')?.touched" class="text-danger">
+                                <label class="form-label-invalid">Title is required.</label>
+                                </div>
+                                </div>
+                            </div>
+                                <div class="form-group row pt-2">
+                                <label for="priority" class="form-label col-lg-3">Priority <span class="text-danger">*</span></label>
+                                <div class=" col-lg-9">
+                                <select id="priority" formControlName="priority" class="form-control">
+                                    <option value="">Select priority</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                                <div *ngIf="preventiveForm.get('priority')?.invalid && preventiveForm.get('priority')?.touched" class="text-danger">
+                                    <label class="form-label-invalid">Priority is required.</label>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="form-group row pt-2">
+                                <label for="category" class="form-label col-lg-3">Category <span class="text-danger">*</span></label>
+                                <div class=" col-lg-9">
+                                <select id="category" formControlName="category" class="form-control">
+                                    <option value="">Select category</option>
+                                    <option value="Electrical">Electrical</option>
+                                    <option value="Damage">Damage</option>
+                                    <option value="Inspection">Inspection</option>
+                                    <option value="Preventetive">Preventetive</option>
+                                </select>
+                                <div *ngIf="preventiveForm.get('category')?.invalid && preventiveForm.get('category')?.touched" class="text-danger">
+                                    <label class="form-label-invalid">Category is required.</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row pt-2">
+                            <label for="asset" class="form-label col-lg-3">Assets <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                <select id="asset" formControlName="asset" class="form-control">
+                                    <option [ngValue]="null">Select assets</option>
+                                    <option *ngFor="let asset of assets" [ngValue]="asset.id">{{ asset.assetName }}</option>
+                                  </select>
+                                  
+                                <div *ngIf="preventiveForm.get('asset')?.invalid && preventiveForm.get('asset')?.touched" class="text-danger">
+                                    <label class="form-label-invalid">Asset is required.</label>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="form-group row pt-2">
+                                <label for="location" class="form-label col-lg-3">Location<span class="text-danger">*</span></label>
+                                <div class=" col-lg-9">                               
+                                <select id="assignTo" formControlName="location" class="form-control">
+                                    <option [ngValue]="null">Select Location</option>
+                                    <option *ngFor="let location of location" [ngValue]="location.id">{{location.description}}</option>
+                                  </select>
+                                <div *ngIf="preventiveForm.get('location')?.invalid && preventiveForm.get('location')?.touched" class="text-danger">
+                                    <label class="form-label-invalid">Location is required.</label>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="form-group row pt-2">
+                                <label for="assignTo" class="form-label col-lg-3"> Assign To<span class="text-danger">*</span></label>
+                                <div class=" col-lg-9">
+                                    <select id="assignTo" formControlName="assignTo" class="form-control">
+                                        <option [ngValue]="null">Select assignee</option>
+                                        <option *ngFor="let emp of employee" [ngValue]="emp.userID">{{ emp.username }}</option>
+                                      </select>
+                                      
+                                <div *ngIf="preventiveForm.get('assignTo')?.invalid && preventiveForm.get('assignTo')?.touched" class="text-danger">
+                                    <label class="form-label-invalid">assets is required.</label>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="form-group row pt-2">
+                                <label class="form-label col-lg-3">Start Date<span class="text-danger">*</span></label>
+                                <div class="col-lg-9">
+                                    <input type="datetime-local" class="form-control"  formControlName="startDate" [min]="minDateTime"  (change)="onStartDateChange($event)">
+                                </div>
+                            </div>
+                            <div class="form-group row pt-2">
+                                <label class="form-label col-lg-3">Due Date<span class="text-danger">*</span></label>
+                                <div class="col-lg-9">
+                                    <input type="datetime-local" class="form-control" formControlName="dueDate" [min]="dueDateMin">
+                                </div>                                
+                            </div>
+                            <div class="form-group row pt-2">
+                                <label for="description" class="form-label col-lg-3">Description<span class="text-danger">*</span></label>
+                                <div class="col-lg-9">
+                                <textarea type="text" id="description" formControlName="description" class="form-control" placeholder=""></textarea>
+                                <!-- <div *ngIf="assetsForm.get('description')?.invalid && assetsForm.get('description')?.touched" class="text-danger">
+                                <label class="form-label-invalid">description is required.</label>
+                                </div> --></div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div *ngIf="selectedTab === 'schedule'">
+                        <div class="px-5 pt-4">
+                            <h5>Structure</h5>
+                            <label class="form-labelp pt-3">Schedules tell CMMS when and how to create WOs. They're applied to PM records that specify asset, start date, and more.</label>
+                            
+                            <div class="form-group row pt-3">
+                                <div class="col-lg-05 pt-2">
+                                    <input type="radio" id="calendar" 
+                                   
+                                    checked [disabled]="isCalanderScheduleAdded "  name="structure" value="Calendar" class="mt-1">
+                                </div>
+                                <div class="col-lg-11"> 
+                                    <label for="calendar" class="form-label mb-0">Calendar</label><br>
+                                    <label class="form-labelp"> WOs are due regularly, or when the previous one is completed.</label>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center pt-3">
+
+                                  <!-- card add option -->
+                                <div class="card p-3 w-75" *ngIf="!isCalanderScheduleAdded">
+                                    <h5>Calendar Schedules</h5>
+                                    <div class="d-grid pt-2">
+                                        <!-- Show Add Schedule button only if Calendar structure is selected -->
+                                        <button type="button"  class="btn btn-light btnadd" (click)="addcalanderSchedule()">Add Calendar Schedule</button>
+                                        <!-- Show Add Schedule button only if Meter structure is selected -->
+                                        <!-- <button type="button" *ngIf="selectedStructure === 'Meter'" class="btn btn-light btnadd" (click)="addmeterSchedule()">Add Meter Schedule</button> -->
+                                    </div>
+                                </div>
+
+                                  <!-- card add Calander Schedule-->
+                                <div class="card p-3 w-100" *ngIf="isCalanderScheduleAdded">
+                                    <div class="d-flex justify-content-between">
+                                        <h5>Add Calendar Schedule</h5>
+                                        <button type="button" class="btn btn-light me-2 btn-sm circle-btn" (click)="cancelcalanderSchedule()"><span>&times;</span></button>
+
+                                    </div>                                    
+                                    <div>                                    
+                                            <div class="form-group row py-3 border-bottom">
+                                                <div class="col-lg-3">
+                                                    <label class="form-label">Schedule Type</label>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="d-flex dropdown btn btn-light btnadd">
+                                                        <div class="topimport px-2 d-flex align-items-center w-100" id="assignedToDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                       
+                                                            {{ selectedscheduletype || 'Regular Inter' }}
+                                                            <i class="fa fa-angle-down ms-auto"></i>
+                                                        </div>
+                                                        <ul class="dropdown-menu" aria-labelledby="assignedToDropdown">
+                                                            <li><a class="dropdown-item" (click)="selectOption('Regular Inter')">Regular Inter</a></li>
+                                                            <li><a class="dropdown-item" (click)="selectOption('After Completion')">After Completion</a></li>
+                                                        </ul>           
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                            <div class="form-group row pt-2 pb-2 border-bottom">
+                                              
+                                                <div class="col-lg-3">
+                                                    <label class="form-label">WOs Due</label>
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <label class="form-labelp">Every</label>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <input type="number" class="form-control" formControlName="frequencyInterval">
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <div class="d-flex dropdown btn btn-light btnadd">
+                                                        <div class="topimport px-2 d-flex align-items-center w-100"  data-bs-toggle="dropdown" aria-expanded="false">
+                                                            {{ selectedFrequencyType || 'Day(s)' }}
+                                                            <i class="fa fa-angle-down ms-auto"></i> 
+                                                        </div>
+                                                        <ul class="dropdown-menu" aria-labelledby="frequencyDropdown">
+                                                            <li><a class="dropdown-item" (click)="selectFrequencyType('Day(s)')">Day(s)</a></li>
+                                                            <li><a class="dropdown-item" (click)="selectFrequencyType('Week(s)')">Week(s)</a></li>
+                                                            <li><a class="dropdown-item" (click)="selectFrequencyType('Month(s)')">Month(s)</a></li>
+                                                            <li><a class="dropdown-item" (click)="selectFrequencyType('Year(s)')">Year(s)</a></li>
+                                                        </ul>           
+                                                    </div>                                                    
+                                                </div>
+                                           
+                                                <!-- Show days of the week when "Week(s)" is selected -->
+                                                <div class="form-group row m-0" *ngIf="selectedFrequencyType === 'Week(s)'">
+                                                    <div class="col-lg-3"></div>
+                                                    <div class="d-flex justify-content-start flex- col-lg-9 pt-2" style="padding-left: px;">
+                                                      <div *ngFor="let day of daysOfWeek" class="pe-3">
+                                                        <label>
+                                                          <input type="checkbox" [checked]="selectedDays.includes(day)" (change)="toggleDay(day)" />
+                                                          {{ day }}
+                                                        </label>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                           
+                                            </div>
+                                              
+                                            <div class="form-group row pt-3  mb-0">
+                                                <div class="col-lg-3">
+                                                    <label class="form-label">Create WOs</label>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-1">
+                                                            <input type="radio" checked id="op1" formControlName="wos" [(ngModel)]="selectedOption" [value]="1" />
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <input type="text" formControlName="workOrderDue" class="form-control" [disabled]="selectedOption !== 1" />
+                                                        </div>
+                                                        <div class="col-lg-4 pl-0">
+                                                            <button type="button" class="d-flex dropdown btn btn-light btnadd ms-auto w-100" [disabled]="selectedOption !== 1">
+                                                                <div class="topimport px-2 d-flex align-items-center w-100" id="assignedToDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    {{selectedadvanceCreationPeriod || 'Day(s)'}}
+                                                                    <i class="fa fa-angle-down ms-auto"></i>
+                                                                </div>
+                                                                <ul class="dropdown-menu" aria-labelledby="assignedToDropdown">
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Day(s)')">Day(s)</a></li>
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Week(s)')">Week(s)</a></li>
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Month(s)')">Month(s)</a></li>
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Year(s)')">Year(s)</a></li>
+                                                                </ul>           
+                                                            </button>
+                                                            
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <label class="form-labelp"> before the due date</label>
+                                                        </div>
+                                                    </div>
+                                                
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-1">
+                                                            <input type="radio" id="op2" formControlName="wos" [(ngModel)]="selectedOption" [value]="2" />                                                            
+                                                        </div>
+                                                        <div class="col-lg-2 pl-0">
+                                                            <label class="form-labelp">On the</label>
+                                                        </div>
+                                                        <div class="col-lg-5 pl-0">
+                                                            <button type="button" class="d-flex dropdown btn btn-light btnadd w-100"  [disabled]="selectedOption !== 2">
+                                                                <div class="topimport px-2 d-flex align-items-center w-100" id="assignedToDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    {{selectedadvanceCreationPeriod || 'Sun'}}
+                                                                    <i class="fa fa-angle-down ms-auto"></i>
+                                                                </div>
+                                                                <ul class="dropdown-menu" aria-labelledby="assignedToDropdown">
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Sun')">Sun</a></li>
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Tue')">Tue</a></li>
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Wed')">Wed</a></li>
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Thu')">Thu</a></li>
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Fri')">Fri</a></li>
+                                                                    <li><a class="dropdown-item" (click)="selectadvancecreation('Sat')">Sat</a></li>
+                                                                </ul>           
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <label class="form-labelp"> before the due date</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                        
+                                    </div>
+                                    <div class="text-end">
+                                      
+                                      
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>                        
+                    </div>                
+                    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                </div>
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeviewModal()">Cancel</button>
+                    <button type="submit" [disabled]="!preventiveForm.valid" class="btn btn-success btn-sm btn-block">{{isedit? 'Edit PM' : 'Create PM'}}</button>
+                                
+                </div>
+            </form>            
+        </div>
+    </div>
+</div>

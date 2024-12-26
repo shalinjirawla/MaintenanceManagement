@@ -1,0 +1,7 @@
+.desc{
+    text-align: justify;
+    text-justify: inter-word;
+}
+.bglbl{
+    border-bottom: solid 1px rgb(185, 185, 185);
+}

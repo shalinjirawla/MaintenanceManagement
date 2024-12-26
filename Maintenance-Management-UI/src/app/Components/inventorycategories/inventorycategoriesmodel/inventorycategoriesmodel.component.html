@@ -1,0 +1,36 @@
+<div class="modal-overlay" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ item?.id ? 'Edit Category' : 'Add Category' }}</h5>
+                <button type="button" class="btn-close col-1" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+            <div class="modal-body">
+                    <input type="text" id="id" formControlName="id" hidden />
+                    <div class="form-group">
+                        <label for="categoryName" class="form-label">Category Name<span class="text-danger">*</span></label>
+                        <input type="text" id="categoryName" formControlName="categoryName" class="form-control" placeholder="Enter categoryName" />
+                        <div *ngIf="categoryForm.get('categoryName')?.invalid && categoryForm.get('categoryName')?.touched" class="text-danger">
+                           <label class="form-label-invalid"> Category Name is required.</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                        <input type="text" id="description" formControlName="description" class="form-control" placeholder="Enter your description" />
+                        <div *ngIf="categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched" class="text-danger">
+                           <label class="form-label-invalid"> Description is required.</label>
+                        </div>
+                    </div>
+                        
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-success btn-sm btn-block" >Save</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

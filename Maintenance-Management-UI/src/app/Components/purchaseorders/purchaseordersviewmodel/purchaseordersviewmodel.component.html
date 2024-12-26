@@ -1,0 +1,180 @@
+<div class="container px-90">
+    <div class="pt-3">
+        <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+        <i class="fa fa-arrow-left ml-8" (click)="closeModal()"></i>
+        <div>
+        <button
+        *ngIf="purchaseorder?.status!='Fulfilled'"
+        type="button"
+        class="btn btn-danger btn-sm btn-block"
+        (click)="closeModal()"
+      >
+        Decline
+      </button>&nbsp;
+      <button
+      *ngIf="purchaseorder?.status=='Awaiting'"
+        type="button"
+        class="btn btn-success btn-sm btn-block"
+        (click)="PurchaseOrderStatus(purchaseorder?.status??'',purchaseorder?.id ?? 0)"
+      >Approve</button>
+
+      <button
+      *ngIf="purchaseorder?.status=='Approved'"
+      type="button"
+      class="btn btn-success btn-sm btn-block"
+      (click)="PurchaseOrderStatus(purchaseorder?.status??'',purchaseorder?.id ?? 0)"
+    > Fulfill</button>
+   
+    
+    </div>
+    </div>
+    </div>
+    <form  >
+      <div class="modal-body">
+        <input type="text" id="id" formControlName="id" hidden />
+        <div class="form-group row">
+            <div class="card card col-lg-4 p-3">
+                <b>Details</b>
+                <div class="form-group row pt-2">
+                    <label class="form-label col-lg-4">PO Number</label>
+                    <label class="form-label col-lg-8">{{purchaseorder?.orderNumber}}</label>     
+            </div>
+                <div class="form-group row">
+                    <label for="title" class="form-label col-lg-4"
+                        >Status</label>
+                    <span *ngIf="purchaseorder?.status=='Awaiting'" class="form-label  col-lg-3 badge-pending">{{purchaseorder?.status}}</span>
+                    <span *ngIf="purchaseorder?.status=='Approved'" class="form-label  col-lg-3 badge-complate">{{purchaseorder?.status}}</span>
+                    <span *ngIf="purchaseorder?.status=='Fulfilled'" class="form-label  col-lg-3 badge-accepted">{{purchaseorder?.status}}</span>
+                </div>  
+                <div class="form-group row">
+                    <label for="vendorId" class="form-label col-lg-4">Vendor </label
+                    >
+                    <label class="form-label col-lg-8">{{purchaseorder?.vendor?.name}}</label> 
+                </div> 
+                <div class="form-group row">
+                    <label for="expectedDeliveryDate" class="form-label col-lg-4"
+                    >Due Date </label>      
+                    <label class="form-label col-lg-8">{{purchaseorder?.expectedDeliveryDate | date:'dd-MM-yyyy'}}</label> 
+                </div> 
+                <div class="form-group row">
+                    <label for="expectedDeliveryDate" class="form-label col-lg-4"
+                    >PO Date</label>      
+                    <label class="form-label col-lg-8">{{purchaseorder?.dateCreated | date:'dd-MM-yyyy'}}</label> 
+                </div>  
+                <div class="form-group row">
+                    <label for="title" class="form-label col-lg-4"
+                        >Cost </label>
+                    <label class="form-label col-lg-8">{{purchaseorder?.totalAmount| currency: 'INR': 'symbol'}}</label>
+                </div>   
+                    
+                
+              
+            </div>   
+            <div class="col-lg-8" style="padding-right: 0px;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Part Number</th>
+                                <th>Cost</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr  *ngFor="let item of purchaseorder?.purchaseOrderItems">
+                                <td>{{item.itemName}}</td>
+                                <td>{{item.id}}</td>
+                                <td>{{item.cost| currency: 'INR': 'symbol'}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.cost * item.quantity}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="form-group row ">
+                        <div class="col-lg-7"> 
+                        </div> 
+                        <div class="col-lg-5"> 
+                            <div class="form-group row">
+                                <label class="form-label col-lg-5">Subtotal</label>
+                                <label class="form-label col-lg-4 text-end">{{ subtotal | currency: 'INR': 'symbol'}}</label>
+                            </div><hr>
+                           
+                            <div class="form-group row">
+                                <label class="form-label col-lg-5">Other Costs</label> 
+                                <label class="form-label col-lg-4 text-end">  {{ (purchaseorder?.totalAmount ?? 0) - subtotal | currency: 'INR': 'symbol'}}</label>
+                            </div><hr>
+                            <div class="form-group row">
+                                <label class="form-label col-lg-5"><b>Total</b></label>
+                                <label class="form-label col-lg-4 text-end"  for="totalAmount"><b>{{purchaseorder?.totalAmount| currency: 'INR': 'symbol'}}</b></label>
+                            </div>
+                        </div>                      
+                    </div>
+            </div>                      
+            </div>
+      </div>
+
+    </form>
+  </div>
+  
+  <div class="modal-overlay" *ngIf="Openfulfill">
+    <div class="modal-dialog" style="width: 550px !important;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Fulfill Purchase Order</h5>
+          <button
+            type="button"
+            class="btn-close col-1" 
+            (click)="closefulfillModal()"         
+          >
+            <span>&times;</span>
+          </button>
+        </div>
+        <form>
+            <div class="formdiv">
+          <div class="modal-body">
+            <p>Each item's quantity will be increased by the amount received</p>
+            
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Number</th>
+                  <th>Item</th>
+                  <th>Ordered</th>
+                  <th>Received</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let itemadd of purchaseorder?.purchaseOrderItems; let i = index">
+                    <td>{{ i + 1 }}</td>
+                  <td>{{itemadd.itemName}}</td>                
+                  <td>0/{{itemadd.quantity }}</td>
+                  <td [hidden]="true">0/{{itemadd.id }}</td>
+                  <td><input
+                    type="number"                    
+                   [value]="itemadd.quantity"
+                    class="form-control"
+                  /></td>             
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger btn-sm btn-block"             
+          (click)="closefulfillModal()">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-success btn-sm btn-block" (click)="onFulfill()">
+            Fulfill
+          </button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div> 
+
+
+  

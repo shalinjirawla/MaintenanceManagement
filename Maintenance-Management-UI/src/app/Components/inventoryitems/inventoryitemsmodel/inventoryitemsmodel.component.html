@@ -1,0 +1,105 @@
+<div class="modal-overlay" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ item?.id ? 'Edit Item' : 'Add Item' }}</h5>
+                <button type="button" class="btn-close col-1" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+                <div class="modal-body">
+                    <input type="text" id="id" formControlName="id" hidden />
+                
+                    <!-- Name -->
+                    <div class="form-group">
+                      <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                      <input
+                        type="text"
+                        id="name"
+                        formControlName="name"
+                        class="form-control"
+                        placeholder="Enter item name"
+                      />
+                      <div *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched" class="text-danger">
+                        <label class="form-label-invalid">Name is required.</label>
+                      </div>
+                    </div>
+                
+                    <!-- Category ID -->
+                    <div class="form-group">
+                      <label for="inventoryCategoryId" class="form-label">Category <span class="text-danger">*</span></label>
+                      <select id="inventoryCategoryId" formControlName="inventoryCategoryId" class="form-control">
+                        <option value="">Select Category</option>
+                        <option *ngFor="let category of categories" [value]="category.id">{{ category.categoryName }}</option>
+                      </select>
+                      <div *ngIf="itemForm.get('inventoryCategoryId')?.invalid && itemForm.get('inventoryCategoryId')?.touched" class="text-danger">
+                        <label class="form-label-invalid">Category is required.</label>
+                      </div>
+                    </div>
+                
+                    <!-- SKU -->
+                    <div class="form-group">
+                      <label for="sku" class="form-label">SKU <span class="text-danger">*</span></label>
+                      <input type="text" id="sku" formControlName="sku" class="form-control" placeholder="Enter SKU" />
+                      <div *ngIf="itemForm.get('sku')?.invalid && itemForm.get('sku')?.touched" class="text-danger">
+                        <label class="form-label-invalid">SKU is required.</label>
+                      </div>
+                    </div>
+                      <!-- Unit -->
+                      <div class="form-group">
+                        <label for="unit" class="form-label">Unit <span class="text-danger">*</span></label>
+                        <select id="unit" formControlName="unit" class="form-control">
+                          <option value="">Select Unit</option>
+                          <option value="boc">Box-boc</option>
+                          <option value="cm">CMS - cm</option>
+                          <option value="dz">DOZ - dz</option>
+                          <option value="ft">FTS - ft</option>
+                          <option value="g">GMS - g</option>
+                          <option value="in">INC - in</option>
+                          <option value="kg">KGS - kg</option>
+                          <option value="km">KME - km</option>
+                          <option value="lb">LBS - lb</option>
+                          <option value="mg">MGS - mg</option>
+                          <option value="ml">MLT - ml</option>
+                          <option value="m">MTR - m</option>
+                          <option value="pcs">PCS - pcs</option>
+                        </select>
+                        <div *ngIf="itemForm.get('unit')?.invalid && itemForm.get('unit')?.touched" class="text-danger">
+                          <label class="form-label-invalid">Unit is required.</label>
+                        </div>
+                      </div>
+            
+                    <!-- Location -->
+                    <div class="form-group">
+                      <label for="location" class="form-label">Location </label>
+                      <input
+                        type="text"
+                        id="location"
+                        formControlName="location"
+                        class="form-control"
+                        placeholder="Enter location"
+                      />
+                    </div>
+                      <!-- Description -->
+                      <div class="form-group">
+                        <label for="description" class="form-label">Description </label>
+                        <textarea
+                          id="description"
+                          formControlName="description"
+                          class="form-control"
+                          placeholder="Enter description"
+                        ></textarea>
+                        <div *ngIf="itemForm.get('description')?.invalid && itemForm.get('description')?.touched" class="text-danger">
+                          <label class="form-label-invalid">Description is required.</label>
+                        </div>
+                      </div>
+                  </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-success btn-sm btn-block" >Save</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

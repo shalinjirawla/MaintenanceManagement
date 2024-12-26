@@ -1,0 +1,145 @@
+<div class="modal-overlay" [ngClass]="{ show: true }">
+  <div class="modal-dialog">
+    <div class="modal-content" *ngIf="!isadmin">
+      <div class="modal-header">
+        <h5 class="modal-title">Customer Complaint Form</h5>
+        <button type="button" class="btn-close col-1" (click)="closeModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="complaintForm" (ngSubmit)="onSubmitComplaint()">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="service" class="form-label">Select Service<span class="text-danger">*</span></label>
+            <select
+              class="form-control"
+              required
+              formControlName="WorkRequestID"
+            >
+            <option [value]="''">Select Service</option>
+              <option
+                *ngFor="let service of WorkRequest"
+                [value]="service.workRequest.id"
+              >
+                {{ service.workRequest.title }} ({{
+                  service.workRequest.createdDate | date : "dd-MM-yyyy"
+                }})
+              </option>
+            </select>
+            <small *ngIf="complaintForm.get('WorkRequestID')?.touched && complaintForm.get('WorkRequestID')?.invalid" class="text-danger">
+              Please select a service.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="title" class="form-label">Complaint Title<span class="text-danger">*</span></label>
+            <input
+              type="text"
+              formControlName="title"
+              class="form-control"
+              required
+              placeholder="Enter a brief title"
+            />
+            <small *ngIf="complaintForm.get('title')?.touched && complaintForm.get('title')?.hasError('required')" class="text-danger">
+              Title is required.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+            <textarea
+              formControlName="description"
+              class="form-control"
+              required
+              rows="4"
+              placeholder="Describe your complaint in detail"
+            ></textarea>
+            <small *ngIf="complaintForm.get('description')?.touched && complaintForm.get('description')?.hasError('required')" class="text-danger">
+              Description is required.
+            </small>
+            <small *ngIf="complaintForm.get('description')?.touched && complaintForm.get('description')?.hasError('minlength')" class="text-danger">
+              Description must be at least 10 characters long.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="priority" class="form-label">Priority Level<span class="text-danger">*</span></label>
+            <select
+              formControlName="priority"
+              class="form-control"
+              required
+              name="priority"
+            >
+            <option value="null">Select priority level</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+            <small *ngIf="complaintForm.get('priority')?.touched && complaintForm.get('priority')?.invalid" class="text-danger">
+              Please select a priority level.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="attachment" class="form-label">Attachment</label>
+            <input
+              type="file"
+              formControlName="attachment"
+              class="form-control"
+              (change)="onFileSelect($event)"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-sm"  (click)="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-success btn-sm">
+            Submit Complaint
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="modal-content" *ngIf="isadmin">
+      <div class="modal-header">
+        <h5 class="modal-title">Complaint Review</h5>
+        <button type="button" class="btn-close col-1" (click)="closeModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-lg-4 text-center">
+            <label class=" "><img [src]="complaint.attachment" style="height: 150px; width: 150px;"></label><br>
+            <label class="form-label">Attechment</label>
+          </div>
+          <div class="col-lg-8">
+            <div class="form-group row bglbl">
+              <label class="col-lg-3 form-label">Customer ID</label>
+              <label class="col-lg-9">{{ complaint.customerID }}</label>
+            </div>
+              <div class="form-group row bglbl">
+              <label class="col-lg-3 form-label">Customer Name</label>
+              <label class="col-lg-9">{{
+                complaint.requesterUser?.username
+              }}</label>
+            </div>
+            <div class="form-group row bglbl">
+              <label class="col-lg-3 form-label">Title</label>
+              <label class="col-lg-9">{{ complaint.title }}</label>
+            </div>
+            <div class="form-group row bglbl">
+              <label class="col-lg-3 form-label">Priority</label>
+              <label class="col-lg-9">{{ complaint.priority }}</label>
+            </div>
+    
+            <div class="form-group row">
+              <label class="col-lg-3 form-label">Description</label>
+              <label class="col-lg-9"><p class="desc">{{ complaint.description }}</p></label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

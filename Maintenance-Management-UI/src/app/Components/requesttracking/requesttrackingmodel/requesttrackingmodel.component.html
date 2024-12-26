@@ -1,0 +1,148 @@
+    <!-- Modal for Creating Request -->
+    <div *ngIf="WorkorderModalOpen" class="modal-overlay" tabindex="-1" [ngClass]="{'show': true}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Approve Request</h5>
+                
+                    <button type="button" class="btn-close col-1" (click)="closeModal()">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form #requestForm="ngForm">
+                    <div class="modal-body formdiv">
+                        <div class=""> <!-- Main content column -->
+                            <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                            <div class="form-group">
+                                <label for="title" class="form-label">Title<span class="text-danger">*</span></label>
+                                <input type="text" id="title" name="title" class="form-control" disabled="true" [(ngModel)]="workorder.title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                                <input type="text" id="description" name="description" class="form-control" disabled="true" [(ngModel)]="workorder.description" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="location" class="form-label">Location<span class="text-danger">*</span></label>                                   
+                                <select id="location"  name="location" #locationModel="ngModel" disabled="true" required class="form-control" [(ngModel)]="workorder.location" required>
+                                    <option [ngValue]="''" >Select Location</option>
+                                    <option *ngFor="let location of location" [ngValue]="location.id">{{location.description}}</option>
+                                </select>
+                                <div *ngIf="locationModel.invalid && locationModel.touched" class="text-danger">
+                                    <small *ngIf="locationModel.errors?.['required']">Location is required.</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="priority" class="form-label">Priority<span class="text-danger">*</span></label>
+                                <select id="priority" name="priority" class="form-control" disabled="true" [(ngModel)]="workorder.priority" required>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div> 
+                            <div class="form-group">
+                                <label for="cost" class="form-label">Estimated Cost<span class="text-danger">*</span></label>
+                                <input type="text" id="cost" name="cost" disabled="true" class="form-control" [(ngModel)]="quotation.cost">
+                            
+                            </div>
+                            <div class="form-group">
+                                <label for="time" class="form-label">Estimated Time<span class="text-danger">*</span></label>
+                                <input type="text" id="time" name="time" disabled="true" class="form-control" [(ngModel)]="quotation.time">
+                            </div>
+                            <!-- Start Approved time -->
+                            <div *ngIf="isEditing"> 
+                                <div class="form-group">
+                                    <label class="form-label">Start Date & Time<span class="text-danger">*</span></label>
+                                    <input type="datetime-local" #startDate="ngModel" required
+                                    class="form-control" [(ngModel)]="workorder.startDate" name="startDateTime" [min]="minDateTime" >
+                                    <div *ngIf="startDate.invalid && startDate.touched" class="text-danger">
+                                        <small *ngIf="startDate.errors?.['required']">Start date and time are required.</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Due Date & Time<span class="text-danger">*</span></label>
+                                    <input type="datetime-local" #dueDate="ngModel" required class="form-control" [(ngModel)]="workorder.dueDate" name="dueDateTime" [min]="workorder.startDate" (change)="Checkawailable()">
+                                    <div *ngIf="dueDate.invalid && dueDate.touched" class="text-danger">
+                                        <small *ngIf="dueDate.errors?.['required']">Due date and time are required.</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="category" class="form-label">Category<span class="text-danger">*</span></label>
+                                    <select id="category" name="category" required #category="ngModel" class="form-control" [(ngModel)]="workorder.category" required>
+                                        <option [ngValue]="''">Select Category</option>
+                                        <option value="1">Damage</option>
+                                        <option value="2">Electrical</option>
+                                        <option value="3">Inspection</option>
+                                        <option value="4">Meter Reading</option>
+                                        <option value="5">Safety</option>
+                                    </select>
+                                    <div *ngIf="category.invalid && category.touched" class="text-danger">
+                                        <small *ngIf="category.errors?.['required']">Category is required.</small>
+                                    </div>
+                                </div>                               
+
+                                <div class="form-group">
+                                    <label for="assets" class="form-label">Assets</label>
+                                    <select id="assets" name="assets" class="form-control" [(ngModel)]="workorder.asset">
+                                        <option [ngValue]="''">Select assets</option>
+                                        <option *ngFor="let asset of assets" [ngValue]="asset.assetName">{{ asset.assetName }}</option>
+                                    </select>
+                                    <!-- <div *ngIf="assetsmodel.invalid && assetsmodel.touched" class="text-danger">
+                                        <small *ngIf="assetsmodel.errors?.['required']">Assets is required.</small>
+                                    </div> -->
+                                </div>
+                                <div class="form-group">
+                                    <label for="assignedTo" class="form-label">Primary Employee<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="assignedTo" #assignedTo="ngModel"  name="assignedTo" [(ngModel)]="workorder.assignedTo" required>
+                                        <option [ngValue]="null">Select Employee</option> <!-- Default disabled option -->
+                                        <option *ngFor="let employee of availableEmployees" [value]="employee.userID">{{employee.username}}</option>
+                                    </select>
+                                    <div *ngIf="assignedTo.invalid && assignedTo.touched" class="text-danger">
+                                        <small *ngIf="assignedTo.errors?.['required']">Employee is required.</small>
+                                    </div>
+                                </div>
+                                
+                                                                                         
+                            </div>
+                            <!-- End Approved time -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">                       
+                            <ng-container>
+                                <button type="button" class="btn btn-sm btn-danger" (click)="closeModal()">Close</button>                                    
+                                <button type="button" class="btn btn-sm btn-success" [disabled]="requestForm.invalid"  (click)="approveRequest()" >Approve Request</button>
+                            </ng-container>                          
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+<!-- <div *ngIf="declineModalOpen" class="modal-overlay" tabindex="-1" [ngClass]="{'show': true}">
+    <div class="modal-dialog2">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Decline Request</h5>
+                <button type="button" class="btn-close col-1" (click)="closeDeclineModal()">
+                    <span>&times;</span>
+                </button>   
+            </div>
+            <div class="modal-body">
+                <b class="text-muted form-label">Enter a reason<span class="text-danger">*</span></b>
+                <textarea class="form-control custom-textarea" required="" rows="6" #declineReasonField="ngModel"  [(ngModel)]="declineReason"></textarea>
+                <div *ngIf="declineReasonField.invalid && declineReasonField.touched" class="text-danger">
+                    <small *ngIf="declineReasonField.errors?.['required']">Reason is required.</small>
+                    <small *ngIf="declineReasonField.errors?.['minlength']">Reason must be at least 10 characters long.</small>
+                  </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="closeDeclineModal()">Cancel</button>&nbsp;
+                <button type="button" class="btn btn-sm btn-danger" [disabled]="declineReasonField.invalid" (click)="confirmDecline(workorder.id,declineReason)">Decline</button>
+            </div>
+        </div>  
+    </div>
+</div> -->
+
+
+

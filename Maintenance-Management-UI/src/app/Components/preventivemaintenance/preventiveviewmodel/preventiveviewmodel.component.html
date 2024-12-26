@@ -1,0 +1,87 @@
+<div class="modal-overlay" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View PM </h5>
+                <button type="button" class="btn-close col-1" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form>
+            <div class="modal-body">
+                    <input type="text" id="userID" formControlName="userID" hidden />
+                  
+                     <div class="form-group row">
+                         <div class="col-lg-6">
+                             <h6>PM Details</h6>
+                            <div class="form-group row">
+                                <label for="username" class="form-label col-lg-4">Title</label>
+                                <label class="col-lg-8 form-labelp" >{{item.title}}</label>                        
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="form-label col-lg-4">Category</label>
+                                <label class="col-lg-8 form-labelp" >{{item.category}}</label>                        
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="form-label col-lg-4">Asset</label>
+                                <label class="col-lg-8 form-labelp" >{{item.assetName}}</label>                        
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="form-label col-lg-4">Priority</label>
+                                <label class="col-lg-8 form-labelp" >{{item.priority}}</label>                        
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="form-label col-lg-4">Location</label>
+                                <label class="col-lg-8 form-labelp" >{{item.locationname}}</label>                        
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="form-label col-lg-4">Assign To</label>
+                                <label class="col-lg-8 form-labelp" >{{item.assignToName}}</label>                        
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="form-label col-lg-4">Start Date</label>
+                                <label class="col-lg-8 form-labelp" >{{item.startDate | date:'dd-MM-yyyy'}}</label>                        
+                            </div>
+                            <div class="form-group row">
+                                <label for="username" class="form-label col-lg-4">Due Date</label>
+                                <label class="col-lg-8 form-labelp" >{{item.dueDate | date:'dd-MM-yyyy'}}</label>                        
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <h6>PM Schedule</h6>
+                            <div class="card p-3">
+                                <div class="form-group row">
+                                    <label class="col-lg-6 form-label">Schedule Type</label>
+                                    <label class="col-lg-6 form-labelp">{{item.scheduleType}}</label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-6 form-label">Frequency Interval</label>
+                                    <label class="col-lg-6 form-labelp">{{item.frequencyInterval}} {{item.frequencyType}}</label>
+                                </div>
+                                <!-- <div class="form-group row">
+                                    <label class="col-lg-6 form-label">Frequency Type</label>
+                                    <label class="col-lg-6 form-labelp">{{item.frequencyType}}</label>
+                                </div> -->
+                                <div class="form-group row">
+                                    <label class="col-lg-6 form-label">Day Of Week</label>
+                                    <label class="col-lg-6 form-labelp">{{item.daysOfWeek}}</label>
+                                </div>
+                                <!-- <div class="form-group row">
+                                    <label class="col-lg-6 form-label">Work Order Due</label>
+                                    <label class="col-lg-6 form-labelp">{{item.workOrderDue}}</label>
+                                </div> -->
+                                <div class="form-group row">
+                                    <label class="col-lg-6 form-label">Aadvance Creation Period</label>
+                                    <label class="col-lg-6 form-labelp">{{item.workOrderDue}} {{item.advanceCreationPeriod}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>                        
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

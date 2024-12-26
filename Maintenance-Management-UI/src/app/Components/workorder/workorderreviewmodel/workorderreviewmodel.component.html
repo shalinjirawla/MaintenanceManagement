@@ -1,0 +1,53 @@
+<!-- Modal for Creating Request -->
+<div class="modal-overlay" tabindex="-1" [ngClass]="{ show: true }">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Review</h5>  
+          <button type="button" class="btn-close col-1" (click)="closeModal()">
+            <span>&times;</span>
+          </button>
+        </div>
+        <form #requestForm="ngForm">
+          <div class="modal-body">
+            <div class="formdiv">  
+              <div class="p-4">
+                <!-- Tab Content -->
+                <div class="tab-content">
+                  <!-- Overview Tab -->
+                  <div                  >
+                    <!-- Overview Content -->
+                    <!-- { label: 'Proof Of Completion', value: workorderreview.proofOfCompletion }, -->
+                    <div
+                      *ngFor="
+                        let field of [
+                          { label: 'Status', value: workorderreview.status },
+                          { label: 'Notes Comments', value: workorderreview.notesComments },
+                          { label: 'Description Of Occurrence', value: workorderreview.descriptionOfOccurrence },
+                          { label: 'Challenges Encountered', value: workorderreview.challengesEncountered },
+                          { label: 'SpareParts Materials Used', value: workorderreview.sparePartsMaterialsUsed },
+                          { label: 'Extra Work Details', value: workorderreview.extraWorkDetails },
+                          { label: 'Actual Labor Hours', value: workorderreview.actualLaborHours },
+                          { label: 'Work Hours', value: workorderreview.workHours }
+                        ]
+                      "
+                    >
+                      <div class="form-group">
+                        <label class="col-lg-4 form-label"
+                          >{{ field.label }}:</label
+                        >
+                        <label class="reviewlbl col-lg-8">{{ field.value }}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Task Tab -->
+         
+              </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

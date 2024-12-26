@@ -1,0 +1,289 @@
+<div class="container px-90">
+  <div class="pt-3">
+    <!-- <p class="modal-title h6">Add New</p> -->
+    <!-- <div class="d-flex text-end"> -->
+    <!-- <i class="fa fa-arrow-right"  (click)="closeModal()"></i> -->
+  <!-- </div> -->
+  </div>
+  <form [formGroup]="purchaseorderForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+      <input type="text" id="id" formControlName="id" hidden />
+      <div class="form-group row">
+        <label for="title" class="form-label col-lg-2"
+          >Title<span class="text-danger">*</span></label
+        >
+        <div class="col-lg-4">
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            class="form-control"
+            placeholder="Enter title"
+          />
+          <div
+            *ngIf="
+              purchaseorderForm.get('title')?.invalid &&
+              purchaseorderForm.get('title')?.touched
+            "
+            class="text-danger"
+          >
+            <label class="form-label-invalid"> title is required.</label>
+          </div>
+        </div>
+
+        <label for="orderNumber" class="form-label col-lg-2"
+          >PO Number<span class="text-danger">*</span></label
+        >
+        <div class="col-lg-4">
+          <input
+            type="text"
+            id="orderNumber"
+            formControlName="orderNumber"
+            class="form-control"
+            placeholder="Enter po number"
+          />
+          <div
+            *ngIf="
+              purchaseorderForm.get('orderNumber')?.invalid &&
+              purchaseorderForm.get('orderNumber')?.touched
+            "
+            class="text-danger"
+          >
+            <label class="form-label-invalid"> Order Number is required.</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="vendorId" class="form-label col-lg-2"
+          >Vendor<span class="text-danger">*</span></label
+        >
+        <div class="col-lg-4">
+          <select  class="form-control" formControlName="vendorId">
+            <option value=null>Select Vendor</option>
+            <option *ngFor="let item of vendor" [value]="item.id">{{item.name}}</option>
+          </select>
+        </div>
+
+        <label for="expectedDeliveryDate" class="form-label col-lg-2"
+          >Due Date<span class="text-danger">*</span></label
+        >
+        <div class="col-lg-4">
+          <input
+            type="date"
+            id="expectedDeliveryDate"
+            formControlName="expectedDeliveryDate"
+            class="form-control"
+            placeholder="Enter po number"
+          />
+          <div
+            *ngIf="
+              purchaseorderForm.get('expectedDeliveryDate')?.invalid &&
+              purchaseorderForm.get('expectedDeliveryDate')?.touched
+            "
+            class="text-danger"
+          >
+            <label class="form-label-invalid"> expected Delivery Date is required.</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row pt-3 ">
+        <label for="Name" class="col-lg-2 form-label"
+          >Line Items<span class="text-danger">*</span></label
+        >
+        <div class="col-lg-4 ">
+          <button type="button" class="btn btn-sm btn-secondary" (click)="openpart()">
+            Add Parts</button
+          >&nbsp;
+
+          <button type="button" class="btn btn-sm btn-secondary" (click)="openaddpart()">
+            Create Parts
+          </button>
+        </div>        
+       
+      </div>
+   
+        
+        <div *ngIf="selectedItems && selectedItems.length > 0">
+      
+          <div class="form-group row pt-4">
+            <label class="form-label col-lg-4">Item</label>
+            <label class="form-label col-lg-2">Cost</label>
+            <label class="form-label col-lg-1">Taxes(%)</label>
+            <label class="form-label col-lg-2">Quantity</label>
+            <label class="form-label col-lg-3 text-center pl-50" 
+              >Total</label
+            >
+          </div>
+          <hr class="m-0 p-1" />
+          <!-- FormArray binding -->
+          
+          <div formArrayName="selectedItems">
+            <div *ngFor="let item of selectedItems.controls; let i = index" [formGroupName]="i" class="form-group row pt-2 pb-2">
+              <label class="form-label col-lg-4">{{ item.get('name')?.value }}</label>
+              <div class="col-lg-2">
+                <input type="text" formControlName="cost"  class="form-control text-end" />
+              </div>
+              <div class="col-lg-1">
+                <input type="text" formControlName="taxes"  class="form-control text-end" />
+              </div>
+              <div class="col-lg-2">
+                <input type="text" formControlName="quantity" class="form-control" />
+              </div>
+              <div class="col-lg-3 row">
+              <label class="form-label text-end col-lg-10" style="padding-right: 25px;">{{ (item.get('cost')?.value * item.get('quantity')?.value) || 0 }}</label>
+              <div class="col-lg-2 text-end p-0">
+                <i class="fa fa-trash" style="cursor: pointer;"(click)="removeItem(i)"></i>
+              </div>              
+              <label class="form-label col-lg-4" [hidden]="true">{{ item.get('inventoryItemId')?.value }}</label>
+            </div>
+            </div>
+          </div>
+      
+          <hr class="m-0 p-1" />
+          <div class="form-group row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-4"></div>
+            <label class="form-label col-lg-3">Subtotal</label>
+            <label class="form-label col-lg-1 p-0 text-end" 
+              >{{ subtotal | currency : 'INR': 'symbol'}}</label
+            >
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-4"></div>
+            <label class="form-label col-lg-3">Taxes</label>          
+              <label class="form-label col-lg-1 p-0 text-end">{{ totalTaxes | currency : 'INR': 'symbol'}}</label>
+              <!-- <input type="text" formControlName="taxes" value="" class="form-control text-end" /> -->
+           
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-3"></div>
+            <label class="form-label col-lg-2">Shipping</label>
+
+            <div class="col-lg-2 text-end" style="margin-left: 21px;">
+              <input type="text"  formControlName="shipping" class="form-control text-end" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-3"></div>
+            <label class="form-label col-lg-2">Other Costs</label>
+            <div class="col-lg-2 text-end" style="margin-left: 21px;">
+              <input type="text"  formControlName="otherCost" value="0.00" class="form-control text-end" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-3"></div>
+            <label class="form-label col-lg-4"><b>Total</b></label>
+            <label class="form-label col-lg-1 p-0 text-end"  for="totalAmount"> {{ totalAmount | currency : 'INR': 'symbol'}}</label>
+            
+          </div>
+        </div>
+
+        <div *ngIf="!selectedItems || selectedItems.length === 0" class="text-center">
+            <hr>
+            <p class="pt-3">No line items have been added yet</p>
+         
+        </div>
+     
+    </div>
+    <div class="modal-footer">
+      <button
+    type="button"
+    class="btn btn-danger btn-sm btn-block"
+    (click)="closepoModal()"
+  >
+    Cancel
+  </button>&nbsp;
+  <button type="submit" class="btn btn-success btn-sm btn-block">
+   Save
+  </button>
+    </div>
+  </form>
+</div>
+
+<div class="modal-overlay" *ngIf="Openpart">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Parts</h5>
+        <button
+          type="button"
+          class="btn-close col-1"
+          (click)="closepartModal()"
+        >
+          <span>&times;</span>
+        </button>
+      </div>
+      <form class="formdiv">
+        <div class="modal-body">
+          <div class="d-flex align-items-center pb-2">
+            <input
+              type="text"
+              class="search me-2"
+              placeholder="Search"
+              style="width: 150px"
+            />
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="">
+                  <input
+                    type="checkbox"
+                    (change)="toggleAll()"
+                    (change)="updateSelection()"
+                    class="me-2"
+                  />
+                </th>
+                <th>Name</th>
+                <th>ID</th>
+                <th>Cost</th>
+                <th>Available Qty</th>
+                <th>Category</th>
+                <th>Unit</th>
+                <th>Status</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of filteredinventoryItems">
+                <td>
+                  <input
+                    type="checkbox"
+                    (change)="updateSelection()"
+                    class="me-2"
+                  />
+                </td>
+                <td>{{item.name}}</td>
+                <td>{{item.id}}</td>                
+                <td>{{item.price == null ? 'N/A' : item.price }}</td>
+                <td>{{item.availableQuantity == null ? '0.00':item.availableQuantity}}</td>
+                <td>{{item.inventoryCategory?.categoryName}}</td>
+                <td>{{item.unit}}</td>
+                <td>{{item.status}}</td>                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger btn-sm btn-block"
+          (click)="closepartModal()"
+        >
+          Cancel
+        </button>
+        <button type="button" class="btn btn-success btn-sm btn-block" (click)="SelectItem(selectedItemss)">
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-inventoryitemsmodel *ngIf="isModalOpen"  (close)="closeModal($event)">
+</app-inventoryitemsmodel>

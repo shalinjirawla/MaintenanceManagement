@@ -1,0 +1,401 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;          
+    top: 0;                  
+    left: 0;                  
+    width: 100vw;           
+    height: 100vh;          
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;          
+    justify-content: center; 
+    align-items: center;     
+    z-index: 1050;           
+    /* opacity: 0;              */
+    /* transition: opacity 0.3s; */
+    /* visibility: hidden;       */
+}
+
+.modal-overlay.show {
+    opacity: 1 !important;            
+    visibility: visible !important;    
+}
+  
+  .modal-dialog {
+    background: white !important;
+    /* border-radius: 10px !important; */
+    border-radius: 0 !important;
+    width: 800px !important;
+    max-width: 90% !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .modal-dialog2 {
+    background: white;
+    border-radius: 0px !important;
+    width: 600px;
+    height: auto;
+    max-width: 90%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.5s ease;
+  }
+  
+
+  .modal-header {
+    padding: 0.9rem 1.5rem 0.9rem !important;
+    border-bottom: none !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom:solid 1px rgb(184, 184, 184) !important;
+  }
+  .modal-footer {
+    padding: 0.9rem 1.5rem 0.9rem !important;
+    border-bottom: none !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-top:solid 1px rgb(184, 184, 184) !important;
+  }
+  
+  .modal-title {
+    margin: 0 !important;
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #5f5f5f !important;
+  }
+  
+  .btn-close {
+    background: none !important;
+    border: none !important;
+    font-size: 2rem !important;
+    color: #999 !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    position: relative !important;
+    top: -10px !important;
+    right: -10px !important;    
+    --bs-btn-close-focus-shadow: none !important;
+  }
+
+  .btn-close:hover {
+    color: #333 !important;
+  }  
+  
+  /* Modal Body */
+  .modal-body {
+    padding: 1rem 1.5rem !important;
+  }
+  .formdiv{
+    max-height: 68vh !important;           /* Set maximum height */
+    overflow-y: auto !important;  
+  }
+  
+  .form-group {
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .form-label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #555 !important;
+  }
+  .form-label-invalid{
+    font-size: 14px !important;
+    color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important
+  }
+  
+  .form-control {
+    height: 35px !important;
+    padding: 0.4rem 0.6rem !important;
+    border-radius: 5px !important;
+    border: 1px solid #ddd !important;
+    font-size: 14px !important;
+  }
+  
+  .form-control:focus {
+    border-color: #2a4646 !important;
+    box-shadow: 0 0 5px rgba(0, 255, 128, 0.25) !important;
+  }
+  
+  .btn-themcolor {
+    background-color: #2a4646 !important;
+    border-color: #2a4646 !important;
+    color: white !important;
+    padding: 10px !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    border-radius: 5px !important;
+  }
+  
+  .btn-themcolor:hover {
+    background-color: #3c5757 !important;
+    border-color: #2a4646 !important;
+  }
+  .text-themecolor{
+    color: #3c5757 !important;
+  }
+  
+  .d-grid {
+    display: grid !important;
+  }
+  
+  .d-grid .btn-block {
+    width: 100%;
+  }
+  
+
+/* CSS */
+.custom-textarea {
+  height: 80px !important;
+}
+/* Wrapper for horizontal scrolling */
+.table-responsive {
+    /* overflow-x: auto;  */
+    white-space: nowrap; /* Prevent table headers from wrapping */
+  }
+  
+  /* Table header styles */
+  .table thead th {
+    border-collapse: collapse; 
+    white-space: nowrap; /* Ensure headers are kept on a single line */
+    /* padding-left: 10px !important;
+    padding-right: 10px !important; */
+    font-size: 12px;
+    color: rgb(76 78 96 / 75%);
+    /* background-color:#2a4646; */
+    background-color: #f9f9fb;
+    text-transform: uppercase;
+    /* padding: 0.6rem .3rem !important; */
+    border-top: 1px solid #ebeaf2;
+    border-bottom: 1px solid #ebeaf2;
+  }
+  
+  /* Table body cell styles */
+  .table tbody td {
+    white-space: nowrap; /* Prevent text in cells from wrapping */
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+    border-top: 1px solid #ebeaf2;
+    border-bottom: 1px solid #ebeaf2;
+    /* text-align: center;    */
+  }
+  .table-hover > tbody > tr:hover > * {
+    --bs-table-color-state: var(--bs-table-hover-color) !important;
+    --bs-table-bg-state: rgb(249 249 251)!important;
+  }
+
+  .badge-waiting {
+    background-color: rgb(247, 247, 165); /* Change to your desired color for Waiting status */
+    color: black; /* Text color */
+    padding: 0.2em 0.5em; /* Optional: Adjust padding for better spacing */
+    border-radius: 5px; /* Optional: Add rounded corners */
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .badge-pending {
+    background-color: rgb(251, 237, 213);/* Change to your desired color for Waiting status */
+    color: black; /* Text color */ 
+    padding: 0.2em 0.5em;
+    border-radius: 4px; /* Optional: Add rounded corners */
+    font-size: 13px;
+  
+  }
+  .badge-accepted {
+    background-color:rgb(230, 246, 231);/* Change to your desired color for Waiting status */
+    color: black; /* Text color */ 
+    padding: 0.2em 0.5em; /* Optional: Adjust padding for better spacing */
+    border-radius: 4px; /* Optional: Add rounded corners */
+  }
+  .badge-complete {
+    background-color:  #9ebbc7;/* Change to your desired color for Waiting status */
+    color: black; /* Text color */
+    padding: 0.2em 0.5em; /* Optional: Adjust padding for better spacing */
+    border-radius: 5px; /* Optional: Add rounded corners */
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .badge-declined{
+    background-color: rgb(255, 234, 239);/* Change to your desired color for Waiting status */
+    color: black; /* Text color */ 
+    padding: 0.2em 0.5em; 
+    border-radius: 4px; /* Optional: Add rounded corners */
+    font-size: 13px;
+  }
+  .badge-inprogress{
+    background-color: rgb(241, 200, 175);/* Change to your desired color for Waiting status */
+    color: black; /* Text color */ 
+    padding: 0.2em 0.5em; 
+    border-radius: 4px; /* Optional: Add rounded corners */
+    font-size: 13px;
+  }
+  .badge-send{
+    background-color: rgb(213, 237, 251);/* Change to your desired color for Waiting status */
+    color: black; /* Text color */ 
+    border-radius: 4px; /* Optional: Add rounded corners */
+  
+  }
+  .badge-complate {
+    background-color:rgb(206, 235, 255);/* Change to your desired color for Waiting status */
+    color: black; /* Text color */ 
+    padding: 0.2em 0.5em; /* Optional: Adjust padding for better spacing */
+    border-radius: 4px; /* Optional: Add rounded corners */
+    font-size: 13px;
+  }
+
+  .badge-hold{
+    background-color: rgb(198, 231, 218);/* Change to your desired color for Waiting status */
+    color: black; /* Text color */ 
+    padding: 0.2em 0.5em;
+    border-radius: 4px; /* Optional: Add rounded corners */
+    font-size: 13px;
+  }
+  .search{
+    border: solid 1px rgb(221 221 221) !important;
+    background-color: #f8f8f8 !important; 
+    padding-top: 4px!important;
+    padding-left: 7px!important;
+    padding-bottom: 4px!important;
+    border-radius: 3px!important;
+    font-size: 14px!important;
+  }
+  .search:focus-visible{
+    border: none !important;
+  }
+  .btn-themecolor{
+    border-color: #408dfb!important;
+    background-color: #408dfb!important;
+    color: #ffffff!important;
+}
+.btn-themecolor:hover{
+ background-color: #2a7ef5!important;
+ color: #ffffff!important;
+}
+.ml-2{
+  margin-left: 5px;
+}
+
+.full-screen-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it overlays other content */
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+
+
+/* Global font styles */
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  color: #333; /* Set a default text color */
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+code, pre {
+  font-family: 'Fira Code', monospace;
+  font-size: 14px; /* Slightly smaller for code blocks */
+  color: #555; /* Optional: Customize code text color */
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  /* font-family: 'Roboto', sans-serif; */
+  font-weight: 700;  
+  margin: 0 0 10px 0;
+}
+
+.actionicon:hover{
+  background-color:rgb(165, 165, 165) ;
+  padding: 2px 7px 2px 7px;
+  border-radius: 3px;
+  }
+  .actionicon{
+      padding: 2px 7px 2px 7px;
+  }
+  /* Border on the left of the first row */
+
+
+.ngx-pagination .current {
+  background: #2a4646 !important;
+}
+
+
+.dropdown-item{ 
+  font-size: 14px;
+}
+  
+.modal-dialog {
+  animation: slideIn 0.5s ease; /* Smooth slide-in animation */
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px); /* Start slightly above */
+    opacity: 0; /* Start invisible */
+  }
+  to {
+    transform: translateY(0); /* End at original position */
+    opacity: 1; /* Fully visible */
+  }
+}
+/* .btn-sm2 {
+  --bs-btn-padding-y: 0.12rem !important;
+  --bs-btn-padding-x: 0.3rem  !important;
+  --bs-btn-font-size: 0.800rem !important;
+  --bs-btn-border-radius: 2px !important;
+
+} */
+.btn-sm2 {
+  --bs-btn-padding-y: 2px !important;
+  --bs-btn-padding-x: 4px !important;
+      --bs-btn-font-size: 11px !important;
+      --bs-btn-border-radius: 3px !important;
+}
+
+.pl-25{
+  padding-left: 25px !important;
+}
+.ml-8{
+  margin-left: 8px !important;
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.pl-50{
+  padding-left: 50px !important;
+}
+.pr-50{
+  padding-right: 50px !important;
+}
+.font{
+  font-size: 12px !important;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.filterbtn{
+  background-color: rgb(245 245 245) !important;
+  border-color: rgb(221 221 221) !important;
+  cursor:  pointer !important;
+}
+.filterbtn:hover{
+  border-color: rgb(187, 187, 187) !important;
+  cursor:  pointer !important;
+}

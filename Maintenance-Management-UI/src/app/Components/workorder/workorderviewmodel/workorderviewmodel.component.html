@@ -1,0 +1,78 @@
+<div class="modal-overlay" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Work Order</h5>
+                <button type="button" class="btn-close col-1" (click)="onModalClose()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="bg-due text-center" *ngIf="overdue()">
+                <p class="form-labelp titledue m-0 p-2"><i class="far fa-clock"></i> &nbsp;Overdue since {{item.dueDate | date : "dd-MM-yyyy hh:mm a" }}</p>
+            </div>
+            <form >
+            <div class="modal-body">
+                    <input type="text" id="userID" formControlName="userID" hidden />
+                    <p *ngIf="item.comment" class="text-danger">{{item.comment}}</p>
+                    <div class="form-group row">   
+
+                        <label for="username" class="col-lg-10 h5">{{item.title}}</label>
+                        <span class="col-lg-2"><i
+                            class="fa-solid fa-flag text-danger"
+                            *ngIf="item.priority === 'High'"
+                          ></i>
+                          <i
+                            class="fa-solid fa-flag text-success"
+                            *ngIf="item.priority === 'Low'"
+                          ></i>
+                          <i
+                            class="fa-solid fa-flag text-warning"
+                            *ngIf="item.priority === 'Medium'"
+                          ></i>
+                          &nbsp;{{ item.priority }}</span>
+                    </div>
+                    <div class="form-group row">                      
+                        <label for="username" class="form-labelp col-lg-8">{{item.description}}</label>
+                        
+                    </div>
+
+                    <hr>
+            <p class="bold">Details</p>
+                   
+
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-2">Due Date </label>
+                        <label for="username" class="form-labelp col-lg-5">{{item.dueDate | date : "dd-MM-yyyy hh:mm a" }}</label>
+                    </div>  
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-2">Start Date </label>
+                        <label for="username" class="form-labelp col-lg-5">{{item.startDate| date : "dd-MM-yyyy hh:mm a" }}</label>
+                    </div>                   
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-2">Satus </label>
+                        <label for="username" class="form-labelp col-lg-5">{{item.status}}</label>
+                    </div> 
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-2">Location </label>
+                        <label for="username" class="form-labelp col-lg-5">{{item.locationName}}</label>
+                    </div>
+                    <div class="form-group row" *ngIf="item.asset">
+                        <label for="username" class="form-label col-lg-2">Asset </label>
+                        <label for="username" class="form-labelp col-lg-5">{{item.asset}}</label>
+                    </div>
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-2">Assign To</label>
+                        <label for="username" class="form-labelp col-lg-5">{{item.assignedToUser}}</label>
+                    </div> 
+                    <div class="form-group row">
+                        <label for="username" class="form-label col-lg-2">Customer</label>
+                        <label for="username" class="form-labelp col-lg-5">{{item.requestedToUser}}</label>
+                    </div> 
+                </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-sm btn-block" (click)="onModalClose()">Cancel</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

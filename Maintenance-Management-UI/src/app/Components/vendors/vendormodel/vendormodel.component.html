@@ -1,0 +1,141 @@
+<div class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ item?.id ? "Edit vendor" : "Add vendor" }}
+        </h5>
+        <button type="button" class="btn-close col-1" (click)="closeModal()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="vendoreForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <input type="text" id="id" formControlName="id" [hidden]="true" />
+          <div class="form-group">
+            <label for="name" class="form-label"
+              >Name<span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+              placeholder="Enter your name"
+            />
+            <div *ngIf="vendoreForm.get('name')?.invalid && vendoreForm.get('name')?.touched" class="text-danger">
+              <label class="form-label-invalid">
+                Name is required.
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="companyName" class="form-label"
+              >Company Name<span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              id="companyName"
+              formControlName="companyName"
+              class="form-control"
+              placeholder="Enter your company Name"
+            />
+            <div *ngIf="vendoreForm.get('companyName')?.invalid && vendoreForm.get('companyName')?.touched" class="text-danger">
+              <label class="form-label-invalid">
+                CompanyName is required.
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email" class="form-label"
+              >Email<span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              id="email"
+              formControlName="email"
+              class="form-control"
+              placeholder="Enter your email"
+            />
+            <div *ngIf="vendoreForm.get('email')?.invalid && vendoreForm.get('email')?.touched" class="text-danger">
+              <label class="form-label-invalid" *ngIf="vendoreForm.get('email')?.hasError('required')">
+                Email is required.
+              </label>
+              <label class="form-label-invalid" *ngIf="vendoreForm.get('email')?.hasError('email')">
+                Please enter a valid email address.
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="contactNumber" class="form-label"
+              >Contact Number<span class="text-danger">*</span></label>
+            <input
+              type="text"
+              id="contactNumber"
+              maxlength="12"
+              formControlName="contactNumber"
+              class="form-control"
+              placeholder="Enter your contact Number"
+              (input)="onContactNumberInput($event)"
+            />
+            <div *ngIf="vendoreForm.get('contactNumber')?.invalid && vendoreForm.get('contactNumber')?.touched" class="text-danger">
+              <label class="form-label-invalid" *ngIf="vendoreForm.get('contactNumber')?.hasError('required')">
+                Contact Number is required.
+              </label>
+              <label class="form-label-invalid" *ngIf="vendoreForm.get('contactNumber')?.hasError('pattern')">
+                Contact Number must be a valid 10-12 digit number.
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="contactPerson" class="form-label"
+              >Contact Person<span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              id="contactPerson"
+              formControlName="contactPerson"
+              class="form-control"
+              placeholder="Enter your Contact Person"
+            />
+            <div
+              *ngIf="
+                vendoreForm.get('contactPerson')?.invalid &&
+                vendoreForm.get('contactPerson')?.touched
+              "
+              class="text-danger"
+            >
+              <label class="form-label-invalid">
+                Contact Person is required.</label
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="address" class="form-label"
+              >Address<span class="text-danger">*</span></label
+            >
+            <textarea formControlName="address" class="form-control"></textarea>
+            <div *ngIf="vendoreForm.get('address')?.invalid && vendoreForm.get('address')?.touched" class="text-danger">
+              <label class="form-label-invalid" *ngIf="vendoreForm.get('address')?.hasError('required')">
+                Address is required.
+              </label>             
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger btn-sm btn-block"
+            (click)="closeModal()"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-success btn-sm btn-block">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="modal-overlay" [ngClass]="{'show': true}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ isedit ? 'Edit People' : 'Add People' }}</h5>
+                <button type="button" class="btn-close col-1" (click)="closeModal()">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="modal-body">
+                    <input type="text" id="userID" formControlName="userID" hidden />
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username<span class="text-danger">*</span></label>
+                        <input type="text" id="username" formControlName="username" class="form-control" placeholder="Enter your username" />
+                        <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="text-danger">
+                           <label class="form-label-invalid"> Username is required.</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                        <input type="text" id="email" formControlName="email" class="form-control" placeholder="Enter your email" />
+                        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
+                            <label class="form-label-invalid">A valid email is required.</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" *ngIf="!isedit">
+                        <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+                        <input type="password" id="password" formControlName="password" class="form-control" placeholder="Enter your password" />
+                        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+                            <label class="form-label-invalid">Password must be at least 6 characters.</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="roleID" class="form-label">Role<span class="text-danger">*</span></label>
+                        <select class="form-control" formControlName="roleID">
+                            <option [value]="null">Select Role</option>
+                            <option *ngFor="let role of roles" [value]="role.roleID">{{ role.roleName }}</option>
+                        </select>
+                        <div *ngIf="loginForm.get('roleID')?.invalid && loginForm.get('roleID')?.touched" class="text-danger">
+                            <label class="form-label-invalid">Role selection is required.</label>
+                        </div>
+                    </div>                    
+
+                    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-success btn-sm btn-block" >Save</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>

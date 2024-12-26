@@ -1,0 +1,23 @@
+.btn-outline-themecolor{
+    border-color: #2a4646;
+    color: #2a4646;
+}
+.btn-outline-themecolor:hover{
+ background-color: #2a4646;
+ color: #ffffff;
+}
+.dropdown-menu{
+    width: 600px;
+  }
+  
+  @media (max-width: 768px) {
+    .dropdown-menu {
+      width: 220px;
+    }
+  }
+  /* .link{
+    border-bottom: 1 px green;
+  }
+  .link:hover{
+    border-bottom: 0px;
+  } */

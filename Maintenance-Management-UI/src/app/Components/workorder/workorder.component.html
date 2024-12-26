@@ -1,0 +1,443 @@
+<div class="mt-2" *ngIf="!ComplationworkorderModalOpen">
+  <div class="full-screen-loader" *ngIf="isLoading">
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <!-- Data Content-->
+  <div
+    class="d-flex justify-content-between align-items-center pb-2 px-2"
+  >
+    <div class="d-flex">
+      <div class="dropdown me-2">
+        <button
+          class="btn btn-sm filterbtn dropdown-toggle"         
+          type="button"
+          id="assetDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Filters
+        </button>
+        <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+          <li>
+            <div>
+              <form #filterForm="ngForm">
+                <div class="form-group row">
+                  <div class="col-lg-6 form-group">
+                    <label for="id" class="form-label">WO#</label>
+                    <input
+                      type="text"
+                      id="id"
+                      name="id"
+                      class="form-control"
+                      [(ngModel)]="filters.id"
+                    />
+                  </div>
+
+                  <div class="col-lg-6 form-group">
+                    <label for="title" class="form-label">Title</label>
+                    <input
+                      type="text"
+                      id="title"
+                      name="title"
+                      class="form-control"
+                      [(ngModel)]="filters.title"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-lg-6 form-group">
+                    <label for="status" class="form-label">Status</label>
+                    <input
+                      type="text"
+                      id="status"
+                      name="status"
+                      class="form-control"
+                      [(ngModel)]="filters.status"
+                    />
+                  </div>
+                  <div class="col-lg-6 form-group">
+                    <label for="dueDate" class="form-label">Due Date</label>
+                    <input
+                      type="date"
+                      id="dueDate"
+                      class="form-control"
+                      [(ngModel)]="filters.dueDate"
+                      name="dueDate"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-lg-6 form-group">
+                    <label for="startDate" class="form-label"
+                      >Start Date</label
+                    >
+                    <input
+                      type="date"
+                      id="startDate"
+                      class="form-control"
+                      [(ngModel)]="filters.startDate"
+                      name="startDate"
+                    />
+                  </div>
+                  <div class="col-lg-6 form-group">
+                    <label for="priority" class="form-label">Priority</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="filters.priority"
+                      name="priority"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="form-group col-lg-6">
+                    <label for="assignedTo" class="form-label"
+                      >Assigned To</label
+                    >
+                    <input
+                      type="text"
+                      id="assignedTo"
+                      class="form-control"
+                      [(ngModel)]="filters.assignedTo"
+                      name="assignedTo"
+                    />
+                  </div>
+                  <div class="form-group col-lg-6">
+                   <p></p>                  
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-primary mt-3"
+                      (click)="applyFilters()"
+                    >
+                      Apply Filters
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="d-flex align-items-center">
+      <button
+          class="btn btn-sm  dropdown-toggle"
+          style="background-color: rgb(245 245 245);border-color: rgb(221 221 221);"
+          type="button"
+          id="assetDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Select
+        </button>&nbsp;&nbsp;
+    <ul class="dropdown-menu" aria-labelledby="assignedToDropdown" style="width: 60px !important;">
+      <li>
+          <!-- <a class="dropdown-item" > <i class="fa fa-eye text-primary  pe-2"></i>View</a> -->
+        <a class="dropdown-item" (click)="history()"> Work order History</a>
+        <a class="dropdown-item" (click)="open()"> Open work order</a>
+      </li>
+    </ul>
+
+      <input
+        type="text"
+        class="search"
+        placeholder="Search"
+        style="width: 150px"
+        [(ngModel)]="searchTerm"
+        (keyup)="searchWorkOrder()"
+      />
+    </div>
+  </div>
+  <div class="card card-body p-4 mx-2" *ngIf="!filteredWorkOrder || filteredWorkOrder.length === 0">
+    <div class="d-flex justify-content-between align-items-center">
+
+    </div>
+    <div class="pt-2 text-center">
+      <p class="text-muted h5">No Data Found !</p>
+    </div>
+    <div class="pt-5 text-center">  
+      <!-- <button class="btn btn-outline-themecolor">Create Work Order</button> -->
+    </div>
+  </div>
+  <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deleteSelected()"  style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+  <div *ngIf="filteredWorkOrder && filteredWorkOrder.length > 0">
+  
+    <div *ngIf="!isLoading">
+    <div class="table-responsive d-none d-md-block">
+      <div class="table-scroll">
+        <table class="table table-hover">
+          <thead>
+            <tr class="">
+              <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
+              <th (click)="sortBy('id')" style="cursor: pointer; padding-left: 10px !important;">
+                WO#
+                <i
+                  *ngIf="sortColumn === 'id'"
+                  class="fas"
+                  [ngClass]="{
+                    'fa-sort-up': sortOrder === 'asc',
+                    'fa-sort-down': sortOrder === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th (click)="sortBy('title')" style="cursor: pointer">
+                Work Order Title
+                <i
+                  *ngIf="sortColumn === 'title'"
+                  class="fas"
+                  [ngClass]="{
+                    'fa-sort-up': sortOrder === 'asc',
+                    'fa-sort-down': sortOrder === 'desc'
+                  }"
+                ></i>
+              </th>             
+              <th (click)="sortBy('dueDate')" style="cursor: pointer">
+                Due Date
+                <i
+                  *ngIf="sortColumn === 'dueDate'"
+                  class="fas"
+                  [ngClass]="{
+                    'fa-sort-up': sortOrder === 'asc',
+                    'fa-sort-down': sortOrder === 'desc'
+                  }"
+                ></i>
+              </th>
+              <!-- <th (click)="sortBy('startDate')" style="cursor: pointer">
+                Start Date
+                <i
+                  *ngIf="sortColumn === 'startDate'"
+                  class="fas"
+                  [ngClass]="{
+                    'fa-sort-up': sortOrder === 'asc',
+                    'fa-sort-down': sortOrder === 'desc'
+                  }"
+                ></i>
+              </th> -->
+              <th (click)="sortBy('priority')" style="cursor: pointer">
+                Priority
+                <i
+                  *ngIf="sortColumn === 'priority'"
+                  class="fas"
+                  [ngClass]="{
+                    'fa-sort-up': sortOrder === 'asc',
+                    'fa-sort-down': sortOrder === 'desc'
+                  }"
+                ></i>
+              </th>            
+              <th (click)="sortBy('assignedTo')" style="cursor: pointer" *ngIf="!employee">
+                Assigned To
+                <i
+                  *ngIf="sortColumn === 'assignedTo'"
+                  class="fas"
+                  [ngClass]="{
+                    'fa-sort-up': sortOrder === 'asc',
+                    'fa-sort-down': sortOrder === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th *ngIf="!employee" >Payment</th>
+              <th (click)="sortBy('status')" style="cursor: pointer">
+                Status
+                <i
+                  *ngIf="sortColumn === 'status'"
+                  class="fas"
+                  [ngClass]="{
+                    'fa-sort-up': sortOrder === 'asc',
+                    'fa-sort-down': sortOrder === 'desc'
+                  }"
+                ></i>
+              </th>
+              <th *ngIf="employee">Payment</th>
+              <!-- <th class="text-center">Completion Report</th> -->
+              <th class="text-center">Action</th>
+              <th class=" pr-20"></th>
+            
+            </tr>
+          </thead>
+          <tbody>
+            <tr  style=" vertical-align: middle;"
+              *ngFor="let item of filteredWorkOrder | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+              <th class="pl-50"><input type="checkbox" [(ngModel)]="item.selected" (change)="updateSelection()" /> </th>                         
+              <td class="pl-9">
+                {{ item.id }}
+              </td>
+              <td> {{ item.title.length > 20 ? (item.title | slice: 0: 20) + '...' : item.title }}</td>
+             
+              <td>{{ item.dueDate | date : "dd-MM-yyyy hh:mm a" }}</td>
+              <!-- <td>{{ item.startDate | date : "dd-MM-yyyy hh:mm a" }}</td> -->
+              <td>
+                <i
+                  class="fa-solid fa-flag text-danger"
+                  *ngIf="item.priority === 'High'"
+                ></i>
+                <i
+                  class="fa-solid fa-flag text-success"
+                  *ngIf="item.priority === 'Low'"
+                ></i>
+                <i
+                  class="fa-solid fa-flag text-warning"
+                  *ngIf="item.priority === 'Medium'"
+                ></i>
+                &nbsp;{{ item.priority }}
+              </td>
+              <td  *ngIf="!employee">{{ item.assignedToUser }}</td>
+              <td *ngIf="!employee" >
+                <span class="text-danger" *ngIf="item.payment==null && item.status=='Complete'">Pending</span>
+                <span class="pl-25" *ngIf="item.payment==null && item.status!='Complete'">-</span>  
+                <span class="text-success" *ngIf="item.payment!=null"> {{item.payment}}</span>
+              </td>
+
+              <td>
+                <span
+                  class="badge-declined p-1 m-0"
+                  *ngIf="item.status === 'Open'"
+                  >{{ item.status }}</span
+                >
+                <span
+                  class="badge-complate p-1 m-0"
+                  *ngIf="item.status === 'In Progress'"
+                  >{{ item.status }}</span
+                >
+                <span
+                  class="badge-pending p-1 m-0"
+                  *ngIf="item.status === 'On Hold'"
+                  >{{ item.status }}</span
+                >
+                <span
+                  class="badge-hold p-1 m-0"
+                  *ngIf="item.status === 'Complete'"
+                  >{{ item.status }}</span
+                >
+              </td>
+              <td *ngIf="employee" >
+                <button class="btn btn-sm2 btn-warning" *ngIf="item.payment==null && item.status=='Complete'" >Pending</button>
+                <span class="pl-25" *ngIf="item.payment==null && item.status!='Complete'">-</span>  
+                <button class="btn btn-sm2 btn-success" *ngIf="item.payment!=null"> {{item.payment}}</button>
+              </td>
+              <td class="text-center">                          
+                                             
+                  <button class="btn btn-sm2 btn-primary me-1" (click)="openviewModel(item)"> <i class="fa fa-eye"></i></button>
+                  <button class="btn btn-sm2 btn-success me-1"  (click)="openModal(item)" *ngIf="item.status!='Complete'"> <i class="fa fa-pen" ></i></button>
+                  <button class="btn btn-sm2 btn-danger me-1" *ngIf="!employee" (click)="deleteSelected(item.id)"> <i class="fa fa-trash"></i></button>
+               
+              </td>
+              <td class="pr-20"><i  *ngIf="item.status!='Open'"  (click)="review(item.id)" class="fa fa-chevron-circle-down fa-xl" style="color: #408dfb;cursor: pointer;"></i></td>
+              <!-- <td>{{ categoryMapping[item.category] }}</td>             -->
+            </tr>
+          </tbody>
+          <!-- Pagination Controls -->
+        </table>
+        <pagination-controls
+        (pageChange)="pageChanged($event)"
+        [maxSize]="5"
+        [directionLinks]="true"
+        [autoHide]="true"
+        ></pagination-controls>
+      </div>
+    </div>
+    </div>
+    <!-- Mobile view -->
+
+    <ul class="list-group mt-3 d-block d-md-none">
+      <li
+        *ngFor="let item of filteredWorkOrder"
+        class="list-group-item d-flex justify-content-between align-items-start border rounded shadow-sm mb-2"
+        (click)="openModal(item)"
+        style="cursor: pointer; background-color: #f8f9fa"
+      >
+        <div class="flex-grow-1 me-2">
+          <h5 class="mb-1" style="color: #b3b3b3">WO#: {{ item.id }}</h5>
+          <div class="form-group row">
+            <div class="col-6">
+              <h6 class="mb-1">{{ item.title }}</h6>
+            </div>
+            <div class="col-6">
+              <p class="mb-1">
+                <!-- <strong>Status:</strong> -->
+                <span
+                  class=""
+                  [ngClass]="{
+                    'badge-declined': item.status === 'Open',
+                    'badge-pending': item.status === 'In Progress',
+                    'badge-hold': item.status === 'On Hold',
+                    'badge-complate': item.status === 'Complete'
+                  }"
+                >
+                  {{ item.status }}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-6">
+              <strong>Due Date:</strong>
+              <p>{{ item.dueDate | date : "dd-MM-yyyy hh:mm a" }}</p>
+            </div>
+            <div class="col-6">
+              <strong>Start Date:</strong>
+              <p>{{ item.startDate | date : "dd-MM-yyyy hh:mm a" }}</p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-6">
+              <p class="mb-1">
+                <strong>Assigned To:</strong>
+                {{ item.assignedToUser }}
+              </p>
+            </div>
+            <div class="col-6">
+              <p class="mb-1">
+                <i
+                  class="fa-solid fa-flag"
+                  [ngClass]="{
+                    'text-danger': item.priority === 'High',
+                    'text-success': item.priority === 'Low',
+                    'text-warning': item.priority === 'Medium'
+                  }"
+                ></i>
+                &nbsp;{{ item.priority }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="align-self-start">
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+      </li>
+    </ul>
+
+  </div>
+</div>
+  <app-workordermodel
+    [item]="selectedItem"
+    (close)="EditworkorderModalOpen = false"
+    (close)="onModalClose()"
+    *ngIf="EditworkorderModalOpen"
+  >
+  </app-workordermodel>
+  <app-workorderreviewmodel
+    [item]="selectedItem"
+    (close)="ReviewworkorderModalOpen = false"
+    (close)="onModalClose()"
+    *ngIf="ReviewworkorderModalOpen"
+  >
+  </app-workorderreviewmodel>
+  <app-workorderviewmodel
+  [item]="selectedItem"
+  (close)="onModalClose()"
+  *ngIf="workorderviewModalOpen">
+
+  </app-workorderviewmodel>
+  <app-workordercomplation
+  [item]="selectedItem"
+  (close)="onModalClose()"
+  *ngIf="ComplationworkorderModalOpen"
+  >
+  </app-workordercomplation>
+
