@@ -77,40 +77,5 @@ namespace MaintenanceManagementApi.Data.Repository
 
         }
 
-        //Advance Filter location
-        public async Task<List<Location>> GetFilteredlocation(FilterDto filter)
-        {
-            // Start with a base query.
-            var query = _context.Locations.AsQueryable();
-
-            // Filter by admin ID.
-            if (filter.Id != null)  // Assuming Id is nullable in FilterDto
-            {
-                query = query.Where(asset => asset.HadAdmin == filter.Id);
-            }
-
-            if (!string.IsNullOrEmpty(filter.Name))
-            {
-                query = query.Where(w => w.Name.Contains(filter.Name));
-            }
-            if (!string.IsNullOrEmpty(filter.Description))
-            {
-                query = query.Where(w => w.Description == filter.Description);
-
-            }
-            if (!string.IsNullOrEmpty(filter.Status))
-            {
-                int status = filter.Status == "Active" ? 1 : filter.Status == "Inactive" ? 0 : -1;
-
-                if (status != -1) // Only filter if the status matches "Active" or "Inactive"
-                {
-                    query = query.Where(w => w.Status == status);
-                }
-            }
-
-
-            return await query.ToListAsync();
-
-        }
     }
 }

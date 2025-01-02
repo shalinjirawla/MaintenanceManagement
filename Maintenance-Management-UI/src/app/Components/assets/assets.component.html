@@ -82,21 +82,19 @@
        
         <div class="d-flex align-items-center">
           <input
+            name="search"
             type="text"
             class="search me-2"
             placeholder="Search"
-            style="width: 150px"
             [(ngModel)]="searchTerm"
             (keyup)="searchasset()"
           />
-
           <button
             class="btn btn-sm btn-themecolor d-none d-md-inline"
             (click)="openModal(null, 'add')"
           >
           <i class="fa fa-plus fa-xs"></i> New
-          </button>
-         
+          </button>         
         </div>
       </div>
 
@@ -125,7 +123,9 @@
           </button>
         </div>
       </div>
-      <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deleteassets()" style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>
+
+      <button class="btn btn-sm2 btn-danger mb-2 ml-8 font point" *ngIf="selectedItems.length > 0" (click)="deleteassets()" ><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>
+      
       <div *ngIf="!isLoading">
       <div class="table-responsive" *ngIf="filteredassets && filteredassets.length > 0">
         <table class="table table-hover">
@@ -133,23 +133,24 @@
             <tr>
               <th class="text-center pl-50">
                 <input
+                  name="select"
                   type="checkbox"
                   [(ngModel)]="selectAll"
                   (change)="toggleAll()"
                   (change)="updateSelection()"
                 />
               </th>
-              <th (click)="sortBy('assetName')" style="cursor: pointer">
+              <th (click)="sortBy('assetName')" class="point">
                 Name
               </th>
               <!-- <th>Image</th> -->
-              <th (click)="sortBy('location')" style="cursor: pointer">
+              <th (click)="sortBy('location')" class="point">
                 Location
               </th>
-              <th (click)="sortBy('serialNumber')" style="cursor: pointer">
+              <th (click)="sortBy('serialNumber')" class="point">
                 Serial Number
               </th>
-              <th (click)="sortBy('category')" style="cursor: pointer">
+              <th (click)="sortBy('category')" class="point">
                 Asset Type
               </th>
               <th class="text-center pr-50">Action</th>
@@ -159,7 +160,7 @@
             <!-- *ngFor="let item of filteredassets" (click)="openModal(item, 'view')" -->
             <tr
               *ngFor="let item of filteredassets | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" 
-              style="cursor: pointer; vertical-align: middle"  [class.checked]="item.selected"
+              class="point align-middle"  [class.checked]="item.selected"
             >
             <td class="pl-50" style="position: relative; width: 40px; height: 40px;">
               <!-- Default Image - Visible unless Checkbox is Checked -->
@@ -172,30 +173,14 @@
       
               <!-- Checkbox - Visible when Image is Hovered or Checked -->
               <input
+                name="select"
                 type="checkbox"
                 [(ngModel)]="item.selected"
                 (change)="updateSelection()"
                 class="checkbox"
               />
-            </td>
-            
-            
-              <!-- <td style="padding-left: 10px !important;">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="item.selected"
-                  (change)="updateSelection()"
-                  (click)="$event.stopPropagation()"
-                />
-              </td> -->
+            </td>            
               <td>{{ item.assetName }}</td>
-              <!-- <td>
-                <img
-                  [src]="item.assetImage"
-                  style="height: 60px; width: 60px"
-                  (click)="openImageModal(item.assetImage)"
-                />
-              </td> -->
               <td>{{ item.location }}</td>
               <td>{{ item.serialNumber }}</td>
               <td>{{ item.category }}</td>

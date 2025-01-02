@@ -22,7 +22,5 @@ namespace MaintenanceManagementApi.Data.IRepository
         // Delete Location
         Task<bool> Delete(List<int> id);
 
-        //Advance Filter location
-        Task<List<Location>> GetFilteredlocation(FilterDto filter);
     }
 }

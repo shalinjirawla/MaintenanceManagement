@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -84,27 +85,16 @@ namespace MaintenanceManagementApi.Bussiness.Service
             return data;
         }
 
-        //Advance Filter Inventory Item
-        public async Task<List<InventoryItemDto>> GetInventoryitems(FilterDto filter)
-        {
-            var data = await _inventoryRepository.GetFilteredItems(filter);
-            var itemdata = _mapper.Map<List<InventoryItemDto>>(data);
-            return itemdata;
-        }
-
-        //Advance Filter Inventory Item category 
-        public async Task<List<InventoryCategoryDto>> GetInventorycategory(FilterDto filter)
-        {
-            var data = await _inventoryRepository.GetInventorycategory(filter);
-            var itemdata = _mapper.Map<List<InventoryCategoryDto>>(data);
-            return itemdata;
-
-        }
-
         //Get inventory item count for dashboard
         public async Task<List<DashbordCountsDto>> GetInventorycount(int id)
         {
             return await _inventoryRepository.GetInventorycount(id);
+        }
+
+        //Check Exist Category
+        public async Task<bool> CheckExist(string category, int adminid, int id)
+        {
+            return await _inventoryRepository.CheckExist(category, adminid, id);
         }
     }
 }

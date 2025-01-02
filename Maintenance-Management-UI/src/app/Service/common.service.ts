@@ -10,11 +10,13 @@ import { Vendor } from '../Model/vendor.model';
 import { Inventorycategories } from '../Model/InventoryCategory.model';
 import { InventoryItem } from '../Model/InventoryItem.model';
 import { PurchaseOrder } from '../Model/purchaseOrder.model';
+import { Payemnt } from '../Model/payment.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
+  isLoading: boolean = false;
   constructor(private requestService: RequestService) {}
 
   getRequests(userId: number) {
@@ -77,6 +79,15 @@ export class CommonService {
   sortWorkOrder(workOrders: Workorder[], sortColumn: string, sortOrder: 'asc' | 'desc') {
     return this.sort(workOrders, sortColumn, sortOrder);
   }
+  sortPayment(payment: Payemnt[], sortColumn: string, sortOrder: 'asc' | 'desc') {
+    return this.sort(payment, sortColumn, sortOrder);
+  }
+  sortPeople(payment: Login[], sortColumn: string, sortOrder: 'asc' | 'desc') {
+    return this.sort(payment, sortColumn, sortOrder);
+  }
+  sortVendor(payment: Vendor[], sortColumn: string, sortOrder: 'asc' | 'desc') {
+    return this.sort(payment, sortColumn, sortOrder);
+  }
 
   filterAsset(assets: Asset[], searchTerm: string) {
     return this.filter(assets, searchTerm, [
@@ -97,6 +108,9 @@ export class CommonService {
   sortPM(assets: PreventiveMaintenance[], sortColumn: string, sortOrder: 'asc' | 'desc') {
     return this.sort(assets, sortColumn, sortOrder);
   }
+  sortPO(assets: PurchaseOrder[], sortColumn: string, sortOrder: 'asc' | 'desc') {
+    return this.sort(assets, sortColumn, sortOrder);
+  }
 
   filterLocation(locations: Location[], searchTerm: string) {
     return this.filter(locations, searchTerm, ['name', 'description']);
@@ -111,7 +125,7 @@ export class CommonService {
     return this.filter(vendor,searchTerm,['categoryName','description','isActive']);
   }
   filterInventoryItem(vendor:InventoryItem[],searchTerm:string){
-    return this.filter(vendor,searchTerm,['name','sku','unit','isActive']);
+    return this.filter(vendor,searchTerm,['id','name','sku','unit','isActive','status','availableQuantity']);
   }
   sortInventoryItem(InventoryItem: InventoryItem[], sortColumn: string, sortOrder: 'asc' | 'desc') {
     return this.sort(InventoryItem, sortColumn, sortOrder);
@@ -121,5 +135,8 @@ export class CommonService {
       'title', 'orderNumber', 'vendorname', 'dateCreated', 'items', 'quantity','totalAmount','status'
     ]);
   }
-
+  filterPayment(payment:Payemnt[],searchTerm:string){
+    return this.filter(payment,searchTerm,['paymentId','amount','datetime','email','requestId','workorderId','status']);
+  }
+  
 }

@@ -64,7 +64,7 @@ export class WorkOrderService {
       // Append each key-value pair, including those with undefined or null values
       params = params.append(key, value !== undefined ? value : '');
     });
-    return this.http.get<Workorder[]>(`${this.apiUrl}/Filterdata`, { params });
+    return this.http.get<Workorder[]>(`${this.apiUrl}/FilterWorkOrder`, { params });
   }
 
   completeworkorder(formData: WorkOrderCompletion): Observable<any> {

@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormsModule,  ReactiveFormsModule,} from '@angular/forms';
 import { Workorder } from '../../../Model/workorder.model';
 import { Login } from '../../../Model/login.model';
 import { UserService } from '../../../Service/user.service';
@@ -43,7 +37,6 @@ export class WorkordermodelComponent implements OnInit {
     private workOrderService: WorkOrderService,
     private locationService: LocationService,
     private assetsService: AssetsService,
-    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -67,6 +60,8 @@ export class WorkordermodelComponent implements OnInit {
       this.assets = response;
     });
   }
+
+  //Fetch Employee
   loadEmployees(start: string, end: string) {
     const hadId = Number(localStorage.getItem('UserId'));
     this.userService.getEmployees(start, end, hadId).subscribe((employees) => {
@@ -81,7 +76,9 @@ export class WorkordermodelComponent implements OnInit {
       }
     });
   }
-  Checkawailable() {
+
+  //fetch available employee
+  Checkavailable() {
     const start = this.item.startDate.toString();
     const end = this.item.dueDate.toString();
     if (start != undefined && end != undefined) {
@@ -89,14 +86,7 @@ export class WorkordermodelComponent implements OnInit {
     }
   }
 
-  updateStatus(newStatus: string) {
-    const userid = Number(localStorage.getItem('UserId'));
-    this.item.status = newStatus; // or handle accordingly
-    this.item.completedBy = userid;
-    this.workOrderService
-      .updateworkorderstatus(this.item)
-      .subscribe((response) => {});
-  }
+  //work order edit
   editworkorder() {
     const data = new Workorder();
     data.startDate = this.item.startDate;
@@ -118,6 +108,8 @@ export class WorkordermodelComponent implements OnInit {
       });
     });
   }
+
+  //Close model
   closeModal() {
     this.close.emit(); // Emit close event
   }

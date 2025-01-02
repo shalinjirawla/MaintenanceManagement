@@ -14,10 +14,12 @@ namespace MaintenanceManagementApi.Controllers
     public class VendorController : ControllerBase
     {
         private readonly IVendorService _vendorService;
+        private readonly IGenericFilterService<VendorDto> _iGenericFilterService;
 
-        public VendorController(IVendorService vendorService)
+        public VendorController(IVendorService vendorService, IGenericFilterService<VendorDto> iGenericFilterService)
         {
             _vendorService = vendorService;
+            _iGenericFilterService = iGenericFilterService;
         }
 
         // Register New Vendor  
@@ -53,13 +55,12 @@ namespace MaintenanceManagementApi.Controllers
 
             return Ok(count);
         }
-
         //Advance Filter Vendore
-        [HttpGet("Filterdata")]
-        public async Task<ActionResult<IEnumerable<VendorDto>>> GetInventoryitems([FromQuery] FilterDto filter)
+        [HttpGet("FilterVendor")]
+        public async Task<ActionResult<IEnumerable<VendorDto>>> FilterLocations([FromQuery] FilterDto filter)
         {
-            var items = await _vendorService.GetVendore(filter);
-            return Ok(items);
+            var locations = await _iGenericFilterService.GetFilteredData(filter);
+            return Ok(locations);
         }
     }
 }

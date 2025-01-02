@@ -17,8 +17,6 @@ namespace MaintenanceManagementApi.Bussiness.IService
 
         //Delete Vendor
         Task<bool> DeleteVendor(List<int> ids);
-
-        //Advance Filter Vendore
-        Task<List<VendorDto>> GetVendore(FilterDto filter);
+        
     }
 }

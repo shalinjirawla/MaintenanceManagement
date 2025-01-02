@@ -6,12 +6,12 @@ import { RequestService } from '../../../Service/request.service';
 import { Workorder } from '../../../Model/workorder.model';
 import { Quotation } from '../../../Model/quotation.model';
 import { WorkRequestWithStatusDto } from '../../../Model/WorkRequestWithStatusDto';
-import { response } from 'express';
 import { NotificationService } from '../../../Service/notification.service';
 import { Notification } from '../../../Model/notification.model';
 import Swal from 'sweetalert2';
 import { Location } from '../../../Model/Location.model';
 import { LocationService } from '../../../Service/location.service';
+import { noWhitespaceValidator } from '../../validation/custom-validators';
 
 @Component({
   selector: 'app-requestmodel',
@@ -37,14 +37,22 @@ export class RequestmodelComponent implements OnInit {
   requestid!:number;
   filteredWorkRequests!: WorkRequestWithStatusDto[];
   location!: Location[];
+  isSubmitting = false; 
 
   constructor(private fb: FormBuilder,
     private requestService:RequestService,
     private notificationService:NotificationService,
-    private locationService: LocationService){
-
+    private locationService: LocationService){      
     }
   ngOnInit() {    
+     // Initialize the reactive form
+     this.requestForm = this.fb.group({
+      title: ['', [Validators.required, noWhitespaceValidator]],
+      description: ['', [Validators.required, Validators.minLength(10),noWhitespaceValidator]],
+      location: ['', [Validators.required]],
+      priority: ['', [Validators.required]],
+      image: ['']
+    });
 
     if (this.item) {
       this.workorder = { ...this.item.workRequest }; // Populate work order with selected item data for editing
@@ -77,20 +85,20 @@ export class RequestmodelComponent implements OnInit {
   }
 
   onSubmit() {
-    
-    if (!this.isQuotation) {
-      
+    debugger;    
+    if (this.requestForm.valid && !this.isQuotation && !this.isSubmitting) { 
+      this.isSubmitting = true;     
       const formData = new FormData();
       this.workorder.createdBy=Number(localStorage.getItem("UserId"));
       this.newRequest.hadAdminId=Number(localStorage.getItem("HadAdminId"));      
       formData.append('Id', '0');  // Match property names (case-sensitive)
-      formData.append('Title',this.workorder.title);
-      formData.append('Description', this.workorder.description);
-      formData.append('Priority', this.workorder.priority);
+      formData.append('Title',this.requestForm.value.title);
+      formData.append('Description', this.requestForm.value.description);
+      formData.append('Priority', this.requestForm.value.priority);
       formData.append('Image', this.workorder.image);
       formData.append('CreatedBy', this.workorder.createdBy.toString());
       formData.append('Status', 'Pending');
-      formData.append('Location',this.workorder.location.toString());
+      formData.append('Location',this.requestForm.value.location.toString());
       formData.append('HadAdminId', this.newRequest.hadAdminId.toString());
 
       if (this.selectedFile) {
@@ -115,6 +123,7 @@ export class RequestmodelComponent implements OnInit {
           confirmButtonColor: '#3085d6',
         }).then(() => {
           // Close the modal after the user clicks "OK"
+          this.isSubmitting = false; 
           this.closeModal();
         });
              
@@ -142,6 +151,7 @@ export class RequestmodelComponent implements OnInit {
     });
   }
   onFileSelected(event: any) {
+    debugger;
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;

@@ -7,10 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { VendorService } from '../../../Service/vendor.service';
-import { response } from 'express';
-import { UserService } from '../../../Service/user.service';
 import Swal from 'sweetalert2';
-import { Vendor } from '../../../Model/vendor.model';
+import { cleanWhitespace, noWhitespaceValidator,contactNumberValidator } from '../../validation/custom-validators';
 
 @Component({
   selector: 'app-vendormodel',
@@ -24,18 +22,19 @@ export class VendormodelComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   isModalOpen = true;
   vendoreForm: FormGroup;  
+  isSubmitting = false;
 
   constructor(private fb: FormBuilder, private vendorService: VendorService) {
     this.vendoreForm = fb.group({
       id: [0],
-      name: ['', Validators.required],
-      address: ['', Validators.required],
-      contactNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      name: ['', [Validators.required, noWhitespaceValidator]],
+      address: ['', [Validators.required,noWhitespaceValidator]],
+      contactNumber: ['', [Validators.required, contactNumberValidator]],
       email: ['', [Validators.required, Validators.email]],
-      contactPerson: ['', Validators.required],
+      contactPerson: ['', [Validators.required,noWhitespaceValidator]],
       hadAdminId: [],
       isActive: [],
-      companyName: ['', Validators.required],
+      companyName: ['', [Validators.required, noWhitespaceValidator]],
     });
   }
   ngOnInit(): void {
@@ -44,18 +43,20 @@ export class VendormodelComponent implements OnInit {
       this.vendoreForm.patchValue(this.item);
     }
   }
-  onContactNumberInput(event: any) {
-    // Remove non-numeric characters
-    event.target.value = event.target.value.replace(/[^0-9]/g, '');
-  }
   
   closeModal() {
     this.close.emit();
   }
-  onSubmit() {
-    
-    if (this.vendoreForm.valid) {
+  onSubmit() {    
+    debugger;
+    if (this.vendoreForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
       const formdata = this.vendoreForm.value;
+      for (const key in formdata) {
+        if (formdata[key] && typeof formdata[key] === 'string') {
+          formdata[key] = cleanWhitespace(formdata[key]); // Clean each string value
+        }
+      }
       formdata.hadAdminId = Number(localStorage.getItem('UserId'));
       formdata.isActive = true;
 
@@ -75,8 +76,8 @@ export class VendormodelComponent implements OnInit {
             confirmButtonColor: '#3085d6',
           }).then(() => {
             // Close the modal after the user clicks "OK"
-
             this.closeModal();
+            this.isSubmitting = false;
           });
         },
       });

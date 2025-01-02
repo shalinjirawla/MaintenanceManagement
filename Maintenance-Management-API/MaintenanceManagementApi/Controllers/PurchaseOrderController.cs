@@ -12,10 +12,12 @@ namespace MaintenanceManagementApi.Controllers
     public class PurchaseOrderController : ControllerBase
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
+        private readonly IGenericFilterService<PurchaseOrderListDto> _iGenericFilterService;
 
-        public PurchaseOrderController(IPurchaseOrderService purchaseOrderService)
+        public PurchaseOrderController(IPurchaseOrderService purchaseOrderService, IGenericFilterService<PurchaseOrderListDto> iGenericFilterService)
         {
             _purchaseOrderService = purchaseOrderService;
+            _iGenericFilterService = iGenericFilterService;
         }
 
         // Add New Purchase Order 
@@ -69,12 +71,22 @@ namespace MaintenanceManagementApi.Controllers
             var result = await _purchaseOrderService.UpdatePurchaseOrderStatus(dto.Id, dto.Status);
             if (!result) return BadRequest("Update failed");            
             return Ok(new { message = "Status updated successfully" });
+        }        
+
+        //Check Exist PO number
+        [HttpGet("exists")]
+        public async Task<bool> CheckPoNoExists(string ponumber, int id, int uid)
+        {
+            var result = await _purchaseOrderService.CheckExist(ponumber, id, uid);
+            return result;
         }
 
-        public class UpdateStatusDto
+        //Advance Filter purchase order 
+        [HttpGet("FilterPurchseOrder")]
+        public async Task<ActionResult<IEnumerable<PurchaseOrderListDto>>> FilterPurchseOrder([FromQuery] FilterDto filter)
         {
-            public int Id { get; set; }
-            public string Status { get; set; }
+            var assets = await _iGenericFilterService.GetFilteredData(filter);
+            return Ok(assets);
         }
 
     }

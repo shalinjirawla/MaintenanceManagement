@@ -20,7 +20,7 @@
                       
                           <div class="col-lg-6 form-group m-0">
                             <label for="priority" class="form-label">Priority</label>
-                            <input type="text" class="form-control" [(ngModel)]="filters.priority" name="priority">
+                            <input type="text" id="priority" class="form-control" [(ngModel)]="filters.priority" name="priority">
                           </div>
                                                               
                         </div>
@@ -50,7 +50,7 @@
           </div>
         </div>
         <div class="d-flex align-items-center">                      
-          <input type="text" class="search me-2" placeholder="Search" style="width: 150px;" [(ngModel)]="searchTerm" 
+          <input type="text" name="search" class="search me-2" placeholder="Search" [(ngModel)]="searchTerm" 
           (keyup)="searchRequests()">   
           <button class="btn btn-sm btn-themecolor d-none d-md-inline" (click)="openModal()">Create Request</button>
           <button class="btn btn-sm btn-outline-themecolor d-md-none" (click)="openModal()"><i class="fa fa-plus"></i></button>
@@ -81,30 +81,36 @@
                 <table class="table table-hover">    
                     <thead>
                         <tr>
-                          <th class="pl-50" style="cursor: pointer;"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> 
+                          <th class="pl-50 point"><input type="checkbox" name="select" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> 
                           </th>
                             <th  (click)="sortBy('title')">Title  <i *ngIf="sortColumn === 'title'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i></th>
                          
                             <th>Image</th>
-                            <th (click)="sortBy('createdDate')" style="cursor: pointer;">Submitted Date
+                            <th (click)="sortBy('createdDate')" class="point">Submitted Date
                               <i *ngIf="sortColumn === 'createdDate'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i>
                             </th>
-                            <th (click)="sortBy('priority')" style="cursor: pointer;">Priority
+                            <th (click)="sortBy('priority')" class="point">Priority
                               <i *ngIf="sortColumn === 'priority'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i>
                             </th>
-                            <th (click)="sortBy('status')" style="cursor: pointer;">Status
+                            <th (click)="sortBy('status')" class="point">Status
                               <i *ngIf="sortColumn === 'status'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i>
                             </th>
                             <th class="pr-50">Service Estimate</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let item of filteredWorkRequests" style="cursor: pointer;vertical-align: middle;" 
+                        <tr *ngFor="let item of filteredWorkRequests | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="point align-middle"
                         (click)="openFeedbackModal(item)">
-                        <td class="pl-50"><input type="checkbox" [(ngModel)]="item.workRequest.selected" (change)="updateSelection()" (click)="$event.stopPropagation()"  /></td>
+                        <td class="pl-50"><input type="checkbox" name="select" [(ngModel)]="item.workRequest.selected" (change)="updateSelection()" (click)="$event.stopPropagation()"  /></td>
                         <td>  {{ item.workRequest.title.length > 25 ? (item.workRequest.title | slice: 0: 25) + '...' : item.workRequest.title }}</td>
                          
-                            <td> <img [src]="item.workRequest.image"style="width: 50px; height: 50px;" *ngIf="item.workRequest.image" /></td>
+                        <td>
+                          <ng-container *ngIf="item.workRequest.image; else noImage">
+                            <img [src]="item.workRequest.image" class="h-10 w-10" />
+                          </ng-container>
+                          <ng-template #noImage>-</ng-template>
+                        </td>
+                        
                             <td>{{ item.workRequest.createdDate | date:'dd-MM-YYYY' }}</td>
                             <td>{{ item.workRequest.priority }}</td>
                             <td><span class="badge-declined p-1 m-0"  *ngIf="item.workRequest.status === 'Declined'">{{ item.workRequest.status }}</span>
@@ -117,21 +123,22 @@
                               <button class="btn btn-sm btn-secondary" (click)="openModalquotation(item.body,item.workRequest.id)" (click)="$event.stopPropagation()"  *ngIf="item.status === 1">Accept</button>
                               <button class="btn btn-sm btn-secondary" (click)="openModalquotation(item.body,item.workRequest.id)" (click)="$event.stopPropagation()"  *ngIf="item.status === 2 && item.workRequest.status !== 'Declined'">show</button>
                             </td>
-                            <!-- <td>{{ item.createdBy}}</td> -->
-                            <!-- <td>{{ item.estimatedCost}}</td>
-                            <td>{{ item.location }}</td>
-                            <td>{{ item.estimatedCost }}</td>                        
-                            <td>{{ item.approvedBy }}</td>   -->
                         </tr>
                     </tbody>
                 </table>
+                <pagination-controls
+                (pageChange)="pageChanged($event)"
+                [maxSize]="5"
+                [directionLinks]="true"
+                [autoHide]="true"
+                ></pagination-controls>
             </div>
             </div>
             <div class="fixed-bottom d-flex justify-content-center p-3" *ngIf="selectedItems.length > 0">
                 <div class="bg-dark text-white p-3 d-flex justify-content-between align-items-center rounded">
                   <span>{{ selectedItems.length }} selected</span>&nbsp;&nbsp;
-                  <button class="btn btn-own text-white" (click)="deleteSelected()" style="cursor: pointer;">Delete</button>
-                  <i class="fas fa-times ms-3" (click)="clearSelection()" style="cursor: pointer;"></i>
+                  <button class="btn btn-own text-white" (click)="deleteSelected()">Delete</button>
+                  <i class="fas fa-times ms-3" (click)="clearSelection()" class="point"></i>
                 </div>
             </div>
         </div>

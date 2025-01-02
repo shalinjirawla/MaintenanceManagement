@@ -76,21 +76,5 @@ namespace MaintenanceManagementApi.Bussiness.Service
             return result;
         }
 
-        //Advance Filter Assets 
-        public async Task<IEnumerable<AssetDto>> GetFilteredassets(FilterDto filter)
-        {
-            var data = await _assetRepository.GetFilteredAssets(filter);
-            string baseUrl = "https://localhost:7025/wwwroot/Uploads/";
-            var assetdata = _mapper.Map<IEnumerable<AssetDto>>(data);
-            foreach (var message in assetdata)
-            {
-                if (!string.IsNullOrEmpty(message.AssetImage))
-                {
-                    var imageNames = message.AssetImage.Split(',');
-                    message.AssetImage = string.Join(",", imageNames.Select(name => $"{baseUrl}{name}"));
-                }
-            }
-            return assetdata;
-        }
     }
 }

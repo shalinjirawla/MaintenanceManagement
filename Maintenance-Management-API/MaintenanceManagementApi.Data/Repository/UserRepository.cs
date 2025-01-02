@@ -23,17 +23,17 @@ namespace MaintenanceManagementApi.Data.Repository
         // Register New User
         public async Task<int> Insert(User user)
         {
-            
+
             if (user.UserID == 0)
             {
                 bool userExists = await _context.Users
                 .AnyAsync(u => u.Username == user.Username && u.HadAdminId == user.HadAdminId);
 
-            if (userExists)
-            {                   
-                return 0; // Indicates that the user already exists
-            }
-           
+                if (userExists)
+                {
+                    return 0; // Indicates that the user already exists
+                }
+
                 await _context.Users.AddAsync(user);
                 _context.SaveChanges();
                 return user.UserID;
@@ -43,6 +43,14 @@ namespace MaintenanceManagementApi.Data.Repository
                 var existingUser = await _context.Users.FindAsync(user.UserID);
                 if (existingUser != null)
                 {
+                    bool usernameTaken = await _context.Users
+              .AnyAsync(u => u.Username == user.Username && u.HadAdminId == user.HadAdminId && u.UserID != user.UserID);
+
+
+                    if (usernameTaken)
+                    {
+                        return 0; // Username is already taken by another user
+                    }
                     existingUser.UpdatedAt = DateTime.Now;
 
                     // Update fields
@@ -89,16 +97,6 @@ namespace MaintenanceManagementApi.Data.Repository
         //Get awailable employees
         public async Task<List<User>> GetAvailableEmployees(DateTime startDate, DateTime endDate, int hadid)
         {
-            // Get all employees (RoleID == 4) who are not assigned to incomplete or overlapping work orders
-            //var availableEmployees = await (from u in _context.Users
-            //                                where u.RoleID == 4 && u.HadAdminId==hadid &&
-            //                                      !(from w in _context.WorkOrders
-            //                                        where w.Status != "Complete" &&
-            //                                              ((w.StartDate < endDate && w.DueDate > startDate)) &&
-            //                                              w.AssignedTo == u.UserID
-            //                                        select w).Any()
-            //                                select u).ToListAsync();
-
             //return availableEmployees;
             var availableEmployees = await (from u in _context.Users
                                             where u.RoleID == 4 && u.HadAdminId == hadid &&
@@ -157,39 +155,7 @@ namespace MaintenanceManagementApi.Data.Repository
             //_context.SaveChanges();
             //return users.Count;
         }
-
-        //Advance Filter User
-        public async Task<IEnumerable<UserDto>> GetFilteredUsers(FilterDto filter)
-        {
-            var query = from user in _context.Users
-                         join role in _context.Roles on user.RoleID equals role.RoleID
-                         where user.HadAdminId == filter.Id
-                         select new UserDto
-                         {
-                             UserID = user.UserID,
-                             Username = user.Username,
-                             Email = user.Email,
-                             RoleName = role.RoleName,
-                             RoleID = user.RoleID,
-                             Password = user.Password,
-                         };
-
-            if (!string.IsNullOrEmpty(filter.Username))
-            {
-                query = query.Where(w => w.Username.Contains(filter.Username));
-            }
-            if (!string.IsNullOrEmpty(filter.Email))
-            {
-                query = query.Where(w => w.Email == filter.Email);
-            }
-            if (!string.IsNullOrEmpty(filter.Role))
-            {
-                query = query.Where(w => w.RoleName == filter.Role);
-            }
-
-            return await query.ToListAsync();
-        }
-
+     
         // Get All emplyee count by admin
         public async Task<int> GetAllEmployeeallcount(int id)
         {
@@ -198,7 +164,23 @@ namespace MaintenanceManagementApi.Data.Repository
             return await query.CountAsync();  // Count the number of users
         }
 
-       
+        //Check Exist User
+        public async Task<bool> CheckExist(string username, int id, int uid)
+        {
+            if (uid == 0)
+            {
+                return await _context.Users.AnyAsync(u => u.Username == username && u.HadAdminId == id);
+            }
+            else
+            {
+                return await _context.Users.AnyAsync(u =>
+                    u.Username == username &&
+                    u.HadAdminId == id &&
+                    u.UserID != uid
+                );
+            }
+        }
+
 
     }
 }

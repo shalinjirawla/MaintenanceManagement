@@ -1,31 +1,17 @@
 <!-- Modal for Creating Request -->
-<div class=" " tabindex="-1" >
-    <div class=" ">
+<div tabindex="-1" >
+    <div>
       <div class="modal-content">
-  
+        <!-- start model header -->
         <div class="modal-header">
           <h5 class="modal-title" style="font-size: 15px !important; margin-left: 25px !important;">WO#00{{ item.id }}</h5>
           <button type="button" class="btn-close col-1" (click)="closeModal()">
             <span>&times;</span>
           </button>
-        </div>
-  
-        <ul class="nav nav-tabs" [hidden]="true">
-          <li class="nav-item pe-3" (click)="setActiveTab('task')">
-            <a class="nav-link" [ngClass]="{ active: activeTab === 'task' }"
-              >Task</a
-            >
-          </li>
-          <li class="nav-item" (click)="setActiveTab('payment')">
-            <a
-              class="nav-link"
-              [ngClass]="{ active: activeTab === 'payment' }"
-              >Payment</a
-            >
-          </li>
-        </ul>
-  
+        </div>  
+        <!-- end model header -->
         <form #requestForm="ngForm">
+        <!-- start model body --> 
           <div class="modal-body">             
               <div class="p-4 pt-0">
                 <!-- Tab Content -->
@@ -45,8 +31,8 @@
                     <p class="text-muted"><b>Task</b></p>                           
                   <div class="form-group row">
                     <div class="col-lg-6">
-                    <label class="form-label">Add Notes/Comments</label>
-                    <input type="text" formControlName="notesComments" class="form-control" />
+                    <label class="form-label" for="notesComments">Add Notes/Comments</label>
+                    <input type="text" formControlName="notesComments" id="notesComments" class="form-control" />
                     <div *ngIf="completedWorkOrderForm.get('notesComments')?.errors && completedWorkOrderForm.get('notesComments')?.touched">
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('notesComments')?.errors?.['required']">This field is required.</small>
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('notesComments')?.errors?.['minlength']">Minimum 5 characters required.</small>
@@ -54,8 +40,8 @@
                   </div>                  
                   
                   <div class="col-lg-6">
-                    <label class="form-label">Description of Occurrence</label>
-                    <textarea formControlName="descriptionOfOccurrence" class="form-control col-lg-8" rows="3"></textarea>
+                    <label class="form-label" for="descriptionOfOccurrence">Description of Occurrence</label>
+                    <textarea formControlName="descriptionOfOccurrence" id="descriptionOfOccurrence" class="form-control col-lg-8" rows="1"></textarea>
                     <div *ngIf="completedWorkOrderForm.get('descriptionOfOccurrence')?.errors && completedWorkOrderForm.get('descriptionOfOccurrence')?.touched">
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('descriptionOfOccurrence')?.errors?.['required']">This field is required.</small>
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('descriptionOfOccurrence')?.errors?.['minlength']">Minimum 10 characters required.</small>
@@ -65,16 +51,16 @@
                   
                   <div class="form-group row">
                     <div class="col-lg-6">
-                    <label class="form-label">Challenges Encountered</label>
-                    <textarea formControlName="challengesEncountered" class="form-control col-lg-8" rows="3"></textarea>
+                    <label class="form-label" for="challengesEncountered">Challenges Encountered</label>
+                    <textarea formControlName="challengesEncountered" id="challengesEncountered" class="form-control col-lg-8" rows="1"></textarea>
                     <div *ngIf="completedWorkOrderForm.get('challengesEncountered')?.errors && completedWorkOrderForm.get('challengesEncountered')?.touched">
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('challengesEncountered')?.errors?.['maxlength']">Maximum 500 characters allowed.</small>
                     </div>
                   </div>
                   
                   <div class="col-lg-6">
-                    <label class="form-label">Spare Parts/Materials Utilized</label>
-                    <textarea formControlName="sparePartsMaterialsUsed" class="form-control col-lg-8" rows="2"></textarea>
+                    <label class="form-label" for="sparePartsMaterialsUsed">Spare Parts/Materials Utilized</label>
+                    <textarea formControlName="sparePartsMaterialsUsed" id="sparePartsMaterialsUsed" class="form-control col-lg-8" rows="1"></textarea>
                     <div *ngIf="completedWorkOrderForm.get('sparePartsMaterialsUsed')?.errors && completedWorkOrderForm.get('sparePartsMaterialsUsed')?.touched">
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('sparePartsMaterialsUsed')?.errors?.['maxlength']">Maximum 200 characters allowed.</small>
                     </div>
@@ -83,16 +69,16 @@
                   
                   <div class="form-group row">
                     <div class="col-lg-6">
-                    <label class="form-label">Additional Comments</label>
-                    <textarea formControlName="extraWorkDetails" class="form-control col-lg-8" rows="3"></textarea>
+                    <label class="form-label" for="extraWorkDetails">Additional Comments</label>
+                    <textarea formControlName="extraWorkDetails" id="extraWorkDetails" class="form-control col-lg-8" rows="1"></textarea>
                     <div *ngIf="completedWorkOrderForm.get('extraWorkDetails')?.errors && completedWorkOrderForm.get('extraWorkDetails')?.touched">
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('extraWorkDetails')?.errors?.['maxlength']">Maximum 500 characters allowed.</small>
                     </div>
                   </div>
                   
                   <div class="col-lg-6">
-                    <label class="form-label">Deviations from Original Plan</label>
-                    <textarea formControlName="planDeviations" class="form-control col-lg-8" rows="2"></textarea>
+                    <label class="form-label" for="planDeviations">Deviations from Original Plan</label>
+                    <textarea formControlName="planDeviations" id="planDeviations" class="form-control col-lg-8" rows="1"></textarea>
                     <div *ngIf="completedWorkOrderForm.get('planDeviations')?.errors && completedWorkOrderForm.get('planDeviations')?.touched">
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('planDeviations')?.errors?.['maxlength']">Maximum 200 characters allowed.</small>
                     </div>
@@ -101,17 +87,17 @@
                   
                   <div class="form-group row">
                     <div class="col-lg-6">
-                    <label class="form-label">Actual Labor & Hours Spent</label>
-                    <input type="number" formControlName="actualLaborHours" class="form-control col-lg-8" placeholder="Hours spent" />
+                    <label class="form-label" for="actualLaborHours">Actual Labor & Hours Spent</label>
+                    <input type="number" formControlName="actualLaborHours" id="actualLaborHours" class="form-control col-lg-8" placeholder="Hours spent" />
                     <div *ngIf="completedWorkOrderForm.get('actualLaborHours')?.errors && completedWorkOrderForm.get('actualLaborHours')?.touched">
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('actualLaborHours')?.errors?.['required']">This field is required.</small>
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('actualLaborHours')?.errors?.['min']">Minimum of 1 hour required.</small>
                     </div>
                 </div>
                     <div class="col-lg-6">
-                    <label class="form-label">Work Hours</label>
+                    <label class="form-label" for="workHours">Work Hours</label>
                     <div class="d-flex align-items-center">
-                    <input type="time" formControlName="workHours" formControlName="startTime" class="form-control" placeholder="e.g., 9:00 AM - 3:00 PM" />&nbsp;to&nbsp;
+                    <input type="time" formControlName="workHours" id="workHours" formControlName="startTime" class="form-control" placeholder="e.g., 9:00 AM - 3:00 PM" />&nbsp;to&nbsp;
                     <input type="time" formControlName="workHours" formControlName="endTime" class="form-control" placeholder="e.g., 9:00 AM - 3:00 PM" />
                     </div>
                     <div *ngIf="completedWorkOrderForm.hasError('invalidDuration') && completedWorkOrderForm.get('endTime')?.touched">
@@ -128,16 +114,16 @@
                   </div>
                   <div class="form-group row">
                     <div class="col-lg-6">
-                    <label class="form-label">Proof Of Completion</label>
-                    <input type="file" formControlName="proofOfCompletion" class="form-control" />
+                    <label class="form-label" for="proofOfCompletion">Proof Of Completion</label>
+                    <input type="file" formControlName="proofOfCompletion" id="proofOfCompletion" class="form-control" />
                     <div *ngIf="completedWorkOrderForm.get('proofOfCompletion')?.errors && completedWorkOrderForm.get('proofOfCompletion')?.touched">
                       <small class="text-danger" *ngIf="completedWorkOrderForm.get('proofOfCompletion')?.errors?.['required']">This field is required.</small>
                     </div>
                 </div>
                     <div class="col-lg-6">
-                    <label class="form-label">Update Status</label>
-                    <select class="form-control col-lg-8" formControlName="status" (change)="onStatusChange($event,item)"
-                    [disabled]="item.status === 'Complete'">
+                    <label class="form-label" for="status">Update Status</label>
+                    <select class="form-control col-lg-8" formControlName="status" id="status" (change)="onStatusChange($event,item)"
+                   >
                       <option
                         *ngFor="let status of statusOptions"
                         [value]="status.value"
@@ -154,10 +140,10 @@
                         <div class="card card shadow-sm">
                             <div class="card-title p-2 m-0 d-flex justify-content-between">
                                 <div>
-                                    <i class="fa fa-wrench h3"></i>&nbsp;<label class="form-label">Total Parts Costing   {{ totalCost | currency: 'INR': 'symbol' }}</label> 
+                                    <i class="fa fa-wrench h3"></i>&nbsp;<span class="form-label">Total Parts Costing   {{ totalCost | currency: 'INR': 'symbol' }}</span> 
                                 </div>
                                 <div class="text-end">
-                                    <button type="button" class="btn-block btn btn-part"  (click)="openpart()">+Add Part</button>
+                                    <button type="button" class="btn-block btn btn-part"  (click)="openpartModel()">+Add Part</button>
                                 </div>
                             </div>
                             <div class="card-body" formArrayName="selectedItems">
@@ -172,14 +158,14 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let item of selectedItems.controls; let i = index" [formGroupName]="i">
-                                            <td> <label class="form-label col-lg-4">{{ item.get('name')?.value }}</label></td> 
-                                            <td class=" text-center"><label class="form-label col-lg-4">{{ item.get('cost')?.value }}</label></td>
-                                            <td class=" text-center" [hidden]="true"><label class="form-label col-lg-4">{{ item.get('taxes')?.value }}</label></td>
-                                            <td class="text-center"><input type="text" formControlName="selectquantity" (ngModelChange)="validateQuantity(i, $event)" 
+                                            <td> <p class="form-label col-lg-4">{{ item.get('name')?.value }}</p></td> 
+                                            <td class=" text-center"><p class="form-label col-lg-4">{{ item.get('cost')?.value }}</p></td>
+                                            <td class=" text-center" [hidden]="true"><p class="form-label col-lg-4">{{ item.get('taxes')?.value }}</p></td>
+                                            <td class="text-center"><input type="text" name="qty" formControlName="selectquantity" (ngModelChange)="validateQuantity(i, $event)" 
                                                 min="1" value="1" style="width: 30px;" class="border-0 text-end">
                                                 <!-- <label class="form-label">{{ item.get('remainingQuantity')?.value }}&nbsp;left</label>  -->
                                             </td>  
-                                            <td> <i class="fa fa-trash" style="cursor: pointer;"(click)="removeItem(i)"></i>  </td>
+                                            <td> <i class="fa fa-trash" class="point"(click)="removeItem(i)"></i>  </td>
                                                                                                                      
                                         </tr>
                                     </tbody>
@@ -187,30 +173,30 @@
 
                               
                                 <div class="form-group row">
-                                    <label class="col-lg-5"></label>
-                                    <label class="col-lg-4 form-label ">Labor Charges</label>
-                                    <label class="col-lg-3 form-label text-end" for="laborchaegrs">{{item.estimatedCost| currency: 'INR': 'symbol' }}</label>
+                                    <p class="col-lg-5"></p>
+                                    <p class="col-lg-4 form-label ">Labor Charges</p>
+                                    <p class="col-lg-3 form-label text-end" >{{item.estimatedCost| currency: 'INR': 'symbol' }}</p>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-lg-5"></label>
-                                    <label class="col-lg-4 form-label ">Part Costing</label>
-                                    <label class="col-lg-3 form-label text-end" for="partcosting">{{ totalCost | currency: 'INR': 'symbol' }}</label>
+                                    <p class="col-lg-5"></p>
+                                    <p class="col-lg-4 form-label ">Part Costing</p>
+                                    <p class="col-lg-3 form-label text-end" >{{ totalCost | currency: 'INR': 'symbol' }}</p>
                                 </div>
                                 <div class="form-group row">
-                                  <label class="col-lg-5"></label>
-                                  <label class="col-lg-4 form-label ">CGST</label>
-                                  <label class="col-lg-3 form-label text-end" for="laborchaegrs">{{totalTaxes/2 | currency: 'INR': 'symbol'}}</label>
+                                  <p class="col-lg-5"></p>
+                                  <p class="col-lg-4 form-label ">CGST</p>
+                                  <p class="col-lg-3 form-label text-end" >{{totalTaxes/2 | currency: 'INR': 'symbol'}}</p>
                               </div>
                               <div class="form-group row">
-                                <label class="col-lg-5"></label>
-                                <label class="col-lg-4 form-label ">SGST</label>
-                                <label class="col-lg-3 form-label text-end" for="laborchaegrs">{{totalTaxes/2 | currency: 'INR': 'symbol'}}</label>
+                                <p class="col-lg-5"></p>
+                                <p class="col-lg-4 form-label ">SGST</p>
+                                <p class="col-lg-3 form-label text-end" >{{totalTaxes/2 | currency: 'INR': 'symbol'}}</p>
                             </div>
                               <hr class="m-0">
                                 <div class="form-group row">
-                                    <label class="col-lg-5"></label>
-                                    <label class="col-lg-4 form-label ">Total Amount to Pay</label>
-                                    <label class="col-lg-3 form-label text-end">{{totalAmountToPay | currency: 'INR': 'symbol'}}</label>
+                                    <p class="col-lg-5"></p>
+                                    <p class="col-lg-4 form-label ">Total Amount to Pay</p>
+                                    <p class="col-lg-3 form-label text-end">{{totalAmountToPay | currency: 'INR': 'symbol'}}</p>
                                 </div>                                 
                           </div>
                         </div>
@@ -240,7 +226,8 @@
               </div>
               </div>          
           </div>
-  
+        <!-- end model body --> 
+        <!-- start model footer --> 
           <div class="modal-footer mt-3">
             <ng-container>
               <button
@@ -249,8 +236,7 @@
                 (click)="closeModal()"
               >
                 Cancel
-              </button>
-             
+              </button>             
               <button
               type="button"
               class="btn btn-sm btn-success" [disabled]="!completedWorkOrderForm.valid"
@@ -261,12 +247,13 @@
             
             </ng-container>
           </div>
-       
+          <!-- end model footer --> 
         </form>
       </div>
-    </div>
-  
+    </div>  
   </div>
+
+<!-- start part model -->
   <div class="modal-overlay" *ngIf="Openpart">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -288,6 +275,7 @@
                 class="search me-2"
                 placeholder="Search"
                 style="width: 150px"
+                name="search"
               />
             </div>
             <table class="table">
@@ -299,6 +287,7 @@
                       (change)="toggleAll()"
                       (change)="updateSelection()"
                       class="me-2"
+                      name="select"
                     />
                   </th>
                   <th>Name</th>
@@ -318,6 +307,7 @@
                       type="checkbox"
                       (change)="updateSelection()"
                       class="me-2"
+                      name="select"
                     />
                   </td>
                   <td>{{item.name}}</td>
@@ -348,4 +338,5 @@
       </div>
     </div>
   </div>
+<!-- end part model -->
   

@@ -4,6 +4,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { LayoutComponent } from './Components/layout/layout.component';
 import { LoginComponent } from './Components/login/login.component';
 import { LoginService } from './Service/login.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
@@ -34,12 +35,20 @@ export class AppComponent implements OnInit {
         const currentTime = Date.now();
         if (currentTime > expirationTime) {
           this.isAuthenticated = false;
-          alert('Session has expired. Please log in again.');
-          localStorage.removeItem('token'); // Clear expired token
-          localStorage.removeItem('tokenExpiration');
-          localStorage.removeItem('islogin');
-          //this.route.navigate(['/']); // Redirect to login
-          this.route.navigate(['/login']);
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Session has expired',
+                    text: '.',
+                    confirmButtonColor: '#d33',
+                  }).then((result) => {
+                    localStorage.removeItem('token'); // Clear expired token
+                    localStorage.removeItem('tokenExpiration');
+                    localStorage.removeItem('islogin');
+                    this.route.navigate(['/login']);
+                    location.reload();
+                  });
+         // alert('');
+        
         } else {
           const role = localStorage.getItem('Role');
           this.isAuthenticated = true;

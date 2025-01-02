@@ -22,7 +22,14 @@
                         placeholder="Enter item name"
                       />
                       <div *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched" class="text-danger">
-                        <label class="form-label-invalid">Name is required.</label>
+                        <label class="form-label-invalid">
+                          <ng-container *ngIf="itemForm.get('name')?.hasError('required')">
+                            Name is required.
+                          </ng-container>
+                          <ng-container *ngIf="itemForm.get('name')?.hasError('whitespace')">
+                            Name cannot be just spaces.
+                          </ng-container>
+                        </label>
                       </div>
                     </div>
                 
@@ -43,7 +50,14 @@
                       <label for="sku" class="form-label">SKU <span class="text-danger">*</span></label>
                       <input type="text" id="sku" formControlName="sku" class="form-control" placeholder="Enter SKU" />
                       <div *ngIf="itemForm.get('sku')?.invalid && itemForm.get('sku')?.touched" class="text-danger">
-                        <label class="form-label-invalid">SKU is required.</label>
+                        <label class="form-label-invalid">
+                          <ng-container *ngIf="itemForm.get('sku')?.hasError('required')">
+                            SKU is required.
+                          </ng-container>
+                          <ng-container *ngIf="itemForm.get('sku')?.hasError('whitespace')">
+                            SKU cannot be just spaces.
+                          </ng-container>
+                        </label>
                       </div>
                     </div>
                       <!-- Unit -->
@@ -89,10 +103,7 @@
                           formControlName="description"
                           class="form-control"
                           placeholder="Enter description"
-                        ></textarea>
-                        <div *ngIf="itemForm.get('description')?.invalid && itemForm.get('description')?.touched" class="text-danger">
-                          <label class="form-label-invalid">Description is required.</label>
-                        </div>
+                        ></textarea>                        
                       </div>
                   </div>
                     <div class="modal-footer">

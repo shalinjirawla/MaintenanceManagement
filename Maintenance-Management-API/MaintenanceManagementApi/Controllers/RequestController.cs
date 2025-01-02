@@ -15,10 +15,12 @@ namespace MaintenanceManagementApi.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IRequestService _requestService;
+        private readonly IGenericFilterService<WorkRequestWithStatusDto> _iGenericFilterService;
 
-        public RequestController(IRequestService requestService)
+        public RequestController(IRequestService requestService, IGenericFilterService<WorkRequestWithStatusDto> iGenericFilterService)
         {
             _requestService = requestService;
+            _iGenericFilterService = iGenericFilterService;
         }
 
         // Add new request
@@ -141,13 +143,7 @@ namespace MaintenanceManagementApi.Controllers
             return NotFound(new { message = "Request not found." });
         }
 
-        //Advance filter of the request 
-        [HttpGet("Filterdata")]
-        public async Task<ActionResult<IEnumerable<WorkRequestDto>>> GetWorkOrders([FromQuery] FilterDto filter)
-        {
-            var workrequest = await _requestService.GetFilteredWorkRequest(filter);
-            return Ok(workrequest);
-        }
+
 
         //Get requests By Admin
         [HttpGet("getrolebyadmin/{id}")]
@@ -254,6 +250,13 @@ namespace MaintenanceManagementApi.Controllers
             return Ok(data);
         }
 
+        //Advance filter of the request 
+        [HttpGet("FilterRequest")]
+        public async Task<ActionResult<IEnumerable<WorkRequestWithStatusDto>>> GetWorkOrders([FromQuery] FilterDto filter)
+        {
+            var workrequest = await _iGenericFilterService.GetFilteredData(filter);
+            return Ok(workrequest);
+        }
 
     }
 }

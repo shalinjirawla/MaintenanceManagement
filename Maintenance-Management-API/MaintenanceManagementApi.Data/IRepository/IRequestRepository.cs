@@ -34,9 +34,6 @@ namespace MaintenanceManagementApi.Data.IRepository
         //Decline customer request
         Task<bool> DeclineRequest(int id,string declineReason);
 
-        //Advance filter of the request
-        Task<IEnumerable<WorkRequestWithStatus>> GetFilteredWorkRequest(FilterDto filter);
-
         //Get requests By Admin
         Task<List<WorkRequestWithStatusDto>> GetByRoleId(int id);
 

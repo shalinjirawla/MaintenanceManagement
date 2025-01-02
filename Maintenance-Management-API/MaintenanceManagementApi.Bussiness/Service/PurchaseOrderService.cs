@@ -28,14 +28,16 @@ namespace MaintenanceManagementApi.Bussiness.Service
         {
             var data = _mapper.Map<PurchaseOrder>(po);
             var purchaseOrderId = await _purchaseOrderRepository.InsertPurchaseOrder(data);
+            await _purchaseOrderRepository.RemovePreviousItem(purchaseOrderId);
+            if (purchaseOrderId>0) {
+                foreach (var item in po.PurchaseOrderItems)
+                {
+                    item.PurchaseOrderId = purchaseOrderId; // Assign the generated PurchaseOrderId
+                    var purchaseOrderItemEntity = _mapper.Map<PurchaseOrderItem>(item); // Map the DTO to entity
 
-            foreach (var item in po.PurchaseOrderItems)
-            {
-                item.PurchaseOrderId = purchaseOrderId; // Assign the generated PurchaseOrderId
-                var purchaseOrderItemEntity = _mapper.Map<PurchaseOrderItem>(item); // Map the DTO to entity
-
-                // Insert each PurchaseOrderItem into the database
-                await _purchaseOrderRepository.InsertPurchaseOrderItems(purchaseOrderItemEntity);
+                    // Insert each PurchaseOrderItem into the database
+                    await _purchaseOrderRepository.InsertPurchaseOrderItems(purchaseOrderItemEntity);
+                }
             }
 
             return purchaseOrderId;
@@ -68,5 +70,12 @@ namespace MaintenanceManagementApi.Bussiness.Service
         {
             return await _purchaseOrderRepository.UpdatePurchaseOrderStatus(id,status);
         }
+
+        //Check Exist PO number
+        public async Task<bool> CheckExist(string ponumber, int id, int uid)
+        {
+            return await _purchaseOrderRepository.CheckExist(ponumber, id, uid);
+        }
     }
 }
+

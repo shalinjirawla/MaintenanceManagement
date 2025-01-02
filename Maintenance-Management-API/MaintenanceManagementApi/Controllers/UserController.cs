@@ -14,10 +14,12 @@ namespace MaintenanceManagementApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IGenericFilterService<UserDto> _iGenericFilterService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService,IGenericFilterService<UserDto> iGenericFilterService)
         {
             _userService = userService;
+            _iGenericFilterService = iGenericFilterService;
         }
 
         // Register New User
@@ -70,13 +72,6 @@ namespace MaintenanceManagementApi.Controllers
             return Ok(count);
         }
 
-        //Advance Filter User 
-        [HttpGet("Filterdata")]
-        public async Task<ActionResult<IEnumerable<RegisterUserDto>>> GetUsers([FromQuery] FilterDto filter)
-        {
-            var workrequest = await _userService.GetFilteredUsers(filter);
-            return Ok(workrequest);
-        }
 
         // Get All emplyee count by admin
         [HttpGet("getuserscount/{id}")]
@@ -85,6 +80,22 @@ namespace MaintenanceManagementApi.Controllers
             var data = await _userService.GetAllEmployeeallcount(id); // Change this method accordingly
             return Ok(data);
         }
-      
+
+        //Check Exist User
+        [HttpGet("exists")]
+        public async Task<bool> CheckUsernameExists(string username,int id,int uid)
+        {
+            var result = await _userService.CheckExist(username,id,uid);            
+            return result;
+        }
+
+        //Advance Filter User 
+        [HttpGet("FilterPeople")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> FilterPeople([FromQuery] FilterDto filter)
+        {
+            var workrequest = await _iGenericFilterService.GetFilteredData(filter);
+            return Ok(workrequest);
+        }
+
     }
 }

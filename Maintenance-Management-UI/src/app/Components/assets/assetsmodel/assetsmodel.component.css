@@ -1,7 +1,8 @@
-.formdiv{
-    max-height: 75vh;           /* Set maximum height */
-    overflow-y: auto;  
-  }
-  .form-labelp{
-    font-size: 14px;
+
+  .viewimg{
+    width: 150px; 
+    height: 150px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+    border: 1px solid #ddd;
   }

@@ -1,17 +1,16 @@
-<div class="mt-2">  
-    <!-- Add Item Button -->    
+<div class="mt-2">   
+    <!-- start header content-->
     <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+        <!-- start advance filter -->
         <div class="d-flex">
             <div class="dropdown me-2">
               <button class="btn btn-sm filterbtn dropdown-toggle" type="button" id="assetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 Filters
               </button>
               <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
-                <li>
-                    <div>
-                        <form #filterForm="ngForm">
-                          <div class="form-group row">
-                        
+                <li>                  
+                    <form #filterForm="ngForm">
+                          <div class="form-group row">                        
                               <div class="col-lg-6 form-group m-0">
                                 <label for="name" class="form-label">Name</label>
                                 <input type="text" id="name" name="name" class="form-control" [(ngModel)]="filters.name">              
@@ -19,7 +18,7 @@
                         
                             <div class="col-lg-6 form-group m-0">
                               <label for="companyname" class="form-label">Company Name</label>
-                              <input type="text" class="form-control" [(ngModel)]="filters.companyname" name="companyname">
+                              <input type="text" id="companyname" class="form-control" [(ngModel)]="filters.companyname" name="companyname">
                             </div>
                                                                 
                           </div>
@@ -46,24 +45,31 @@
                                 <button type="button" class="btn btn-sm btn-primary mt-2" (click)="applyFilters()">Apply Filters</button>
                               </div>
                             </div>
-                        </form>
-                    </div>
+                    </form>                
                 </li>
             </ul>
             </div>
-          </div>
+        </div>
+        <!-- end advance filter -->
+        <!-- start search vendor -->
         <div class="d-flex align-items-center">
           <input
               type="text"
+              name="search"
               class="search me-2"
               placeholder="Search"
-              style="width: 150px"
               [(ngModel)]="searchTerm"
-              (keyup)="searchlocation()"               
+              (keyup)="searchvendor()"               
             />
             <button class="btn btn-sm btn-themecolor d-none d-md-inline" (click)="OpenModal()"><i class="fa fa-plus fa-xs"></i> New</button>
         </div>
+        <!-- end search vendor -->
     </div>
+    <!-- end header content-->
+    <!-- Start selected delete button-->
+     <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="Deletevendor()"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+    <!-- end selected delete button-->
+    <!-- start No data found --> 
     <div class="card card-body p-4 mx-2" *ngIf="!filteredvendor || filteredvendor.length === 0">
       <div class="d-flex justify-content-between align-items-center">
           <!-- Work Order Title and Status -->
@@ -75,48 +81,73 @@
           <p class="text-muted h5">No Data Found !</p>
       </div>
       <div class="pt-5 text-center">
-          <button class="btn btn-themecolor d-none d-md-inline" (click)="OpenModal()">Add Vendor</button>
-         
+          <button class="btn btn-themecolor d-none d-md-inline" (click)="OpenModal()">Add Vendor</button>         
           <button class="btn btn-sm btn-outline-themecolor d-md-none"  (click)="OpenModal()"><i class="fa fa-plus"></i></button>
       </div>      
-  </div>
-    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="Deletevendor()"  style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
-    <!-- Inventory Items Table -->
+    </div>
+    <!-- end No data found -->
+    
+    <!-- start table content-->
     <div *ngIf="!isLoading">
-    <table class="table"  *ngIf="filteredvendor.length > 0">
+      <div class="table-responsive"  *ngIf="filteredvendor.length > 0">
+    <table class="table">
       <thead>
         <tr>
           <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /></th>
-          <th >Name</th>
-          <th  >Company Name</th>
-          <th>Contact</th>
-          <th>Email</th>
-          <th>Contact Person</th>
+          <th (click)="sortBy('name')" class="point">Name
+            <i *ngIf="sortColumn === 'name'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
+          <th (click)="sortBy('companyName')" class="point">Company Name
+            <i *ngIf="sortColumn === 'companyName'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
+          <th (click)="sortBy('contactNumber')" class="point">Contact
+            <i *ngIf="sortColumn === 'contactNumber'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
+          <th (click)="sortBy('email')" class="point">Email
+            <i *ngIf="sortColumn === 'email'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
+          <th (click)="sortBy('contactPerson')" class="point">Contact Person
+            <i *ngIf="sortColumn === 'contactPerson'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
           <th class="pr-50">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of filteredvendor">
+        <tr *ngFor="let item of filteredvendor | paginate
+              : { itemsPerPage: itemsPerPage, currentPage: currentPage }">
           <td class="pl-50"><input type="checkbox" [(ngModel)]="item.selected" (change)="updateSelection()" /> </td>
           <td>{{item.name}}
           </td>
           <td>{{item.companyName}}</td>
           <td>{{item.contactNumber}}</td>
           <td>{{item.email}}</td>
-          <td>{{item.contactPerson}}</td>
-        
+          <td>{{item.contactPerson}}</td>        
           <td class="pr-50">
             <button class="btn btn-sm2 btn-primary me-1" (click)="Viewvendor(item)"> <i class="fa fa-eye"></i></button>
             <button class="btn btn-sm2 btn-success me-1" (click)="OpenModal(item)"> <i class="fa fa-pen" ></i></button>
             <button class="btn btn-sm2 btn-danger me-1" (click)="Deletevendor(item.id)"> <i class="fa fa-trash"></i></button>
           </td>
         </tr>
-
-
-
       </tbody>
     </table>
+    <!-- Pagination Controls -->
+    <pagination-controls
+    (pageChange)="pageChanged($event)"
+    [maxSize]="5"
+    [directionLinks]="true"
+    [autoHide]="true"
+  ></pagination-controls>
+  <!-- Pagination Controls -->
+</div>
+   <!-- Loader Controls -->
+   <div class="full-screen-loader" *ngIf="isLoading">
+     <div class="spinner-border text-dark" role="status">
+       <span class="visually-hidden">Loading...</span>
+     </div>
+   </div>
+   <!-- Loader Controls -->
     </div>
+    <!-- end table content--> 
 </div>
 <app-vendormodel
 [item]="selectedItem"
@@ -128,9 +159,3 @@
 *ngIf="isViewModalOpen"
 (close)="closeModal()">
 </app-vendorviewmodel>
-
-<div class="full-screen-loader" *ngIf="isLoading">
-  <div class="spinner-border text-dark" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>

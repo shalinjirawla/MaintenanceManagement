@@ -23,15 +23,71 @@ namespace MaintenanceManagementApi.Data.Repository
         // Add New Purchase Order
         public async Task<int> InsertPurchaseOrder(PurchaseOrder po)
         {
+            if (po.Id == 0)
+            {
+                bool uponumberExists = await _context.PurchaseOrders
+            .AnyAsync(u => u.OrderNumber == po.OrderNumber && u.CreatedBy == po.CreatedBy);
 
-            _context.PurchaseOrders.AddAsync(po);
-            await _context.SaveChangesAsync();
-            return po.Id;
+                if (uponumberExists)
+                {
+                    return 0; // Indicates that the user already exists
+                }
+
+                _context.PurchaseOrders.AddAsync(po);
+                await _context.SaveChangesAsync();
+                return po.Id;
+            }
+            else
+            {
+                var uponumberExists = await _context.PurchaseOrders.FindAsync(po.Id);
+                if (uponumberExists != null)
+                {
+                    bool usernameTaken = await _context.PurchaseOrders
+              .AnyAsync(u => u.OrderNumber == po.OrderNumber && u.CreatedBy == po.CreatedBy && u.Id != po.Id);
+
+
+                    if (usernameTaken)
+                    {
+                        return 0; // Username is already taken by another user
+                    }
+
+                    // Update fields
+                    uponumberExists.Title = po.Title;
+                    uponumberExists.OrderNumber = po.OrderNumber;
+                    uponumberExists.VendorId = po.VendorId;
+                    uponumberExists.OtherCost = po.OtherCost;
+                    uponumberExists.TotalAmount = po.TotalAmount;
+                    uponumberExists.ExpectedDeliveryDate = po.ExpectedDeliveryDate;
+                    
+                    _context.PurchaseOrders.Update(uponumberExists);
+                    await _context.SaveChangesAsync();
+                    return uponumberExists.Id;
+                }
+
+                return 0; // User not found
+            }
+        }
+
+        //Remove
+        public async Task<bool> RemovePreviousItem(int id)
+        {
+            // Check if any items exist for the given PurchaseOrderId
+            var existingItems = await _context.PurchaseOrderItems
+                .Where(u => u.PurchaseOrderId == id)
+                .ToListAsync();
+
+            if (existingItems.Any())
+            {
+                // Remove all existing items
+                _context.PurchaseOrderItems.RemoveRange(existingItems);
+            }
+            return true;
         }
 
         // Add New Purchase Order Item
         public async Task<int> InsertPurchaseOrderItems(PurchaseOrderItem item)
         {
+            
             _context.PurchaseOrderItems.Add(item);
             await _context.SaveChangesAsync();
             return item.Id;
@@ -98,7 +154,8 @@ namespace MaintenanceManagementApi.Data.Repository
                                       i.Cost,
                                       i.Quantity,
                                       i.InventoryItemId,
-                                      i.PurchaseOrderId
+                                      i.PurchaseOrderId,
+                                      i.Taxes
                                   }).ToList()
                               }).FirstOrDefaultAsync();
 
@@ -129,7 +186,8 @@ namespace MaintenanceManagementApi.Data.Repository
                     Cost = item.Cost,
                     Quantity = item.Quantity,
                     InventoryItemId = item.InventoryItemId,
-                    PurchaseOrderId = item.PurchaseOrderId
+                    PurchaseOrderId = item.PurchaseOrderId,
+                    Taxes=item.Taxes
                 }).ToList()
             };
 
@@ -188,6 +246,24 @@ namespace MaintenanceManagementApi.Data.Repository
             await _context.SaveChangesAsync();
 
             return true; // Status updated successfully
+        }
+
+
+        //Check Exist PO number
+        public async Task<bool> CheckExist(string ponumber, int id, int uid)
+        {
+            if (uid == 0)
+            {
+                return await _context.PurchaseOrders.AnyAsync(u => u.OrderNumber == ponumber && u.CreatedBy == id);
+            }
+            else
+            {
+                return await _context.PurchaseOrders.AnyAsync(u =>
+                    u.OrderNumber == ponumber &&
+                    u.CreatedBy == id &&
+                    u.Id != uid
+                );
+            }
         }
 
     }

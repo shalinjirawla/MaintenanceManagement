@@ -67,19 +67,17 @@ namespace MaintenanceManagementApi.Bussiness.Service
             return result;
         }
 
-        //Advance Filter User 
-        public async Task<IEnumerable<UserDto>> GetFilteredUsers(FilterDto filter)
-        {
-            var data = await _userRepository.GetFilteredUsers(filter);
-            var requestdata = _mapper.Map<IEnumerable<UserDto>>(data);
-            return requestdata;
-        }
-
         // Get All emplyee count by admin
         public async Task<int> GetAllEmployeeallcount(int id)
         {
             var result = await _userRepository.GetAllEmployeeallcount(id);
             return result;
+        }
+
+        //Check Exist User
+        public async Task<bool> CheckExist(string username, int id, int uid)
+        {
+            return await _userRepository.CheckExist(username,id,uid);
         }
 
 

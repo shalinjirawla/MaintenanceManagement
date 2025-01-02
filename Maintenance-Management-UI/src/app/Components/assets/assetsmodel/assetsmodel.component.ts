@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AssetsService } from '../../../Service/assets.service';
-import { response } from 'express';
-import { Asset } from '../../../Model/asset.model';
 import Swal from 'sweetalert2';
+import { noWhitespaceValidator } from '../../validation/custom-validators';
 
 @Component({
   selector: 'app-assetsmodel',
@@ -29,15 +28,15 @@ export class AssetsmodelComponent implements OnInit{
   ){
     this.assetsForm = this.fb.group({
       id: [0],
-      assetName: ['', Validators.required],
-      description: ['', Validators.required],
-      model: ['', Validators.required],
-      serialNumber: ['', Validators.required],
-      category: ['', Validators.required],
-      location: ['', Validators.required],
+      assetName: ['', [Validators.required,noWhitespaceValidator]],
+      description: ['', [Validators.required,noWhitespaceValidator]],
+      model: ['', [Validators.required,noWhitespaceValidator]],
+      serialNumber: ['', [Validators.required,noWhitespaceValidator]],
+      category: ['', [Validators.required,noWhitespaceValidator]],
+      location: ['', [Validators.required,noWhitespaceValidator]],
       purchaseDate: ['', Validators.required],
       warrantyExpiration: ['', Validators.required],
-      condition: ['', Validators.required],
+      condition: ['', [Validators.required,noWhitespaceValidator]],
       assetImage:[''],
       hadadmin:[localStorage.getItem("UserId")]
     });
@@ -68,18 +67,16 @@ export class AssetsmodelComponent implements OnInit{
       });
     }
   }
-  
-  onSubmit(){
-    
+  //Add/edit asset
+  onSubmit(){    
     if(this.assetsForm.valid){
       const formData = new FormData();
       Object.keys(this.assetsForm.value).forEach(key => {
         formData.append(key, this.assetsForm.value[key]);
-      });
+      });      
       if (this.selectedFile) {  
         formData.append('images', this.selectedFile, this.selectedFile.name);
-      }
-     
+      }    
       this.assetsService.addassets(formData).subscribe(response=>{        
         Swal.fire({
           icon: 'success',
@@ -94,7 +91,11 @@ export class AssetsmodelComponent implements OnInit{
         });
       });      
     }
+    else{
+      this.assetsForm.markAllAsTouched();
+    }
   }
+  //image select
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0]; // Store the selected file
     if (this.selectedFile) {  // Only read the file if it is not null
@@ -105,12 +106,12 @@ export class AssetsmodelComponent implements OnInit{
       reader.readAsDataURL(this.selectedFile);
     }
   }
-
+  //Model Open
   openModal() {   
     this.isModalOpen = true;
   }
-  closeModal() {
-    
+  //Model Close
+  closeModal() {    
     this.previewImage=null;
     this.close.emit(); // Emit close event
   }

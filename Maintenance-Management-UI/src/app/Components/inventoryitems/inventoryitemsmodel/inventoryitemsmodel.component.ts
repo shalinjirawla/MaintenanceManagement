@@ -9,6 +9,10 @@ import {
 import { InventoryService } from '../../../Service/inventory.service';
 import { Inventorycategories } from '../../../Model/InventoryCategory.model';
 import Swal from 'sweetalert2';
+import {
+  cleanWhitespace,
+  noWhitespaceValidator,
+} from '../../validation/custom-validators';
 
 @Component({
   selector: 'app-inventoryitemsmodel',
@@ -30,11 +34,11 @@ export class InventoryitemsmodelComponent implements OnInit {
   ) {
     this.itemForm = fb.group({
       id: [0],
-      name: ['', Validators.required],
+      name: ['', [Validators.required, noWhitespaceValidator]],
       inventoryCategoryId: ['', Validators.required],
-      sku: ['', Validators.required],
+      sku: ['', [Validators.required, noWhitespaceValidator]],
       unit: ['', Validators.required],
-      description: [''],
+      description: [],
       availableQuantity: [null],
       allocatedQuantity: [null],
       onHandQuantity: [null],
@@ -57,23 +61,26 @@ export class InventoryitemsmodelComponent implements OnInit {
     this.inventoryService.getinventorycategoty(UserId).subscribe((response) => {
       this.categories = response;
     });
-    if(this.item){
-      
+    if (this.item) {
       this.itemForm.patchValue(this.item);
     }
   }
 
+  //Add Item
   onSubmit() {
-    
     if (this.itemForm.valid) {
       const formData = this.itemForm.value;
+      for (const key in formData) {
+        if (formData[key] && typeof formData[key] === 'string') {
+          formData[key] = cleanWhitespace(formData[key]); // Clean each string value
+        }
+      }
       formData.hadAdminId = Number(localStorage.getItem('UserId'));
       formData.isActive = true;
       formData.status = 'Non-Stock';
       this.inventoryService
         .addinventoryitems(formData)
         .subscribe((response) => {
-         
           Swal.fire({
             icon: 'success',
             title: `${
@@ -89,24 +96,21 @@ export class InventoryitemsmodelComponent implements OnInit {
             // Close the modal after the user clicks "OK"
             this.closeModal();
           });
-          this.itemForm.value.id=response;
+          this.itemForm.value.id = response;
         });
-    }
-    else{
-      this.itemForm.markAllAsTouched(); 
+    } else {
+      this.itemForm.markAllAsTouched();
     }
   }
 
+  //Model Close
   closeModal() {
-    
     const savedItem = {
       name: this.itemForm.value.name,
-      id: this.itemForm.value.id
+      id: this.itemForm.value.id,
     };
-  
     // Push the saved item to the savedItems array
     this.savedItems.push(savedItem);
-  
     // Emit the savedItems array
     this.close.emit(this.savedItems);
   }

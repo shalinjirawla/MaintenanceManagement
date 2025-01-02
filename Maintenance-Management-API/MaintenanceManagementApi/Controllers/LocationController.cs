@@ -13,10 +13,12 @@ namespace MaintenanceManagementApi.Controllers
     public class LocationController : ControllerBase
     {
         private readonly ILocationService _locationService;
+        private readonly IGenericFilterService<LocationDto> _iGenericFilterService;
 
-        public LocationController(ILocationService locationService)
+        public LocationController(ILocationService locationService, IGenericFilterService<LocationDto> iGenericFilterService)
         {
             _locationService = locationService;
+            _iGenericFilterService = iGenericFilterService;
         }
 
         // Add new Location
@@ -62,12 +64,12 @@ namespace MaintenanceManagementApi.Controllers
             }
         }
 
-        //Advance Filter location 
-        [HttpGet("Filterdata")]
-        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocation([FromQuery] FilterDto filter)
+        //Advance Filter location
+        [HttpGet("FilterLocations")]
+        public async Task<ActionResult<IEnumerable<LocationDto>>> FilterLocations([FromQuery] FilterDto filter)
         {
-            var assets = await _locationService.GetFilteredlocation(filter);
-            return Ok(assets);
+            var locations = await _iGenericFilterService.GetFilteredData(filter);
+            return Ok(locations);
         }
     }
 }

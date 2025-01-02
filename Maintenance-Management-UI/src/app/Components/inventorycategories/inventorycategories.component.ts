@@ -8,6 +8,7 @@ import { InventorycategoriesmodelComponent } from './inventorycategoriesmodel/in
 import { InventorycategoryviewmodelComponent } from './inventorycategoryviewmodel/inventorycategoryviewmodel.component';
 import { InventoryService } from '../../Service/inventory.service';
 import { Filter } from '../../Model/filter.model';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-inventorycategories',
@@ -15,7 +16,8 @@ import { Filter } from '../../Model/filter.model';
   imports: [InventorycategoriesmodelComponent,
     InventorycategoryviewmodelComponent,
     CommonModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule
   ],
   templateUrl: './inventorycategories.component.html',
   styleUrl: './inventorycategories.component.css',
@@ -33,6 +35,8 @@ export class InventorycategoriesComponent implements OnInit {
   filters: Filter = new Filter();
   sortColumn: string = '';
   sortOrder: 'asc' | 'desc' = 'asc';
+  currentPage: number = 1; // Current page for pagination
+  itemsPerPage: number = 10; // Items per page
 
   constructor(
     private inventoryService: InventoryService,
@@ -130,6 +134,10 @@ export class InventorycategoriesComponent implements OnInit {
       this.inventorycategory,
       this.searchTerm
     );
+  }
+  // Updates the `currentPage` variable when the user navigates to a different page in pagination.
+  pageChanged(page: number): void {
+    this.currentPage = page; // Update current page when pagination changes
   }
   showLoader() {
     this.isLoading = true;

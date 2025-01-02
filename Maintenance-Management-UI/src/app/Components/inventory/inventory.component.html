@@ -5,16 +5,51 @@
             <div class="dropdown me-2">
               <button class="btn btn-sm filterbtn dropdown-toggle" type="button" id="assetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 Filters
-              </button>
-            
+              </button>  
+              <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+                <li>
+                    <div>
+                        <form #filterForm="ngForm">
+                          <div class="form-group row">
+                        
+                              <div class="col-lg-6 form-group m-0">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" name="name" class="form-control" [(ngModel)]="filters.name">              
+                              </div> 
+                        
+                            <div class="col-lg-6 form-group m-0">
+                              <label for="unit" class="form-label">Unit</label>
+                              <input type="text" class="form-control" [(ngModel)]="filters.unit" name="unit">
+                            </div>
+                                                                
+                          </div>
+                          <div class="form-group row">                        
+                            <div class="col-lg-6 form-group m-0">
+                              <label for="category" class="form-label">Category</label>
+                              <input type="text" id="category" name="category" class="form-control" [(ngModel)]="filters.category">             
+                            </div>                                     
+                              <div class="col-lg-6 form-group m-0">
+                                <label for="status" class="form-label">Status</label>
+                                <input type="text" id="status" name="status" class="form-control" [(ngModel)]="filters.status">             
+                              </div>  
+                            </div>
+                            <div class="col-lg-6 form-group pt-2">
+                              <button type="button" class="btn btn-sm btn-primary mt-2" (click)="applyFilters()">Apply Filters</button>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>          
             </div>
           </div>
         <div class="d-flex align-items-center">
           <input
+              name="search"
               type="text"
               class="search me-2"
-              placeholder="Search"
-              style="width: 150px"                
+              placeholder="Search" 
+              [(ngModel)]="searchTerm"
+            (keyup)="searchinventory()"             
             />            
         </div>
     </div>
@@ -32,40 +67,74 @@
       </div>      
   </div>
     <!-- Inventory Items Table -->
-    <table class="table" *ngIf="filteredinventory.length>0">
-      <thead>
-        <tr class="text-center">
-          <th class="pl-50">Item Name</th>       
-          <th>Available Qty</th>
-          <th>Allocated Qty</th>
-          <th>On Hand Qty</th>
-          <th>Cost</th>
-          <th>Category</th>
-          <th>Location</th>         
-          <th>Unit of Measure</th>          
-          <th class="pr-50">Status</th>
+    <div *ngIf="!isLoading">
+      <div class="table-responsive" *ngIf="filteredinventory && filteredinventory.length > 0">
+    <table class="table">
+      <thead> 
+        <tr>
+          <th (click)="sortBy('name')"  class="pl-50">Item Name
+            <i *ngIf="sortColumn === 'name'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>      
+         
+          <th (click)="sortBy('inventoryCategori')" class="point">Category
+            <i *ngIf="sortColumn === 'inventoryCategori'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
+          <th (click)="sortBy('location')" class="point">Location
+            <i *ngIf="sortColumn === 'location'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>         
+          <th (click)="sortBy('allocatedQuantity')" class="point">Allocated Qty
+            <i *ngIf="sortColumn === 'allocatedQuantity'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
+          <th (click)="sortBy('onHandQuantity')" class="point">On Hand Qty
+            <i *ngIf="sortColumn === 'onHandQuantity'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
           
+          <th (click)="sortBy('price')" class="point">Cost
+            <i *ngIf="sortColumn === 'price'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
+          <th (click)="sortBy('availableQuantity')" class="point">Available Qty
+            <i *ngIf="sortColumn === 'availableQuantity'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>
+          <th (click)="sortBy('unit')" class="point">Unit of Measure
+            <i *ngIf="sortColumn === 'unit'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+          </th>          
+          <th class="pr-50">Status</th>          
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of filteredinventory"  class="text-center">
-          <td class="pl-50">{{item.name}}</td>       
-          <td>{{item.availableQuantity}}</td>
-          <td>{{ item.allocatedQuantity ?? 0 }}</td>
-          <td>{{item.onHandQuantity}}</td>
+        <tr *ngFor="let item of filteredinventory | paginate
+        : { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+          <td class="pl-50">{{item.name}}</td>      
+          <td>{{item.inventoryCategori}}{{item.inventoryCategory?.categoryName}}</td>                   
+          <td>{{item.location}}</td>   
+          <td  class="text-center">{{ item.allocatedQuantity ?? 0 }}</td>
+          <td class="text-center">{{item.onHandQuantity}}</td>
           <td>{{item.price}}</td>
-          <td>{{item.inventoryCategori}}</td>          
-          <td>{{item.location}}</td>        
-          <td>{{item.unit}}</td>
+          <td class="text-center">{{item.availableQuantity}}</td>     
+          <td class="text-center">{{item.unit}}</td>
           <td class="pr-50"><span class="badge-accepted">{{item.status}}</span>           
-            </td>
-         
+            </td>         
         </tr>
-
-
-
       </tbody>
+    
     </table>
+    <!-- Pagination Controls -->
+    <pagination-controls
+    (pageChange)="pageChanged($event)"
+    [maxSize]="5"
+    [directionLinks]="true"
+    [autoHide]="true">
+    </pagination-controls> 
+    <!--Pagination Controls -->
+    </div>
   </div>
+  </div>
+      <!-- Loader Controls -->
+      <div class="full-screen-loader" *ngIf="isLoading">
+        <div class="spinner-border text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <!-- Loader Controls -->
 
   

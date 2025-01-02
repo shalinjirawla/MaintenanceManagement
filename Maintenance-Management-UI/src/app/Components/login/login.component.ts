@@ -57,7 +57,6 @@ export class LoginComponent implements OnInit {
     }, 400); // 1000ms = 1 second
   }
   onSubmit() {
-   
     this.showLoader();
     if (this.isSignUpMode) {
       // Sign-Up (Registration) logic
@@ -82,7 +81,6 @@ export class LoginComponent implements OnInit {
         this.errorMessage = 'Please fill in all fields for registration.';
       }
     } else {
-    
       if (this.loginForm.valid) {
         const FormData = this.loginForm.value;
         this.loginService.authenticaluser(FormData).subscribe({
@@ -129,14 +127,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // openModal() {
-  //   this.showModal = true;
-  // }
-
-  // closeModal() {
-  //   this.showModal = false;
-  //   this.errorMessage = ''; // Clear any error message when modal is closed
-  // }
   switchToSignUp() {
     this.isSignUpMode = true; // switch to sign-up mode
   }

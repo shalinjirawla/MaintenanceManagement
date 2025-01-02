@@ -1,8 +1,8 @@
 <div class="mt-2">
-  <div class="">
-    <div>
-      <div class="d-flex justify-content-between align-items-center pb-2 px-2">
-        <div class="d-flex">
+    <!-- start header content-->
+    <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+      <!-- start advance filter -->
+      <div class="d-flex">
           <div class="dropdown me-2">
             <button
               class="btn btn-sm filterbtn dropdown-toggle"
@@ -27,6 +27,7 @@
                           id="username"
                           name="username"
                           class="form-control"
+                          autocomplete="username"
                           [(ngModel)]="filters.username"
                         />
                       </div>
@@ -34,8 +35,10 @@
                       <div class="col-lg-6 form-group m-0">
                         <label for="email" class="form-label">Email</label>
                         <input
+                          id="email"
                           type="text"
                           class="form-control"
+                          autocomplete="email"
                           [(ngModel)]="filters.email"
                           name="email"
                         />
@@ -68,38 +71,38 @@
               </li>
             </ul>
           </div>
-        </div>
-        <div class="d-flex align-items-center">
+      </div>
+      <!-- end advance filter -->
+      <!-- start search payment -->
+      <div class="d-flex align-items-center">
           <input
             type="text"
+            name="search"
             class="search me-2"
             placeholder="Search"
-            style="width: 150px"
             [(ngModel)]="searchTerm"
             (keyup)="searchpeople()"
           />
           <button
             class="btn btn-sm btn-themecolor d-none d-md-inline"
-            (click)="openModal()"
-          >
+            (click)="openModal()">
             <i class="fa fa-plus fa-xs"></i> New
           </button>
-        </div>
       </div>
+      <!-- end search payment -->
+    </div>
+    <!-- end header content-->
+    <!-- Start selected delete button-->
       <button
-        class="btn btn-sm2 btn-danger mb-2 ml-8 font"
+        class="btn btn-sm2 btn-danger mb-2 ml-8 font point"
         *ngIf="selectedItems.length > 0"
-        (click)="deletepeople()"
-        style="cursor: pointer"
-      >
+        (click)="deletepeople()">
         <i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;
       </button>
-      <div
-        class="card card-body p-4 mx-2"
-        *ngIf="!employee || employee.length === 0"
-      >
+    <!-- end selected delete button-->
+      <!-- start No data found -->
+      <div class="card card-body p-4 mx-2" *ngIf="!filteredpeople || filteredpeople.length === 0">
         <div class="d-flex justify-content-between align-items-center">
-          <!-- Work Order Title and Status -->
           <div class="">
             <h4 class="card-title mb-1"></h4>
           </div>
@@ -122,37 +125,43 @@
           </button>
         </div>
       </div>
-
+      <!-- end No data found -->
+      <!-- start table content-->
       <div *ngIf="!isLoading">
-        <div class="table-responsive" *ngIf="employee && employee.length > 0">
+        <div class="table-responsive" *ngIf="filteredpeople && filteredpeople.length > 0">
+          <!-- start table people -->
           <table class="table table-hover">
             <thead>
               <tr>
                 <th class="pl-50">
                   <input
+                    name="select"
                     type="checkbox"
                     [(ngModel)]="selectAll"
                     (change)="toggleAll()"
-                    (change)="updateSelection()"
                   />
                 </th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Role</th>
+                <th (click)="sortBy('username')" class="point">Username
+                  <i *ngIf="sortColumn === 'username'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
+                <th (click)="sortBy('email')" class="point">Email
+                  <i *ngIf="sortColumn === 'email'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
+                <th (click)="sortBy('roleName')" class="point">Role
+                  <i *ngIf="sortColumn === 'roleName'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
                 <th class="text-center pr-50">Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr
+              <tr class="point"
                 *ngFor="
                   let item of filteredpeople
                     | paginate
-                      : { itemsPerPage: itemsPerPage, currentPage: currentPage }
-                "
-                style="cursor: pointer"
-              >
+                      : { itemsPerPage: itemsPerPage, currentPage: currentPage }">
                 <td class="pl-50">
                   <input
+                    name="select"
                     type="checkbox"
                     [(ngModel)]="item.selected"
                     (change)="updateSelection()"
@@ -162,7 +171,7 @@
                 <td>{{ item.username }}</td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.roleName }}</td>
-                <!-- <td><i class="fa fa-pen text-success" (click)="updatepeople(item.userID)" style="cursor: pointer;"></i></td> -->
+                <!-- <td><i class="fa fa-pen text-success" (click)="updatepeople(item.userID)" class="point"></i></td> -->
                 <td class="text-center pr-50">
                   <button
                     class="btn btn-sm2 btn-primary me-1"
@@ -187,16 +196,25 @@
               </tr>
             </tbody>
           </table>
+          <!-- end table people -->
+          <!-- Pagination Controls -->
           <pagination-controls
             (pageChange)="pageChanged($event)"
             [maxSize]="5"
             [directionLinks]="true"
             [autoHide]="true"
           ></pagination-controls>
+          <!-- Pagination Controls -->
+        </div>
+      </div>  
+      <!-- end table content--> 
+      <!-- Loader Controls -->
+      <div class="full-screen-loader" *ngIf="isLoading">
+        <div class="spinner-border text-dark" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
       </div>
-    </div>
-  </div>
+      <!-- Loader Controls -->
 
   <app-peoplemodel
     [item]="selectedItem"
@@ -211,8 +229,4 @@
   >
   </app-peopleviewmodel>
 </div>
-<div class="full-screen-loader" *ngIf="isLoading">
-  <div class="spinner-border text-dark" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
+

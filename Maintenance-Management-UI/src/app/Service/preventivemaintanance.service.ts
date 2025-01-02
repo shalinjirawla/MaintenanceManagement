@@ -39,7 +39,7 @@ export class PreventivemaintananceService {
       // Append each key-value pair, including those with undefined or null values
       params = params.append(key, value !== undefined ? value : '');
     });
-    return this.http.get<PreventiveMaintenance[]>(`${this.apiUrl}/Filterdata`, {
+    return this.http.get<PreventiveMaintenance[]>(`${this.apiUrl}/FilterPM`, {
       params,
     });
   }

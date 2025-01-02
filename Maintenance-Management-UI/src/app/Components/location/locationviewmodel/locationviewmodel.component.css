@@ -1,7 +1,4 @@
-.form-labelp{
-    font-size: 14px !important;
-    color: #555 !important;
-}
+
 .modal-footer {
     display: flex;
     justify-content: flex-end !important; /* Align items to the right */

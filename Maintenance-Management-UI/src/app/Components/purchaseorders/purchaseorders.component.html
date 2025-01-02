@@ -1,26 +1,78 @@
 <div class="mt-2"  *ngIf="!isModalOpen && !isViewModalOpen">  
-    <!-- Add Item Button -->    
+    <!-- start header content-->
     <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+        <!-- start advance filter -->
         <div class="d-flex">
             <div class="dropdown me-2">
               <button class="btn btn-sm filterbtn dropdown-toggle" type="button" id="assetDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 Filters
-              </button>
-            
+              </button>  
+              <ul class="dropdown-menu p-3 menufilter" aria-labelledby="filterDropdown">
+                <li>
+                    <div>
+                        <form #filterForm="ngForm">
+                            <div class="form-group row">
+                                <div class="col-lg-6 form-group m-0">
+                                    <label for="title" class="form-label">Title</label>
+                                    <input type="text" id="title" name="title" [(ngModel)]="filters.title" class="form-control" autocomplete="title" />
+                                </div>
+                                <div class="col-lg-6 form-group m-0">
+                                    <label for="ponumber" class="form-label">PO Number</label>
+                                    <input type="text" id="ponumber" name="ponumber" [(ngModel)]="filters.ponumber" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-lg-6 form-group m-0">
+                                    <label for="vendor" class="form-label">	Vendor</label>
+                                    <input type="text" id="vendor" name="vendor" [(ngModel)]="filters.vendor" class="form-control" />
+                                </div>
+                                <div class="col-lg-6 form-group m-0">
+                                    <label for="createdDate" class="form-label">Date</label>
+                                    <input type="date" id="createdDate" name="createdDate" [(ngModel)]="filters.createdDate" class="form-control" />
+                                </div>
+                              </div>
+                              <div class="form-group row">
+
+                              <div class="col-lg-6 form-group m-0">
+                                  <label for="Totalcost" class="form-label">Total Cost</label>
+                                  <input type="text" id="Totalcost" name="Totalcost" [(ngModel)]="filters.totalcost" class="form-control" />
+                              </div>
+                              <div class="col-lg-6 form-group m-0">
+                                <label for="status" class="form-label">Status</label>
+                                <input type="text" id="status" name="status" [(ngModel)]="filters.status" class="form-control" />
+                            </div>
+                            </div>
+
+                              <div class="form-group m-0 text-center">                                     
+                                <button type="button" class="btn btn-sm btn-primary mt-2" (click)="applyFilters()">
+                                    Apply Filters
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>          
             </div>
-          </div>
+        </div>
+        <!-- end advance filter -->
+        <!-- start search vendor -->
         <div class="d-flex align-items-center">
           <input
+              name="searh"
               type="text"
               class="search me-2"
-              placeholder="Search"
-              style="width: 150px"    
+              placeholder="Search" 
               [(ngModel)]="searchTerm"
-              (keyup)="searchWorkOrder()"            
-            />
+              (keyup)="searchpurchaseorder()"/>
             <button class="btn btn-sm btn-themecolor d-none d-md-inline" (click)="openModal()"><i class="fa fa-plus fa-xs"></i> New</button>
         </div>
+         <!-- end search vendor -->
     </div>
+    <!-- end header content-->
+    <!-- Start selected delete button-->
+    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="DeletepurchseOrder()"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+    <!-- end selected delete button-->
+    <!-- start No data found --> 
     <div class="card card-body p-4 mx-2" *ngIf="!filteredpurchaseorder || filteredpurchaseorder.length === 0">
       <div class="d-flex justify-content-between align-items-center">
           <!-- Work Order Title and Status -->
@@ -36,72 +88,107 @@
          
           <button class="btn btn-sm btn-outline-themecolor d-md-none"  (click)="openModal()"><i class="fa fa-plus"></i></button>
       </div>      
-  </div>
-    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0"  style="cursor: pointer;" (click)="DeletepurchseOrder()"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
-    <!-- Inventory Items Table -->
+    </div>
+    <!-- end No data found -->  
+     <!-- start table content-->
     <div *ngIf="!isLoading">
       <div class="table-responsive d-none d-md-block" *ngIf="filteredpurchaseorder.length > 0">
         <div class="table-scroll">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
-          <th >Title</th>        
-          <th>PO Number</th>
-          <th>Vendor</th>
-          <th>Date Created</th>
-          <th class="text-center"># of Items</th>
-          <th  class="text-center">Total Qty</th>
-          <th>Total Cost</th>         
-          <th>Status</th>
-          <th class="pr-50">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of filteredpurchaseorder" (click)="OpenViewmodel(item.id)" style="cursor: pointer;">
-          <th class="pl-50"><input type="checkbox" [(ngModel)]="item.selected"  (click)="$event.stopPropagation()" (change)="updateSelection()" /> </th>                         
-          <td >{{item.title}}</td>          
-          <td>{{item.orderNumber}}</td>
-          <td>{{item.vendorname}}</td>
-          <td>{{item.dateCreated | date:'dd-MM-yyy'}}</td>
-          <td class="text-center">{{item.items}}</td>
-          <td class="text-center">{{item.quantity}}</td>
-          <td>{{item.totalAmount| currency: 'INR': 'symbol'}}</td>
-          <td>  <span
-            class="badge-pending p-1 m-0"
-            *ngIf="item.status === 'Awaiting'"
-            >{{ item.status }}</span
-          >
-          <span
-            class="badge-complate p-1 m-0"
-            *ngIf="item.status === 'Approved'"
-            >{{ item.status }}</span
-          >
-          <span
-            class="badge-accepted p-1 m-0"
-            *ngIf="item.status === 'Fulfilled'"
-            >{{ item.status }}</span
-          >
-            </td>
-          <td class="pr-50 text-center">
-            <!-- <button class="btn btn-sm2 btn-primary me-1"> <i class="fa fa-eye"></i></button> -->
-            <button (click)="$event.stopPropagation()"  *ngIf="item.status === 'Awaiting'" class="btn btn-sm2 btn-success me-1" > <i class="fa fa-pen" ></i></button>
-            <button (click)="$event.stopPropagation()" *ngIf="item.status=='Awaiting'" class="btn btn-sm2 btn-danger me-1" (click)="DeletepurchseOrder(item.id)"> <i class="fa fa-trash"></i></button>
-            <span *ngIf="item.status!='Awaiting'">-</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="pl-50"><input name="select" type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
+                <th class="point" (click)="sortBy('title')">Title
+                  <i *ngIf="sortColumn === 'title'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>        
+                <th class="point" (click)="sortBy('orderNumber')">PO Number
+                  <i *ngIf="sortColumn === 'orderNumber'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
+                <th class="point" (click)="sortBy('vendorname')">Vendor
+                  <i *ngIf="sortColumn === 'vendorname'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
+                <th class="point" (click)="sortBy('dateCreated')">Date Created
+                  <i *ngIf="sortColumn === 'dateCreated'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
+                <th class="text-center point" (click)="sortBy('items')"># of Items
+                  <i *ngIf="sortColumn === 'items'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
+                <th  class="text-center point" (click)="sortBy('quantity')">Total Qty
+                  <i *ngIf="sortColumn === 'quantity'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
+                <th class="point" (click)="sortBy('totalAmount')">Total Cost
+                  <i *ngIf="sortColumn === 'totalAmount'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>         
+                <th class="point" (click)="sortBy('status')">Status
+                  <i *ngIf="sortColumn === 'status'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
+                </th>
+                <th class="pr-50">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of filteredpurchaseorder | paginate
+        : { itemsPerPage: itemsPerPage, currentPage: currentPage }"  (click)="OpenViewmodel(item.id)" class="point">
+                <td class="pl-50"><input name="select" type="checkbox" [(ngModel)]="item.selected"  (click)="$event.stopPropagation()" (change)="updateSelection()" /> </td>                         
+                <td >{{item.title}}</td>          
+                <td>{{item.orderNumber}}</td>
+                <td>{{item.vendorname}}</td>
+                <td>{{item.dateCreated | date:'dd-MM-yyy'}}</td>
+                <td class="text-center">{{item.items}}</td>
+                <td class="text-center">{{item.quantity}}</td>
+                <td>{{item.totalAmount| currency: 'INR': 'symbol'}}</td>
+                <td>  <span
+                  class="badge-pending p-1 m-0"
+                  *ngIf="item.status === 'Awaiting'"
+                  >{{ item.status }}</span
+                >
+                <span
+                  class="badge-complate p-1 m-0"
+                  *ngIf="item.status === 'Approved'"
+                  >{{ item.status }}</span
+                >
+                <span
+                  class="badge-accepted p-1 m-0"
+                  *ngIf="item.status === 'Fulfilled'"
+                  >{{ item.status }}</span
+                >
+                <span
+                class="badge-declined p-1 m-0"
+                *ngIf="item.status === 'Decline'"
+                >{{ item.status }}</span
+              >
+                  </td>
+                <td class="pr-50 text-center">
+                  <!-- <button class="btn btn-sm2 btn-primary me-1"> <i class="fa fa-eye"></i></button> -->
+                  <button (click)="$event.stopPropagation()"  *ngIf="item.status === 'Awaiting'" class="btn btn-sm2 btn-success me-1" (click)="openModal(item.id)"> <i class="fa fa-pen" ></i></button>
+                  <button (click)="$event.stopPropagation()" *ngIf="item.status=='Awaiting'" class="btn btn-sm2 btn-danger me-1" (click)="DeletepurchseOrder(item.id)"> <i class="fa fa-trash"></i></button>
+                  <span *ngIf="item.status!='Awaiting'">-</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+           <!-- Pagination Controls -->
+            <pagination-controls
+            (pageChange)="pageChanged($event)"
+            [maxSize]="5"
+            [directionLinks]="true"
+            [autoHide]="true">
+            </pagination-controls> 
+            <!--Pagination Controls -->
+        </div>
+      </div>
+    </div>
+     <!-- end table content-->
+    <!-- Loader Controls -->
+    <div class="full-screen-loader" *ngIf="isLoading">
+    <div class="spinner-border text-dark" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
     </div>
-    </div>
+    <!-- Loader Controls -->
 </div>
-<div class="full-screen-loader" *ngIf="isLoading">
-  <div class="spinner-border text-dark" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
+
 <app-purchaseordersmodel
+[item]="selectedItem"
 *ngIf="isModalOpen"
 (close)="closeModal()"> 
 </app-purchaseordersmodel>

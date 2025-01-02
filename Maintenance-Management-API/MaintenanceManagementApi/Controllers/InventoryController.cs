@@ -15,10 +15,14 @@ namespace MaintenanceManagementApi.Controllers
     public class InventoryController : ControllerBase
     {
         private readonly IInventoryService _inventoryService;
+        private readonly IGenericFilterService<InventoryCategoryDto> _iGenericFilterService;
+        private readonly IGenericFilterService<InventoryItemDto> _iGenericFiltersService;
 
-        public InventoryController(IInventoryService inventoryService)
+        public InventoryController(IInventoryService inventoryService, IGenericFilterService<InventoryCategoryDto> iGenericFilterService, IGenericFilterService<InventoryItemDto> iGenericFiltersService)
         {
             _inventoryService = inventoryService;
+            _iGenericFilterService = iGenericFilterService;
+            _iGenericFiltersService = iGenericFiltersService;
         }
         // Add New Inventory Category  
         [HttpPost]
@@ -118,17 +122,17 @@ namespace MaintenanceManagementApi.Controllers
         }
 
         //Advance Filter Inventory Item 
-        [HttpGet("Filterdata")]
-        public async Task<ActionResult<IEnumerable<InventoryItemDto>>> GetInventoryitems([FromQuery] FilterDto filter)
+        [HttpGet("FilterInventory")]
+        public async Task<ActionResult<IEnumerable<InventoryItemDto>>> FilterInventory([FromQuery] FilterDto filter)
         {
-            var items = await _inventoryService.GetInventoryitems(filter);
+            var items = await _iGenericFiltersService.GetFilteredData(filter);
             return Ok(items);
         }
         //Advance Filter Inventory Item category 
-        [HttpGet("Filtercategorydata")]
-        public async Task<ActionResult<IEnumerable<InventoryCategoryDto>>> GetInventorycategory([FromQuery] FilterDto filter)
+        [HttpGet("FilterCategory")]
+        public async Task<ActionResult<IEnumerable<InventoryCategoryDto>>> FilterCategory([FromQuery] FilterDto filter)
         {
-            var category = await _inventoryService.GetInventorycategory(filter);
+            var category = await _iGenericFilterService.GetFilteredData(filter);
             return Ok(category);
         }
 
@@ -138,6 +142,14 @@ namespace MaintenanceManagementApi.Controllers
         {
             var data = await _inventoryService.GetInventorycount(id);
             return Ok(data);
+        }
+
+        //Check Exist Category
+        [HttpGet("exists")]
+        public async Task<bool> CheckCategoryExists(string category, int adminid, int id)
+        {
+            var result = await _inventoryService.CheckExist(category, adminid, id);
+            return result;
         }
     }
 }

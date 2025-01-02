@@ -11,6 +11,8 @@ import {
 import { UserService } from '../../../Service/user.service';
 import { Role } from '../../../Model/role.model';
 import Swal from 'sweetalert2';
+import { distinctUntilChanged } from 'rxjs';
+import { noWhitespaceValidator, passwordStrengthValidator } from '../../validation/custom-validators';
 
 @Component({
   selector: 'app-peoplemodel',
@@ -27,11 +29,34 @@ export class PeoplemodelComponent implements OnInit {
   errorMessage: string = '';
   roles!: Role[];
   isedit: boolean = false;
+  isSubmitting = false; 
+  usernameStatus: 'valid' | 'invalid' | 'none' = 'none';
+  passwordVisible: boolean = false;
 
+  constructor(private fb: FormBuilder, private userService: UserService) {
+    // Initialize the form group with validations
+    this.loginForm = this.fb.group({
+      userID: [0],
+      username: ['', [Validators.required, noWhitespaceValidator]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8),passwordStrengthValidator()]],
+      roleID: [null, Validators.required],
+    });
+  }
+  
   ngOnInit(): void {
+    debugger;
     this.fetchRoles();
     this.fetchvalue();
+    this.loginForm.get('username')?.valueChanges
+    .pipe(     
+      distinctUntilChanged() // Only trigger when the value actually changes
+    )
+    .subscribe((value) => {
+      this.checkUsernameExists(value);
+    });
   }
+  //fetch role
   fetchRoles(): void {
     const role = localStorage.getItem('Role');
     if (role) {
@@ -40,7 +65,9 @@ export class PeoplemodelComponent implements OnInit {
       });
     }
   }
+  //patch value loginForm
   fetchvalue() {
+    debugger;
     if (this.item) {
       this.isedit = true;
       this.loginForm.patchValue({
@@ -52,21 +79,32 @@ export class PeoplemodelComponent implements OnInit {
       });
     }
   }
-
-  constructor(private fb: FormBuilder, private userService: UserService) {
-    // Initialize the form group with validations
-    this.loginForm = this.fb.group({
-      userID: [0],
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      roleID: [undefined, Validators.required],
+  //input time check exist
+  checkUsernameExists(event: Event): void {
+    debugger;
+    const input = (event.target as HTMLInputElement)?.value;
+  
+    if (!input || this.loginForm.get('username')?.invalid) {
+      this.usernameStatus = "none"; // Reset the status if input is empty
+      return;
+    }  
+    const Adminid = Number(localStorage.getItem("UserId"));
+    const userid = this.item?.userID || 0;
+  
+    this.userService.checkUsernameExists(input, Adminid, userid).subscribe((exists: boolean) => {
+      this.usernameStatus = exists ? "invalid" : "valid";
     });
+  }  
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible; // Toggle the visibility
   }
-
+  //Add / Edit People
   onSubmit() {
-    if (this.loginForm.valid) {
+    debugger;
+    if (this.loginForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;  
       const loginData: Login = this.loginForm.value;
+      loginData.username=loginData.username.trim();
       loginData.hadAdminId = Number(localStorage.getItem('UserId'));
       this.userService.registerpeople(loginData).subscribe({
         next: (response: number) => {
@@ -77,23 +115,30 @@ export class PeoplemodelComponent implements OnInit {
               title: 'Duplicate Username',
               text: 'A user with this username already exists in your List.',
               confirmButtonColor: '#d33',
+            }).then(() => {
+              this.loginForm.reset();
+              this.usernameStatus='none';
             });
-            this.loginForm.reset();
+            
           } else {
-
             Swal.fire({
               icon: 'success',
-              title: this.loginForm.value.userID > 0 ? 'User Updated Successfully' : 'Registration Successful',
-              text:  `User ${
-                this.loginForm.value.userID  > 0 ? 'updated Successfully' : 'Add Successfully'
+              title:
+                this.loginForm.value.userID > 0
+                  ? 'User Updated Successfully'
+                  : 'Registration Successful',
+              text: `User ${
+                this.loginForm.value.userID > 0
+                  ? 'updated Successfully'
+                  : 'Add Successfully'
               }.`,
               confirmButtonColor: '#3085d6',
             }).then(() => {
               // Close the modal after the user clicks "OK"
               this.loginForm.reset();
               this.closeModal();
+              this.isSubmitting = false;
             });
-          
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -102,14 +147,15 @@ export class PeoplemodelComponent implements OnInit {
         },
       });
     } else {
-      this.loginForm.markAllAsTouched(); 
+      this.loginForm.markAllAsTouched();
     }
   }
-  closeModal() {
-    this.close.emit(); // Emit close event
-  }
-
+  //Model Open
   openModal() {
     this.isModalOpen = true;
+  }
+  //Model Close
+  closeModal() {
+    this.close.emit(); // Emit close event
   }
 }

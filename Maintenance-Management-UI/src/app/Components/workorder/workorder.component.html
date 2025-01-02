@@ -1,9 +1,4 @@
 <div class="mt-2" *ngIf="!ComplationworkorderModalOpen">
-  <div class="full-screen-loader" *ngIf="isLoading">
-    <div class="spinner-border text-dark" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
   <!-- Data Content-->
   <div
     class="d-flex justify-content-between align-items-center pb-2 px-2"
@@ -25,13 +20,14 @@
               <form #filterForm="ngForm">
                 <div class="form-group row">
                   <div class="col-lg-6 form-group">
-                    <label for="id" class="form-label">WO#</label>
+                    <label for="workorderId" class="form-label">WO#</label>
                     <input
                       type="text"
-                      id="id"
-                      name="id"
+                      id="workorderId"
+                      name="workorderId"
                       class="form-control"
-                      [(ngModel)]="filters.id"
+                      (input)="onCostInput($event)"
+                      [(ngModel)]="filters.workorderId"
                     />
                   </div>
 
@@ -49,16 +45,6 @@
 
                 <div class="form-group row">
                   <div class="col-lg-6 form-group">
-                    <label for="status" class="form-label">Status</label>
-                    <input
-                      type="text"
-                      id="status"
-                      name="status"
-                      class="form-control"
-                      [(ngModel)]="filters.status"
-                    />
-                  </div>
-                  <div class="col-lg-6 form-group">
                     <label for="dueDate" class="form-label">Due Date</label>
                     <input
                       type="date"
@@ -67,57 +53,42 @@
                       [(ngModel)]="filters.dueDate"
                       name="dueDate"
                     />
-                  </div>
+                  </div>               
+                  
+                    <div class="col-lg-6 form-group">
+                      <label for="priority" class="form-label">Priority</label>
+                      <input
+                      id="priority"
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="filters.priority"
+                        name="priority"
+                      />
+                    </div>
+                </div>
+                <div class="form-group row">
+                <div class="col-lg-6 form-group">
+                  <label for="status" class="form-label">Status</label>
+                  <input
+                    type="text"
+                    id="status"
+                    name="status"
+                    class="form-control"
+                    [(ngModel)]="filters.status"
+                  />
+                </div>
+                  <div class="form-group col-lg-6">
+                    <p></p>                  
+                     <button
+                       type="button"
+                       class="btn btn-sm btn-primary mt-3"
+                       (click)="applyFilters()"
+                     >
+                       Apply Filters
+                     </button>
+                   </div>
                 </div>
 
-                <div class="form-group row">
-                  <div class="col-lg-6 form-group">
-                    <label for="startDate" class="form-label"
-                      >Start Date</label
-                    >
-                    <input
-                      type="date"
-                      id="startDate"
-                      class="form-control"
-                      [(ngModel)]="filters.startDate"
-                      name="startDate"
-                    />
-                  </div>
-                  <div class="col-lg-6 form-group">
-                    <label for="priority" class="form-label">Priority</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      [(ngModel)]="filters.priority"
-                      name="priority"
-                    />
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <div class="form-group col-lg-6">
-                    <label for="assignedTo" class="form-label"
-                      >Assigned To</label
-                    >
-                    <input
-                      type="text"
-                      id="assignedTo"
-                      class="form-control"
-                      [(ngModel)]="filters.assignedTo"
-                      name="assignedTo"
-                    />
-                  </div>
-                  <div class="form-group col-lg-6">
-                   <p></p>                  
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-primary mt-3"
-                      (click)="applyFilters()"
-                    >
-                      Apply Filters
-                    </button>
-                  </div>
-                </div>
               </form>
             </div>
           </li>
@@ -125,56 +96,38 @@
       </div>
     </div>
     <div class="d-flex align-items-center">
-      <button
-          class="btn btn-sm  dropdown-toggle"
-          style="background-color: rgb(245 245 245);border-color: rgb(221 221 221);"
-          type="button"
-          id="assetDropdown"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          Select
-        </button>&nbsp;&nbsp;
-    <ul class="dropdown-menu" aria-labelledby="assignedToDropdown" style="width: 60px !important;">
-      <li>
-          <!-- <a class="dropdown-item" > <i class="fa fa-eye text-primary  pe-2"></i>View</a> -->
-        <a class="dropdown-item" (click)="history()"> Work order History</a>
-        <a class="dropdown-item" (click)="open()"> Open work order</a>
-      </li>
-    </ul>
-
       <input
         type="text"
+        name="search"
         class="search"
-        placeholder="Search"
-        style="width: 150px"
+        placeholder="Search"      
         [(ngModel)]="searchTerm"
         (keyup)="searchWorkOrder()"
       />
     </div>
   </div>
+  <!-- start No Data found -->
   <div class="card card-body p-4 mx-2" *ngIf="!filteredWorkOrder || filteredWorkOrder.length === 0">
     <div class="d-flex justify-content-between align-items-center">
-
     </div>
     <div class="pt-2 text-center">
       <p class="text-muted h5">No Data Found !</p>
     </div>
-    <div class="pt-5 text-center">  
-      <!-- <button class="btn btn-outline-themecolor">Create Work Order</button> -->
+    <div class="pt-5 text-center">       
     </div>
   </div>
-  <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deleteSelected()"  style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
-  <div *ngIf="filteredWorkOrder && filteredWorkOrder.length > 0">
-  
+   <!-- end No Data found -->
+
+  <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deleteSelected()"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+  <div *ngIf="filteredWorkOrder && filteredWorkOrder.length > 0">  
     <div *ngIf="!isLoading">
     <div class="table-responsive d-none d-md-block">
       <div class="table-scroll">
         <table class="table table-hover">
           <thead>
             <tr class="">
-              <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
-              <th (click)="sortBy('id')" style="cursor: pointer; padding-left: 10px !important;">
+              <th class="pl-50"><input type="checkbox" name="select" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
+              <th (click)="sortBy('id')" class="point">
                 WO#
                 <i
                   *ngIf="sortColumn === 'id'"
@@ -185,7 +138,7 @@
                   }"
                 ></i>
               </th>
-              <th (click)="sortBy('title')" style="cursor: pointer">
+              <th (click)="sortBy('title')" class="point">
                 Work Order Title
                 <i
                   *ngIf="sortColumn === 'title'"
@@ -196,7 +149,7 @@
                   }"
                 ></i>
               </th>             
-              <th (click)="sortBy('dueDate')" style="cursor: pointer">
+              <th (click)="sortBy('dueDate')" class="point">
                 Due Date
                 <i
                   *ngIf="sortColumn === 'dueDate'"
@@ -207,18 +160,7 @@
                   }"
                 ></i>
               </th>
-              <!-- <th (click)="sortBy('startDate')" style="cursor: pointer">
-                Start Date
-                <i
-                  *ngIf="sortColumn === 'startDate'"
-                  class="fas"
-                  [ngClass]="{
-                    'fa-sort-up': sortOrder === 'asc',
-                    'fa-sort-down': sortOrder === 'desc'
-                  }"
-                ></i>
-              </th> -->
-              <th (click)="sortBy('priority')" style="cursor: pointer">
+              <th (click)="sortBy('priority')" class="point">
                 Priority
                 <i
                   *ngIf="sortColumn === 'priority'"
@@ -229,7 +171,7 @@
                   }"
                 ></i>
               </th>            
-              <th (click)="sortBy('assignedTo')" style="cursor: pointer" *ngIf="!employee">
+              <th (click)="sortBy('assignedTo')" class="point" *ngIf="!employee">
                 Assigned To
                 <i
                   *ngIf="sortColumn === 'assignedTo'"
@@ -241,7 +183,7 @@
                 ></i>
               </th>
               <th *ngIf="!employee" >Payment</th>
-              <th (click)="sortBy('status')" style="cursor: pointer">
+              <th (click)="sortBy('status')" class="point">
                 Status
                 <i
                   *ngIf="sortColumn === 'status'"
@@ -252,24 +194,22 @@
                   }"
                 ></i>
               </th>
-              <th *ngIf="employee">Payment</th>
-              <!-- <th class="text-center">Completion Report</th> -->
+              <th *ngIf="employee">Payment</th>              
               <th class="text-center">Action</th>
               <th class=" pr-20"></th>
             
             </tr>
           </thead>
           <tbody>
-            <tr  style=" vertical-align: middle;"
+            <tr class="align-middle"
               *ngFor="let item of filteredWorkOrder | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
-              <th class="pl-50"><input type="checkbox" [(ngModel)]="item.selected" (change)="updateSelection()" /> </th>                         
+              <th class="pl-50"><input type="checkbox" name="select" [(ngModel)]="item.selected" (change)="updateSelection()" /> </th>                         
               <td class="pl-9">
                 {{ item.id }}
               </td>
               <td> {{ item.title.length > 20 ? (item.title | slice: 0: 20) + '...' : item.title }}</td>
              
-              <td>{{ item.dueDate | date : "dd-MM-yyyy hh:mm a" }}</td>
-              <!-- <td>{{ item.startDate | date : "dd-MM-yyyy hh:mm a" }}</td> -->
+              <td>{{ item.dueDate | date : "dd-MM-yyyy hh:mm a" }}</td>              
               <td>
                 <i
                   class="fa-solid fa-flag text-danger"
@@ -326,7 +266,7 @@
                   <button class="btn btn-sm2 btn-danger me-1" *ngIf="!employee" (click)="deleteSelected(item.id)"> <i class="fa fa-trash"></i></button>
                
               </td>
-              <td class="pr-20"><i  *ngIf="item.status!='Open'"  (click)="review(item.id)" class="fa fa-chevron-circle-down fa-xl" style="color: #408dfb;cursor: pointer;"></i></td>
+              <td class="pr-20"><i  *ngIf="item.status!='Open'"  (click)="WorkOrderComplationReview(item.id)" class="fa fa-chevron-circle-down fa-xl point text-primary"></i></td>
               <!-- <td>{{ categoryMapping[item.category] }}</td>             -->
             </tr>
           </tbody>
@@ -341,14 +281,14 @@
       </div>
     </div>
     </div>
-    <!-- Mobile view -->
 
+    <!--Start Mobile view -->
     <ul class="list-group mt-3 d-block d-md-none">
       <li
         *ngFor="let item of filteredWorkOrder"
-        class="list-group-item d-flex justify-content-between align-items-start border rounded shadow-sm mb-2"
+        class="list-group-item d-flex justify-content-between align-items-start border rounded shadow-sm mb-2 point"
         (click)="openModal(item)"
-        style="cursor: pointer; background-color: #f8f9fa"
+        style="background-color: #f8f9fa"
       >
         <div class="flex-grow-1 me-2">
           <h5 class="mb-1" style="color: #b3b3b3">WO#: {{ item.id }}</h5>
@@ -411,6 +351,12 @@
         </div>
       </li>
     </ul>
+    <div class="full-screen-loader" *ngIf="isLoading">
+      <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <!--end Mobile view -->
 
   </div>
 </div>

@@ -24,4 +24,5 @@ export const appConfig: ApplicationConfig = {
           }),
           provideHttpClient(),
           importProvidersFrom(NgxStripeModule.forRoot(environment.stripe.publicKey)), provideAnimationsAsync(),]
+          
 };

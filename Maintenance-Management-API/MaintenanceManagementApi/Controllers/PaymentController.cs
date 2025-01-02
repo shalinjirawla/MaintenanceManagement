@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
+using Stripe.Terminal;
 
 namespace MaintenanceManagementApi.Controllers
 {
@@ -15,12 +16,14 @@ namespace MaintenanceManagementApi.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IPaymentService _paymentService;
+        private readonly IGenericFilterService<PaymentDto> _iGenericFilterService;
         private readonly string _stripeSecretKey;
 
-        public PaymentController(IConfiguration configuration, IPaymentService paymentService)
+        public PaymentController(IConfiguration configuration, IPaymentService paymentService,IGenericFilterService<PaymentDto> iGenericFilterService)
         {
             _configuration = configuration;
             _paymentService = paymentService;
+            _iGenericFilterService = iGenericFilterService;
             _stripeSecretKey = _configuration["Stripe:SecretKey"];
             StripeConfiguration.ApiKey = _stripeSecretKey;
         }
@@ -84,6 +87,13 @@ namespace MaintenanceManagementApi.Controllers
             }
 
             return Ok(data); // Return 200 OK with the work order data
+        }
+        //Advance Filter payment 
+        [HttpGet("FilterPayment")]
+        public async Task<ActionResult<IEnumerable<PaymentDto>>> FilterPayment([FromQuery] FilterDto filter)
+        {
+            var assets = await _iGenericFilterService.GetFilteredData(filter);
+            return Ok(assets);
         }
     }
 }

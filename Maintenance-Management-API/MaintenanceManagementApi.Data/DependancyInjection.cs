@@ -1,4 +1,6 @@
-﻿using MaintenanceManagementApi.Data.IRepository;
+﻿using MaintenanceManagementApi.Common.ViewModel;
+using MaintenanceManagementApi.Data.DBModel;
+using MaintenanceManagementApi.Data.IRepository;
 using MaintenanceManagementApi.Data.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -25,6 +27,18 @@ namespace MaintenanceManagementApi.Data
             repository.AddScoped<IVendorRepository, VendorRepository>();
             repository.AddScoped<IInventoryRepository, InventoryRepository>();
             repository.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+
+            repository.AddScoped<IGenericRepository<Location>, GenericRepository<Location>>();
+            repository.AddScoped<IGenericRepository<Asset>, GenericRepository<Asset>>();            
+            repository.AddScoped<IGenericRepository<InventoryCategory>, GenericRepository<InventoryCategory>>();
+            repository.AddScoped<IGenericRepository<Vendor>, GenericRepository<Vendor>>();
+            repository.AddScoped<IGenericRepository<WorkOrderDto>, GenericRepository<WorkOrderDto>>();
+            repository.AddScoped<IGenericRepository<PreventiveMaintenanceDto>, GenericRepository<PreventiveMaintenanceDto>>();
+            repository.AddScoped<IGenericRepository<WorkRequestWithStatus>, GenericRepository<WorkRequestWithStatus>>();
+            repository.AddScoped<IGenericRepository<InventoryItem>, GenericRepository<InventoryItem>>();
+            repository.AddScoped<IGenericRepository<PurchaseOrderListDto>, GenericRepository<PurchaseOrderListDto>>();
+            repository.AddScoped<IGenericRepository<Payment>, GenericRepository<Payment>>();
+            repository.AddScoped<IGenericRepository<UserDto>, GenericRepository<UserDto>>();
             return repository;
         }
     }

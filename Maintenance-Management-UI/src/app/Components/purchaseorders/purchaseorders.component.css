@@ -1,0 +1,9 @@
+.menufilter{
+    width: 600px;
+  }
+  
+  @media (max-width: 768px) {
+    .menufilter {
+      width: 220px;
+    }
+  }

@@ -74,37 +74,6 @@ namespace MaintenanceManagementApi.Data.Repository
             return assetsdata.Count;
 
         }
-
-        //Advance Filter Assets 
-        public async Task<IEnumerable<Asset>> GetFilteredAssets(FilterDto filter)
-        {
-            // Start with a base query.
-            var query = _context.Assets.AsQueryable();
-
-            // Filter by admin ID.
-            if (filter.Id != null)  // Assuming Id is nullable in FilterDto
-            {
-                query = query.Where(asset => asset.Hadadmin == filter.Id);
-            }
-
-            if (!string.IsNullOrEmpty(filter.AssetName))
-            {
-                query = query.Where(w => w.AssetName.Contains(filter.AssetName));
-            }
-            if (!string.IsNullOrEmpty(filter.Model))
-            {
-                query = query.Where(w => w.Model == filter.Model);
-            }
-            if (!string.IsNullOrEmpty(filter.SerialNumber))
-            {
-                query = query.Where(w => w.SerialNumber == filter.SerialNumber);
-            }
-            if (!string.IsNullOrEmpty(filter.Category))
-            {
-                query = query.Where(w => w.Category == filter.Category);
-            }
-
-            return await query.ToListAsync();
-        }
+                
     }
 }

@@ -38,15 +38,15 @@
               type="text"
               class="search me-2"
               placeholder="Search"
-              style="width: 150px" 
+              name="search"
               [(ngModel)]="searchTerm"
               (keyup)="searchInventoryCategory()"               
             />
             <button class="btn btn-sm btn-themecolor d-none d-md-inline" (click)="openModal()"><i class="fa fa-plus fa-xs"></i> New</button>
         </div>
     </div>
-    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="DeleteInventoryCategory()"  style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
-    <div class="card card-body p-4 mx-2" *ngIf="!inventorycategory || inventorycategory.length === 0">
+    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font point" *ngIf="selectedItems.length > 0" (click)="DeleteInventoryCategory()"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+    <div class="card card-body p-4 mx-2" *ngIf="!filteredinventorycategory || filteredinventorycategory.length === 0">
       <div class="d-flex justify-content-between align-items-center">
           <!-- Work Order Title and Status -->
           <div class="">
@@ -65,8 +65,8 @@
   <div *ngIf="!isLoading">
     <!-- Inventory Categories Table -->
     <div class="table-responsive d-none d-md-block">
-      <div class="table-scroll">
-        <table class="table table-hover" *ngIf="inventorycategory && inventorycategory.length > 0">
+      <div class="table-scroll" *ngIf="filteredinventorycategory && filteredinventorycategory.length > 0">
+        <table class="table table-hover">
    
       <thead>
         <tr>
@@ -78,11 +78,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr  *ngFor="let item of filteredinventorycategory">
+        <tr  *ngFor="let item of filteredinventorycategory  | paginate
+              : { itemsPerPage: itemsPerPage, currentPage: currentPage }">
           <td class="pl-50"><input type="checkbox" [(ngModel)]="item.selected" (change)="updateSelection()" /> </td>
-          <td>{{item.categoryName}}</td>
-          <td>{{item.description}}</td>
-          <td>{{item.isActive ? 'Active' : 'InActive'}}</td>
+          <td>{{item.categoryName}}</td>          
+          <td>{{ item.description.length > 30 ? (item.description | slice: 0: 30) + '...' : item.description }}</td>
+          <td><span class="badge-accepted">{{item.isActive ? 'Active' : 'InActive'}}</span></td>
           <td  class="pr-50">
             <button class="btn btn-sm2 btn-primary me-1" (click)="openViewModel(item)"> <i class="fa fa-eye"></i></button>
             <button class="btn btn-sm2 btn-success me-1"  (click)="openModal(item)"> <i class="fa fa-pen" ></i></button>
@@ -91,6 +92,14 @@
         </tr>
       </tbody>
     </table>
+     <!-- Pagination Controls -->
+     <pagination-controls
+     (pageChange)="pageChanged($event)"
+     [maxSize]="5"
+     [directionLinks]="true"
+     [autoHide]="true">
+     </pagination-controls> 
+     <!--Pagination Controls -->
     </div>
     </div>
   </div>

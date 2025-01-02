@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LocationService } from '../../../Service/location.service';
 import Swal from 'sweetalert2';
+import { cleanWhitespace, noWhitespaceValidator } from '../../validation/custom-validators';
 
 @Component({
   selector: 'app-locationmodel',
@@ -23,8 +24,8 @@ export class LocationmodelComponent {
   ){
     this.locationForm = this.fb.group({
       id: [0],
-      name: ['', Validators.required],
-      description: ['', Validators.required],
+      name: ['', [Validators.required,noWhitespaceValidator]],
+      description: ['', [Validators.required,noWhitespaceValidator]],
       status: [],
       hadAdmin:[],
     });
@@ -45,7 +46,12 @@ export class LocationmodelComponent {
   onSubmit(){
     
     if(this.locationForm.valid){
-      const formData = this.locationForm.value;    
+      const formData = this.locationForm.value;   
+      for (const key in formData) {
+              if (formData[key] && typeof formData[key] === 'string') {
+                formData[key] = cleanWhitespace(formData[key]); // Clean each string value
+              }
+            } 
       formData.status = formData.status ? 1 : 0;  // If checked, 1; if unchecked, 0
      formData.hadAdmin=Number(localStorage.getItem("UserId"));
       this.locationService.addlocation(formData).subscribe(response=>{        

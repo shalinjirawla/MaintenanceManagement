@@ -15,6 +15,7 @@ import { Login } from '../../../Model/login.model';
 import { LocationService } from '../../../Service/location.service';
 import { Location } from '../../../Model/Location.model';
 import Swal from 'sweetalert2';
+import { noWhitespaceValidator } from '../../validation/custom-validators';
 
 @Component({
   selector: 'app-preventivemodel',
@@ -56,7 +57,7 @@ export class PreventivemodelComponent implements OnInit {
     this.selectedadvanceCreationPeriod = 'Day(s)';
     this.preventiveForm = this.fb.group({
       id: [0],
-      title: ['', Validators.required],
+      title: ['', [Validators.required,noWhitespaceValidator]],
       priority: ['', Validators.required],
       category: ['', Validators.required],
       asset: [null, Validators.required],
@@ -64,7 +65,7 @@ export class PreventivemodelComponent implements OnInit {
       assignTo: [null, Validators.required],
       startDate: [null, Validators.required],
       dueDate: [null],
-      description: ['', Validators.required],
+      description: ['', [Validators.required,noWhitespaceValidator]],
       createdBy: [],
       wos: [],
 
@@ -212,4 +213,5 @@ export class PreventivemodelComponent implements OnInit {
   closeviewModal() {
     this.close.emit(); // Emit close event
   }
+
 }

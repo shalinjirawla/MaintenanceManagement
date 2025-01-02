@@ -13,10 +13,12 @@ namespace MaintenanceManagementApi.Controllers
     public class PreventiveMaintenanceController : ControllerBase
     {
         private readonly IPreventiveMaintenanceService _preventiveMaintenanceService;
+        private readonly IGenericFilterService<PreventiveMaintenanceDto> _iGenericFilterService;
 
-        public PreventiveMaintenanceController(IPreventiveMaintenanceService preventiveMaintenanceService)
+        public PreventiveMaintenanceController(IPreventiveMaintenanceService preventiveMaintenanceService, IGenericFilterService<PreventiveMaintenanceDto> iGenericFilterService)
         {
             _preventiveMaintenanceService = preventiveMaintenanceService;
+            _iGenericFilterService = iGenericFilterService;
         }
 
         // Add new Preventive Maintenance
@@ -67,11 +69,11 @@ namespace MaintenanceManagementApi.Controllers
             }
         }
         //Advance Filter PM 
-        [HttpGet("Filterdata")]
+        [HttpGet("FilterPM")]
         public async Task<ActionResult<IEnumerable<PreventiveMaintenanceDto>>> GetPM([FromQuery] FilterDto filter)
         {
-            var filterpm = await _preventiveMaintenanceService.GetFilteredPM(filter);
+            var filterpm = await _iGenericFilterService.GetFilteredData(filter);
             return Ok(filterpm);
-        }
+        }        
     }
 }

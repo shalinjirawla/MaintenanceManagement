@@ -30,7 +30,7 @@
                         </div>
                         <div class="form-group">
                             <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-                            <input type="email" id="email" name="email" disabled="true" class="form-control" [(ngModel)]="quotation.email" required>
+                            <input type="email" id="email" name="email" disabled="true" autocomplete="email" class="form-control" [(ngModel)]="quotation.email" required>
                         </div>  
                         <div class="form-group">
                             <label for="location" class="form-label">Location<span class="text-danger">*</span></label>
@@ -59,7 +59,7 @@
                 <div class="modal-footer">                
                         <ng-container>
                             <button type="button" class="btn btn-sm btn-danger" (click)="closeModal()">Close</button>                            
-                            <button type="button" class="btn btn-sm btn-success" (click)="sendQuotation(workorder.id,workorder.createdBy)" [disabled]="requestForm.invalid">Send Estimate</button>
+                            <button type="button" class="btn btn-sm btn-success" (click)="sendQuotation(workorder.id,workorder.createdBy)" [disabled]="requestForm.invalid || isSubmitting">Send Estimate</button>
                         </ng-container>                    
                 
                 </div>

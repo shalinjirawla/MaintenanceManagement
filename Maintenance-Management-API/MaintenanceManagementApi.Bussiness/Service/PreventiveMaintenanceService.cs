@@ -268,13 +268,5 @@ namespace MaintenanceManagementApi.Bussiness.Service
             return await _preventiveMaintenanceRepository.Delete(id);
         }
 
-        //Advance Filter PM 
-        public async Task<IEnumerable<PreventiveMaintenanceDto>> GetFilteredPM(FilterDto filter)
-        {
-            var data = await _preventiveMaintenanceRepository.GetFilteredPM(filter);
-           
-            return data;
-        }
-
     }
 }

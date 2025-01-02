@@ -25,7 +25,12 @@
             />
             <div *ngIf="vendoreForm.get('name')?.invalid && vendoreForm.get('name')?.touched" class="text-danger">
               <label class="form-label-invalid">
-                Name is required.
+                <ng-container *ngIf="vendoreForm.get('name')?.hasError('required')">
+                  Name is required.
+                </ng-container>
+                <ng-container *ngIf="vendoreForm.get('name')?.hasError('whitespace')">
+                  Name cannot be just spaces.
+                </ng-container>
               </label>
             </div>
           </div>
@@ -41,10 +46,15 @@
               placeholder="Enter your company Name"
             />
             <div *ngIf="vendoreForm.get('companyName')?.invalid && vendoreForm.get('companyName')?.touched" class="text-danger">
-              <label class="form-label-invalid">
-                CompanyName is required.
-              </label>
-            </div>
+            <label class="form-label-invalid">
+              <ng-container *ngIf="vendoreForm.get('companyName')?.hasError('required')">
+                Company Name is required.
+              </ng-container>
+              <ng-container *ngIf="vendoreForm.get('companyName')?.hasError('whitespace')">
+                Company Name cannot be just spaces.
+              </ng-container>
+            </label> 
+            </div>          
           </div>
           <div class="form-group">
             <label for="email" class="form-label"
@@ -72,18 +82,17 @@
             <input
               type="text"
               id="contactNumber"
-              maxlength="12"
+              maxlength="10"
               formControlName="contactNumber"
               class="form-control"
               placeholder="Enter your contact Number"
-              (input)="onContactNumberInput($event)"
             />
             <div *ngIf="vendoreForm.get('contactNumber')?.invalid && vendoreForm.get('contactNumber')?.touched" class="text-danger">
               <label class="form-label-invalid" *ngIf="vendoreForm.get('contactNumber')?.hasError('required')">
                 Contact Number is required.
               </label>
               <label class="form-label-invalid" *ngIf="vendoreForm.get('contactNumber')?.hasError('pattern')">
-                Contact Number must be a valid 10-12 digit number.
+                Contact Number must be a valid 10 digit number.
               </label>
             </div>
           </div>
@@ -116,10 +125,15 @@
             >
             <textarea formControlName="address" class="form-control"></textarea>
             <div *ngIf="vendoreForm.get('address')?.invalid && vendoreForm.get('address')?.touched" class="text-danger">
-              <label class="form-label-invalid" *ngIf="vendoreForm.get('address')?.hasError('required')">
-                Address is required.
-              </label>             
-            </div>
+              <label class="form-label-invalid">
+                <ng-container *ngIf="vendoreForm.get('address')?.hasError('required')">
+                  Address is required.
+                </ng-container>
+                <ng-container *ngIf="vendoreForm.get('address')?.hasError('whitespace')">
+                  Address Name cannot be just spaces.
+                </ng-container>
+              </label> 
+              </div>  
           </div>
           
         </div>
@@ -131,7 +145,7 @@
           >
             Cancel
           </button>
-          <button type="submit" class="btn btn-success btn-sm btn-block">
+          <button type="submit" class="btn btn-success btn-sm btn-block" [disabled]="vendoreForm.invalid || isSubmitting">
             Save
           </button>
         </div>

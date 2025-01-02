@@ -28,4 +28,14 @@ export class Filter{
     unit?:string;
     companyname?:string;
     contact?:number;
+
+    paymentId?:string;
+    amount?:number;
+    requestId?:number;
+    workorderId?:number;
+
+    totalcost?:number;
+    vendor?:string;
+    ponumber?:string;
+
   }

@@ -22,7 +22,5 @@ namespace MaintenanceManagementApi.Bussiness.IService
         //Delete Assets
         Task<int> DeleteAssets(List<int> id);
 
-        //Advance Filter Assets 
-        Task<IEnumerable<AssetDto>> GetFilteredassets(FilterDto filter);
     }
 }

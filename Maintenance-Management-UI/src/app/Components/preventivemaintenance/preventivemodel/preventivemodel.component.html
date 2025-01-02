@@ -28,9 +28,17 @@
                                 <label for="title" class="form-label col-lg-3">Title<span class="text-danger">*</span></label>
                                 <div class=" col-lg-9">
                                 <input type="text" id="title" formControlName="title" class="form-control" placeholder="Enter Title" />
+                           
                                 <div *ngIf="preventiveForm.get('title')?.invalid && preventiveForm.get('title')?.touched" class="text-danger">
-                                <label class="form-label-invalid">Title is required.</label>
-                                </div>
+                                    <label class="form-label-invalid">
+                                      <ng-container *ngIf="preventiveForm.get('title')?.hasError('required')">
+                                        Title is required.
+                                      </ng-container>
+                                      <ng-container *ngIf="preventiveForm.get('title')?.hasError('whitespace')">
+                                        Title cannot be just spaces.
+                                      </ng-container>
+                                    </label>
+                                  </div>
                                 </div>
                             </div>
                                 <div class="form-group row pt-2">
@@ -78,7 +86,7 @@
                             <div class="form-group row pt-2">
                                 <label for="location" class="form-label col-lg-3">Location<span class="text-danger">*</span></label>
                                 <div class=" col-lg-9">                               
-                                <select id="assignTo" formControlName="location" class="form-control">
+                                <select id="location" formControlName="location" class="form-control">
                                     <option [ngValue]="null">Select Location</option>
                                     <option *ngFor="let location of location" [ngValue]="location.id">{{location.description}}</option>
                                   </select>
@@ -101,24 +109,32 @@
                             </div>
                             </div>
                             <div class="form-group row pt-2">
-                                <label class="form-label col-lg-3">Start Date<span class="text-danger">*</span></label>
+                                <label class="form-label col-lg-3" for="startDate">Start Date<span class="text-danger">*</span></label>
                                 <div class="col-lg-9">
-                                    <input type="datetime-local" class="form-control"  formControlName="startDate" [min]="minDateTime"  (change)="onStartDateChange($event)">
+                                    <input type="datetime-local" id="startDate" class="form-control"  formControlName="startDate" [min]="minDateTime"  (change)="onStartDateChange($event)">
                                 </div>
                             </div>
                             <div class="form-group row pt-2">
-                                <label class="form-label col-lg-3">Due Date<span class="text-danger">*</span></label>
+                                <label class="form-label col-lg-3" for="dueDate">Due Date<span class="text-danger">*</span></label>
                                 <div class="col-lg-9">
-                                    <input type="datetime-local" class="form-control" formControlName="dueDate" [min]="dueDateMin">
+                                    <input type="datetime-local" id="dueDate" class="form-control" formControlName="dueDate" [min]="dueDateMin">
                                 </div>                                
                             </div>
                             <div class="form-group row pt-2">
                                 <label for="description" class="form-label col-lg-3">Description<span class="text-danger">*</span></label>
                                 <div class="col-lg-9">
                                 <textarea type="text" id="description" formControlName="description" class="form-control" placeholder=""></textarea>
-                                <!-- <div *ngIf="assetsForm.get('description')?.invalid && assetsForm.get('description')?.touched" class="text-danger">
-                                <label class="form-label-invalid">description is required.</label>
-                                </div> --></div>
+                                <div *ngIf="preventiveForm.get('description')?.invalid && preventiveForm.get('description')?.touched" class="text-danger">
+                                    <label class="form-label-invalid">
+                                      <ng-container *ngIf="preventiveForm.get('description')?.hasError('required')">
+                                        Description is required.
+                                      </ng-container>
+                                      <ng-container *ngIf="preventiveForm.get('description')?.hasError('whitespace')">
+                                        Description cannot be just spaces.
+                                      </ng-container>
+                                    </label>
+                                  </div>    
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -126,17 +142,17 @@
                     <div *ngIf="selectedTab === 'schedule'">
                         <div class="px-5 pt-4">
                             <h5>Structure</h5>
-                            <label class="form-labelp pt-3">Schedules tell CMMS when and how to create WOs. They're applied to PM records that specify asset, start date, and more.</label>
+                            <label class="form-labelp pt-3" for="calendar">Schedules tell CMMS when and how to create WOs. They're applied to PM records that specify asset, start date, and more.</label>
                             
                             <div class="form-group row pt-3">
                                 <div class="col-lg-05 pt-2">
                                     <input type="radio" id="calendar" 
                                    
-                                    checked [disabled]="isCalanderScheduleAdded "  name="structure" value="Calendar" class="mt-1">
+                                    checked [disabled]="isCalanderScheduleAdded"  name="structure" value="Calendar" class="mt-1">
                                 </div>
                                 <div class="col-lg-11"> 
                                     <label for="calendar" class="form-label mb-0">Calendar</label><br>
-                                    <label class="form-labelp"> WOs are due regularly, or when the previous one is completed.</label>
+                                    <p class="form-labelp m-0"> WOs are due regularly, or when the previous one is completed.</p>
                                 </div>
                             </div>
                             
@@ -145,11 +161,9 @@
                                   <!-- card add option -->
                                 <div class="card p-3 w-75" *ngIf="!isCalanderScheduleAdded">
                                     <h5>Calendar Schedules</h5>
-                                    <div class="d-grid pt-2">
-                                        <!-- Show Add Schedule button only if Calendar structure is selected -->
+                                    <div class="d-grid pt-2">                                        
                                         <button type="button"  class="btn btn-light btnadd" (click)="addcalanderSchedule()">Add Calendar Schedule</button>
-                                        <!-- Show Add Schedule button only if Meter structure is selected -->
-                                        <!-- <button type="button" *ngIf="selectedStructure === 'Meter'" class="btn btn-light btnadd" (click)="addmeterSchedule()">Add Meter Schedule</button> -->
+                                        
                                     </div>
                                 </div>
 
@@ -163,7 +177,7 @@
                                     <div>                                    
                                             <div class="form-group row py-3 border-bottom">
                                                 <div class="col-lg-3">
-                                                    <label class="form-label">Schedule Type</label>
+                                                    <p class="form-label">Schedule Type</p>
                                                 </div>
                                                 <div class="col-lg-9">
                                                     <div class="d-flex dropdown btn btn-light btnadd">
@@ -182,13 +196,13 @@
                                             <div class="form-group row pt-2 pb-2 border-bottom">
                                               
                                                 <div class="col-lg-3">
-                                                    <label class="form-label">WOs Due</label>
+                                                    <p class="form-label">WOs Due</p>
                                                 </div>
                                                 <div class="col-lg-1">
-                                                    <label class="form-labelp">Every</label>
+                                                    <label class="form-labelp" for="frequencyInterval">Every</label>
                                                 </div>
                                                 <div class="col-lg-3">
-                                                    <input type="number" class="form-control" formControlName="frequencyInterval">
+                                                    <input type="number" id="frequencyInterval" [maxlength]="2" class="form-control" formControlName="frequencyInterval">
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <div class="d-flex dropdown btn btn-light btnadd">
@@ -210,10 +224,10 @@
                                                     <div class="col-lg-3"></div>
                                                     <div class="d-flex justify-content-start flex- col-lg-9 pt-2" style="padding-left: px;">
                                                       <div *ngFor="let day of daysOfWeek" class="pe-3">
-                                                        <label>
+                                                        <p>
                                                           <input type="checkbox" [checked]="selectedDays.includes(day)" (change)="toggleDay(day)" />
                                                           {{ day }}
-                                                        </label>
+                                                        </p>
                                                       </div>
                                                     </div>
                                                   </div>
@@ -222,7 +236,7 @@
                                               
                                             <div class="form-group row pt-3  mb-0">
                                                 <div class="col-lg-3">
-                                                    <label class="form-label">Create WOs</label>
+                                                    <p class="form-label">Create WOs</p>
                                                 </div>
                                                 <div class="col-lg-9">
                                                     <div class="form-group row">
@@ -230,7 +244,7 @@
                                                             <input type="radio" checked id="op1" formControlName="wos" [(ngModel)]="selectedOption" [value]="1" />
                                                         </div>
                                                         <div class="col-lg-3">
-                                                            <input type="text" formControlName="workOrderDue" class="form-control" [disabled]="selectedOption !== 1" />
+                                                            <input type="number" id="workOrderDue" formControlName="workOrderDue" class="form-control" [disabled]="selectedOption !== 1" />
                                                         </div>
                                                         <div class="col-lg-4 pl-0">
                                                             <button type="button" class="d-flex dropdown btn btn-light btnadd ms-auto w-100" [disabled]="selectedOption !== 1">
@@ -248,7 +262,7 @@
                                                             
                                                         </div>
                                                         <div class="col-lg-4">
-                                                            <label class="form-labelp"> before the due date</label>
+                                                            <p class="form-labelp"> before the due date</p>
                                                         </div>
                                                     </div>
                                                 
@@ -257,7 +271,7 @@
                                                             <input type="radio" id="op2" formControlName="wos" [(ngModel)]="selectedOption" [value]="2" />                                                            
                                                         </div>
                                                         <div class="col-lg-2 pl-0">
-                                                            <label class="form-labelp">On the</label>
+                                                            <p class="form-labelp m-0">On the</p>
                                                         </div>
                                                         <div class="col-lg-5 pl-0">
                                                             <button type="button" class="d-flex dropdown btn btn-light btnadd w-100"  [disabled]="selectedOption !== 2">
@@ -276,14 +290,13 @@
                                                             </button>
                                                         </div>
                                                         <div class="col-lg-4">
-                                                            <label class="form-labelp"> before the due date</label>
+                                                            <p class="form-labelp m-0"> before the due date</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>                                        
                                     </div>
-                                    <div class="text-end">
-                                      
+                                    <div class="text-end">                                      
                                       
                                     </div>
                                 </div>
@@ -292,8 +305,7 @@
                         </div>                        
                     </div>                
                     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-                </div>
-            
+                </div>            
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeviewModal()">Cancel</button>
                     <button type="submit" [disabled]="!preventiveForm.valid" class="btn btn-success btn-sm btn-block">{{isedit? 'Edit PM' : 'Create PM'}}</button>

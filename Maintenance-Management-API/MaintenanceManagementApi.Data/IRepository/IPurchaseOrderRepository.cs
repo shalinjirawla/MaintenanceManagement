@@ -12,7 +12,10 @@ namespace MaintenanceManagementApi.Data.IRepository
     {
         // Add New Purchase Order
         Task<int> InsertPurchaseOrder(PurchaseOrder po);
-        
+
+        //Remove
+        Task<bool> RemovePreviousItem(int id);
+
         // Add New Purchase Order Item
         Task<int> InsertPurchaseOrderItems(PurchaseOrderItem item);
 
@@ -27,5 +30,9 @@ namespace MaintenanceManagementApi.Data.IRepository
 
         //Update Status Purchase Order
         Task<bool> UpdatePurchaseOrderStatus(int id, string status);
+
+        //Check Exist PO number
+        Task<bool> CheckExist(string ponumber, int id, int uid);
+
     }
 }

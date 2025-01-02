@@ -28,9 +28,6 @@ namespace MaintenanceManagementApi.Data.IRepository
         //Update WorkOrder 
         Task<int> Update(WorkOrder workorder);
 
-        //Advance Filter Workorder
-        Task<IEnumerable<WorkOrder>> GetFilteredWorkOrders(FilterDto filter);
-
         // Complate workorder
         Task<int> Insertcomplateworkorder(CompletedWorkOrder completedWorkOrder);
 

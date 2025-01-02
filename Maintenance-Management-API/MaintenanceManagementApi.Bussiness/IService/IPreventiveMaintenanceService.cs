@@ -24,8 +24,5 @@ namespace MaintenanceManagementApi.Bussiness.IService
         // Delete Preventive Maintenance
         Task<bool> Delete(List<int> id);
 
-        //Advance Filter PM 
-        Task<IEnumerable<PreventiveMaintenanceDto>> GetFilteredPM(FilterDto filter);
-
     }
 }

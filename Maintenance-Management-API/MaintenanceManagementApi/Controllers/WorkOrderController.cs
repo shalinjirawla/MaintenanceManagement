@@ -15,10 +15,12 @@ namespace MaintenanceManagementApi.Controllers
     public class WorkOrderController : ControllerBase
     {
         private readonly IWorkOrderService _workOrderService;
+        private readonly IGenericFilterService<WorkOrderDto> _iGenericFilterService;
 
-        public WorkOrderController(IWorkOrderService workOrderService)
+        public WorkOrderController(IWorkOrderService workOrderService,IGenericFilterService<WorkOrderDto> iGenericFilterService)
         {
             _workOrderService = workOrderService;
+            _iGenericFilterService = iGenericFilterService;
         }
 
         // Add new WorkOrder
@@ -86,13 +88,6 @@ namespace MaintenanceManagementApi.Controllers
             return Ok(data);
         }
 
-        //Advance Filter Workorder
-        [HttpGet("Filterdata")]
-        public async Task<ActionResult<IEnumerable<WorkOrderDto>>> GetWorkOrders([FromQuery] FilterDto filter)
-        {
-            var workOrders = await _workOrderService.GetFilteredWorkOrders(filter);
-            return Ok(workOrders);
-        }
 
         // Complate workorder
         [HttpPost("Completeworkorder")]
@@ -146,6 +141,14 @@ namespace MaintenanceManagementApi.Controllers
         {
             var data = await _workOrderService.Getpaymentcount(id);
             return Ok(data);
+        }
+
+        //Advance Filter Workorder
+        [HttpGet("FilterWorkOrder")]
+        public async Task<ActionResult<IEnumerable<WorkOrderDto>>> FilterLocations([FromQuery] FilterDto filter)
+        {
+            var wo = await _iGenericFilterService.GetFilteredData(filter);
+            return Ok(wo);
         }
 
     }

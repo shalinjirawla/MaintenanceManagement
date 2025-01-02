@@ -33,13 +33,10 @@ namespace MaintenanceManagementApi.Bussiness.IService
         // Get Inventory by Admin
         Task<List<InventoryDto>> GetInventory(int id);
 
-        //Advance Filter Inventory Item
-        Task<List<InventoryItemDto>> GetInventoryitems(FilterDto filter);
-
-        //Advance Filter Inventory Item category 
-        Task<List<InventoryCategoryDto>> GetInventorycategory(FilterDto filter);
-
         //Get inventory item count for dashboard
         Task<List<DashbordCountsDto>> GetInventorycount(int id);
+
+        //Check Exist Category
+        Task<bool> CheckExist(string category, int adminid, int id);
     }
 }

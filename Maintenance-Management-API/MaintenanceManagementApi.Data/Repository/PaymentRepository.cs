@@ -1,4 +1,5 @@
-﻿using MaintenanceManagementApi.Data.DataDbContext;
+﻿using MaintenanceManagementApi.Common.ViewModel;
+using MaintenanceManagementApi.Data.DataDbContext;
 using MaintenanceManagementApi.Data.DBModel;
 using MaintenanceManagementApi.Data.IRepository;
 using Microsoft.EntityFrameworkCore;
@@ -38,5 +39,7 @@ namespace MaintenanceManagementApi.Data.Repository
 
             return data;
         }
+
+        
     }
 }

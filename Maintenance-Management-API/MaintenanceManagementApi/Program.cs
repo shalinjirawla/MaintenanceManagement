@@ -15,6 +15,9 @@ using MaintenanceManagementApi.Bussiness.Service;
 using Microsoft.AspNetCore.SignalR;
 using MaintenanceManagementApi.Bussiness.Hubs;
 using Stripe;
+using MaintenanceManagementApi.Common.ViewModel;
+using MaintenanceManagementApi.Data.DBModel;
+using MaintenanceManagementApi.Data.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -102,6 +105,8 @@ builder.Services.AddHangfireServer();
 
 builder.Services.RegisterService();
 builder.Services.RegisterRepository();
+
+
 builder.Services.AddTransient<IPreventiveMaintenanceService, PreventiveMaintenanceService>();
 // Configure Stripe API Key
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
@@ -150,3 +155,4 @@ using (var scope = app.Services.CreateScope())
 
 
 app.Run();
+

@@ -71,13 +71,6 @@ namespace MaintenanceManagementApi.Bussiness.Service
             return result;
         }
 
-        //Advance Filter Workorder
-        public async Task<IEnumerable<WorkOrderDto>> GetFilteredWorkOrders(FilterDto filter)
-        {
-            var data = await _workOrderRepository.GetFilteredWorkOrders(filter);
-            return _mapper.Map<IEnumerable<WorkOrderDto>>(data);
-        }
-
         // Complate workorder
         public async Task<int> InsertCompleteworkorder(CompletedWorkOrderDto completedWorkOrderDto)
         {

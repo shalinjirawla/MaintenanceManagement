@@ -3,6 +3,7 @@ using MaintenanceManagementApi.Bussiness.IService;
 using MaintenanceManagementApi.Common.ViewModel;
 using MaintenanceManagementApi.Data.DBModel;
 using MaintenanceManagementApi.Data.IRepository;
+using MaintenanceManagementApi.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -40,5 +41,6 @@ namespace MaintenanceManagementApi.Bussiness.Service
             var data = await _paymentRepository.getPayment(id);
             return _mapper.Map<List<PaymentDto>>(data);
         }
+
     }
 }

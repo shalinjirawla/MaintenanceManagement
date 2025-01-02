@@ -16,7 +16,7 @@
                     <p *ngIf="item.comment" class="text-danger">{{item.comment}}</p>
                     <div class="form-group row">   
 
-                        <label for="username" class="col-lg-10 h5">{{item.title}}</label>
+                        <p class="col-lg-10 h6">{{item.title}}</p>
                         <span class="col-lg-2"><i
                             class="fa-solid fa-flag text-danger"
                             *ngIf="item.priority === 'High'"
@@ -32,41 +32,39 @@
                           &nbsp;{{ item.priority }}</span>
                     </div>
                     <div class="form-group row">                      
-                        <label for="username" class="form-labelp col-lg-8">{{item.description}}</label>
+                        <p class="form-labelp m-0 col-lg-8">{{item.description}}</p>
                         
                     </div>
 
                     <hr>
-            <p class="bold">Details</p>
-                   
-
-                    <div class="form-group row">
-                        <label for="username" class="form-label col-lg-2">Due Date </label>
-                        <label for="username" class="form-labelp col-lg-5">{{item.dueDate | date : "dd-MM-yyyy hh:mm a" }}</label>
+            <p class="h6">Details</p>                   
+                    <div class="form-group row pt-2">
+                        <p class="form-label col-lg-2">Due Date </p>
+                        <p class="form-labelp m-0 col-lg-5">{{item.dueDate | date : "dd-MM-yyyy hh:mm a" }}</p>
                     </div>  
                     <div class="form-group row">
-                        <label for="username" class="form-label col-lg-2">Start Date </label>
-                        <label for="username" class="form-labelp col-lg-5">{{item.startDate| date : "dd-MM-yyyy hh:mm a" }}</label>
+                        <p class="form-label col-lg-2">Start Date </p>
+                        <p  class="form-labelp m-0 col-lg-5">{{item.startDate| date : "dd-MM-yyyy hh:mm a" }}</p>
                     </div>                   
                     <div class="form-group row">
-                        <label for="username" class="form-label col-lg-2">Satus </label>
-                        <label for="username" class="form-labelp col-lg-5">{{item.status}}</label>
+                        <p class="form-label col-lg-2">Satus </p>
+                        <p class="form-labelp m-0 col-lg-5">{{item.status}}</p>
                     </div> 
                     <div class="form-group row">
-                        <label for="username" class="form-label col-lg-2">Location </label>
-                        <label for="username" class="form-labelp col-lg-5">{{item.locationName}}</label>
+                        <p class="form-label col-lg-2">Location </p>
+                        <p  class="form-labelp m-0 col-lg-5">{{item.locationName}}</p>
                     </div>
                     <div class="form-group row" *ngIf="item.asset">
-                        <label for="username" class="form-label col-lg-2">Asset </label>
-                        <label for="username" class="form-labelp col-lg-5">{{item.asset}}</label>
+                        <p class="form-label col-lg-2">Asset </p>
+                        <p class="form-labelp m-0 col-lg-5">{{item.asset}}</p>
                     </div>
                     <div class="form-group row">
-                        <label for="username" class="form-label col-lg-2">Assign To</label>
-                        <label for="username" class="form-labelp col-lg-5">{{item.assignedToUser}}</label>
+                        <p class="form-label col-lg-2">Assign To</p>
+                        <p class="form-labelp m-0 col-lg-5">{{item.assignedToUser}}</p>
                     </div> 
                     <div class="form-group row">
-                        <label for="username" class="form-label col-lg-2">Customer</label>
-                        <label for="username" class="form-labelp col-lg-5">{{item.requestedToUser}}</label>
+                        <p class="form-label col-lg-2">Customer</p>
+                        <p class="form-labelp m-0 col-lg-5">{{item.requestedToUser}}</p>
                     </div> 
                 </div>
                     <div class="modal-footer">

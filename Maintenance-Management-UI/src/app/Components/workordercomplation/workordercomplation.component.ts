@@ -30,7 +30,6 @@ import { MaintenanceItem } from '../../Model/maintenanceItem.model';
   imports: [FormsModule, CommonModule, ReactiveFormsModule, PaymentComponent],
   templateUrl: './workordercomplation.component.html',
   styleUrl: './workordercomplation.component.css',
-  providers: [DecimalPipe],
 })
 export class WorkordercomplationComponent {
   @Input() item!: Workorder;
@@ -61,14 +60,11 @@ export class WorkordercomplationComponent {
     private locationService: LocationService,
     private assetsService: AssetsService,
     private inventoryService: InventoryService,
-    private fb: FormBuilder,
-    private decimalPipe: DecimalPipe
+    private fb: FormBuilder,    
   ) {}
 
-  ngOnInit(): void {
-    
-    if (this.item) {
-      
+  ngOnInit(): void {    
+    if (this.item) {      
       this.workorder = { ...this.item }; // Populate with selected item data for editing
       this.item.assignedTo = this.workorder.assignedTo;
       this.workorder.location = Number(this.workorder.location);
@@ -76,8 +72,7 @@ export class WorkordercomplationComponent {
       this.workorder.createdBy;
     }
     const role = localStorage.getItem('Role') || '';
-    if (role == 'Employee') {
-      //this.employee = true;
+    if (role == 'Employee') {      
     }
     this.completedWorkOrderForm = this.fb.group(
       {
@@ -86,10 +81,7 @@ export class WorkordercomplationComponent {
         status: [this.item?.status || ''],
         proofOfCompletion: ['', [Validators.required]],
         notesComments: ['', [Validators.required, Validators.minLength(5)]],
-        descriptionOfOccurrence: [
-          '',
-          [Validators.required, Validators.minLength(10)],
-        ],
+        descriptionOfOccurrence: ['',[Validators.required, Validators.minLength(10)],],
         challengesEncountered: ['', Validators.maxLength(500)],
         sparePartsMaterialsUsed: ['', Validators.maxLength(200)],
         extraWorkDetails: ['', Validators.maxLength(500)],
@@ -99,7 +91,7 @@ export class WorkordercomplationComponent {
         startTime: [null, Validators.required],
         endTime: [null, Validators.required],
         selectedItems: this.fb.array([]),
-        selectquantity: [],       
+        selectquantity: [],         
         maintenanceItem: this.fb.array([]),
       },
       { validators: this.workHoursValidator }
@@ -112,42 +104,12 @@ export class WorkordercomplationComponent {
       this.assets = response;
     });
   }
-  workHoursValidator(control: AbstractControl): ValidationErrors | null {
-    const actualLaborHours = control.get('actualLaborHours')?.value;
-    const startTime = control.get('startTime')?.value;
-    const endTime = control.get('endTime')?.value;
 
-    if (!actualLaborHours || !startTime || !endTime) {
-      return null; // If any value is missing, don't check duration yet.
-    }
-    const start = new Date(`1970-01-01T${startTime}:00`);
-    const end = new Date(`1970-01-01T${endTime}:00`);
-    const duration = (end.getTime() - start.getTime()) / (1000 * 60 * 60); // Duration in hours
-
-    if (duration > 12) {
-      return null;
-    }
-    // Check if the duration matches the actualLaborHours
-    if (duration !== actualLaborHours) {
-      return { invalidDuration: true };
-    }
-
-    return null; // No errors
-  }
-  setActiveTab(tab: string) {
-    this.activeTab = tab;
-  }
-
-  isTabActive(tab: string): boolean {
-    return this.activeTab === tab;
-  }
-
-  onSubmit(id: number) {
-    
+  //work order complation submit form
+  onSubmit(id: number) {    
     const maintenanceItems: MaintenanceItem[] = [];
     this.selectedItems.controls.forEach((control: AbstractControl, index: number) => {
-      const itemGroup = control as FormGroup; // Type cast to FormGroup
-  
+      const itemGroup = control as FormGroup; // Type cast to FormGroup  
       const maintenanceItem: MaintenanceItem = {
         id: itemGroup.get('id')?.value || 0, // Ensure id is handled if it's part of the model
         name: itemGroup.get('name')?.value,
@@ -176,19 +138,14 @@ export class WorkordercomplationComponent {
           data.isRead = false;
           data.senderID = Number(localStorage.getItem('UserId'));
           data.reciverId = Number(localStorage.getItem('HadAdminId'));
-          this.notificationService.SendMessage(data).subscribe((response) => {
-            console.log(response);
+          this.notificationService.SendMessage(data).subscribe((response) => {            
           });
-          // this.closeModal();
           Swal.fire({
             icon: 'success',
             title: 'Submitted  Successfully',
             text: 'Work Order Status Update Successfully',
             confirmButtonColor: '#3085d6',
           }).then(() => {
-            
-            // Close the modal after the user clicks "OK"
-            // this.closeModal();
             this.item.estimatedCost = this.totalAmountToPay;
             if(this.item.estimatedCost <=0){
               this.closeModal();
@@ -196,42 +153,41 @@ export class WorkordercomplationComponent {
             else{
               this.showStripePayment = true;
               if (formData.status === 'Complete') {
-                
-                this.setActiveTab('payment');
+                this.activeTab = 'payment';
               } 
               this.showStripePayment = true;           
             }
-              this.closeModal();
-            
+              this.closeModal();            
           });
         });
     } else {
     }
   }
+  //Work order Status change if complate then bill card open
   onStatusChange(event: any, item: any): void {    
     const status = event.target.value;
     if (status === 'Complete') {
       this.selectedItem = item;
     }
   }
+  //Work order Complation Model close
   closeModal() {    
     this.close.emit(); // Emit close event    
   }
+  //Part Model close
   closepartModal() {
     this.Openpart = false;
   }
-  openpart() {    
+  //part model open and get data
+  openpartModel() {    
     const UserId = Number(localStorage.getItem('HadAdminId'));
     this.inventoryService.getinventory(UserId).subscribe((response) => {
       this.inventoryItems = response;
-      this.filteredinventoryItems = this.inventoryItems;
-      console.log(response);
+      this.filteredinventoryItems = this.inventoryItems;    
       this.Openpart = true;
     });
   }
-  get selectedItems(): FormArray {
-    return this.completedWorkOrderForm.get('selectedItems') as FormArray;
-  }
+  //Selected part remove from the bill list
   removeItem(index: number) {
     const selectedItems = this.completedWorkOrderForm.get(
       'selectedItems'
@@ -239,36 +195,8 @@ export class WorkordercomplationComponent {
     selectedItems.removeAt(index);
     this.updateTotalCost();
   }
-  toggleAll() {
-    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-    const allChecked = Array.from(allCheckboxes).every(
-      (checkbox: any) => checkbox.checked
-    );
-
-    allCheckboxes.forEach((checkbox: any) => {
-      checkbox.checked = !allChecked;
-    });
-
-    this.updateSelection(); // Update the selection list
-  }
-  updateSelection(data?: any) {
-    
-    const checkboxes = document.querySelectorAll(
-      'input[type="checkbox"]:checked'
-    );
-    this.selectedItemss = Array.from(checkboxes).map((checkbox: any) => {
-      const row = checkbox.closest('tr');
-      return {
-        cost: row?.cells[3]?.textContent.trim(), // Cost is in the 4th column (index 3)
-        quantity: row?.cells[5]?.textContent.trim(), // Quantity is in the 6th column (index 5)
-        name: row?.cells[1]?.textContent.trim(), // Name is in the 2nd column (index 1)
-        inventoryItemId: row?.cells[2]?.textContent.trim(), // Item ID is in the 3rd column (index 2)
-        taxes: row?.cells[4]?.textContent.trim(),
-      };
-    });
-  }
-  SelectItem(items: any[]) {
-    
+  //Part model selected items
+  SelectItem(items: any[]) {    
     if (items && items.length > 0) {
       const selectedItems = this.completedWorkOrderForm.get(
         'selectedItems'
@@ -289,20 +217,17 @@ export class WorkordercomplationComponent {
         );
       });
       this.updateTotalCost();
-
       this.Openpart = false; // Close modal after selection
     }
   }
+  //Total cose updated inpute wise
   updateTotalCost(): void {
     this.totalCost = 0;
     this.totalQuantity = 0;
     this.totalTaxes = 0;
-
     this.selectedItems.controls.forEach((control) => {
       const initialQuantity = control.get('originalQuantity')?.value || 0; // Store the original quantity
-      const selectQuantity = control.get('selectquantity')?.value || 0;
-
-    
+      const selectQuantity = control.get('selectquantity')?.value || 0;    
       // Calculate the remaining quantity
       const remainingQuantity = initialQuantity - selectQuantity;
 
@@ -319,26 +244,73 @@ export class WorkordercomplationComponent {
       this.totalTaxes += taxPerItem;
     });
   }
+  //Add only available Qty Validation
   validateQuantity(index: number, selectedQuantity: number): void {
-    const remainingQuantity = this.selectedItems.at(index).get('originalQuantity')?.value || 0;
-  
+    const remainingQuantity = this.selectedItems.at(index).get('originalQuantity')?.value || 0;  
     if (selectedQuantity > remainingQuantity) {
       Swal.fire({
         icon: 'error',
         title: 'Invalid Quantity',
         text: `You cannot select more than ${remainingQuantity}.`,
         confirmButtonText: 'OK'
-      });
-  
-      // Reset the value back to the remaining quantity
+      }); 
+      
       this.selectedItems.at(index).get('selectquantity')?.setValue(remainingQuantity);
-    } else {
-      // Update the total cost if the quantity is valid
+    } else {      
       this.updateTotalCost();
     }
-  }
-  
+  }  
+  //validation for selected hours
+  workHoursValidator(control: AbstractControl): ValidationErrors | null {
+    const actualLaborHours = control.get('actualLaborHours')?.value;
+    const startTime = control.get('startTime')?.value;
+    const endTime = control.get('endTime')?.value;
+    if (!actualLaborHours || !startTime || !endTime) {
+      return null; // If any value is missing, don't check duration yet.
+    }
+    const start = new Date(`1970-01-01T${startTime}:00`);
+    const end = new Date(`1970-01-01T${endTime}:00`);
+    const duration = (end.getTime() - start.getTime()) / (1000 * 60 * 60); // Duration in hours
 
+    if (duration > 12) {
+      return null;
+    }
+    // Check if the duration matches the actualLaborHours
+    if (duration !== actualLaborHours) {
+      return { invalidDuration: true };
+    }
+    return null; // No errors
+  }
+  //if you select all parts
+  toggleAll() {
+    const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    const allChecked = Array.from(allCheckboxes).every(
+      (checkbox: any) => checkbox.checked
+    );
+    allCheckboxes.forEach((checkbox: any) => {
+      checkbox.checked = !allChecked;
+    });
+    this.updateSelection(); // Update the selection list
+  }
+  //if you select one part
+  updateSelection(data?: any) {    
+    const checkboxes = document.querySelectorAll(
+      'input[type="checkbox"]:checked'
+    );
+    this.selectedItemss = Array.from(checkboxes).map((checkbox: any) => {
+      const row = checkbox.closest('tr');
+      return {
+        cost: row?.cells[3]?.textContent.trim(), // Cost is in the 4th column (index 3)
+        quantity: row?.cells[5]?.textContent.trim(), // Quantity is in the 6th column (index 5)
+        name: row?.cells[1]?.textContent.trim(), // Name is in the 2nd column (index 1)
+        inventoryItemId: row?.cells[2]?.textContent.trim(), // Item ID is in the 3rd column (index 2)
+        taxes: row?.cells[4]?.textContent.trim(),
+      };
+    });
+  }
+  get selectedItems(): FormArray {
+    return this.completedWorkOrderForm.get('selectedItems') as FormArray;
+  }
   get totalAmountToPay(): number {
     const estimatedCost = parseFloat(
       this.item.estimatedCost?.toString() || '0'

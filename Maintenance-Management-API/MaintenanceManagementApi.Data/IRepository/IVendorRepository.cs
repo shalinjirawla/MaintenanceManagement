@@ -18,8 +18,6 @@ namespace MaintenanceManagementApi.Data.IRepository
 
         //Delete Vendor
         Task<bool> DeleteVendor(List<int> ids);
-
-        //Advance Filter Vendore
-        Task<List<Vendor>> GetVendore(FilterDto filter);
+        
     }
 }

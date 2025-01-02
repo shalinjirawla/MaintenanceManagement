@@ -13,13 +13,11 @@ export class WorkorderviewmodelComponent {
   @Output() close = new EventEmitter<void>();
 
   constructor(){
-
   }  
   onModalClose() {
     this.close.emit(); // Emit close event    
   }
   overdue(): boolean {
     return new Date(this.item.dueDate) < new Date(); // Compare the due date with the current date and time
-  }
-  
+  }  
 }

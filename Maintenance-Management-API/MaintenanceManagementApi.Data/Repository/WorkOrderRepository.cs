@@ -136,7 +136,7 @@ namespace MaintenanceManagementApi.Data.Repository
               {
                   Id = wo.Id,
                   Title = wo.Title,
-                  Description = wo.Description,
+                  Description = wo.Description, 
                   DueDate = wo.DueDate,
                   StartDate = wo.StartDate,
                   Status = wo.Status,
@@ -195,60 +195,7 @@ namespace MaintenanceManagementApi.Data.Repository
             return workorder.Id;
         }
 
-        //Advance Filter Workorder
-        public async Task<IEnumerable<WorkOrder>> GetFilteredWorkOrders(FilterDto filter)
-        {
-            var query = _context.WorkOrders.AsQueryable();
-
-            if (filter.Id.HasValue) // Check if Id has a value
-            {
-                query = query.Where(w => w.Id == filter.Id.Value); // Use equality for filtering
-            }
-            if (!string.IsNullOrEmpty(filter.Title))
-            {
-                query = query.Where(w => w.Title.Contains(filter.Title));
-            }
-            if (!string.IsNullOrEmpty(filter.Status))
-            {
-                query = query.Where(w => w.Status == filter.Status);
-            }
-            // Process DueDate
-            if (!string.IsNullOrEmpty(filter.DueDate))
-            {
-                // Try parsing full date
-                if (DateTime.TryParse(filter.DueDate, out DateTime dueDateValue))
-                {
-                    query = query.Where(w => w.DueDate.Date == dueDateValue.Date);
-                }
-            }
-            if (!string.IsNullOrEmpty(filter.StartDate))
-            {
-                if (DateTime.TryParse(filter.StartDate, out DateTime startDateValue))
-                {
-                    query = query.Where(w => w.StartDate.Date == startDateValue.Date);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(filter.Priority))
-            {
-                query = query.Where(w => w.Priority == filter.Priority);
-            }
-            if (!string.IsNullOrEmpty(filter.AssignedTo))
-            {
-                // Find the user ID based on the provided username
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Username == filter.AssignedTo);
-
-                if (user != null)
-                {
-                    // Filter WorkOrders by the found user ID
-                    query = query.Where(w => w.AssignedTo == user.UserID);
-                }
-            }
-
-            return await query.ToListAsync();
-        }
-
+        
         // Complate workorder
         public async Task<int> Insertcomplateworkorder(CompletedWorkOrder completedWorkOrder)
         {

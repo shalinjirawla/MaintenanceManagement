@@ -13,8 +13,9 @@ export class PeopleviewmodelComponent {
   @Input() item: any;
   @Output() close = new EventEmitter<void>();
 
-  constructor() {}
+  //Close Model
   closeModal() {
     this.close.emit(); // Emit the close event after animation completes
   }
 }
+  

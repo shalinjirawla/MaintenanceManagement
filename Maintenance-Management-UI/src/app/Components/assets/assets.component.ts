@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AssetsmodelComponent } from './assetsmodel/assetsmodel.component';
 import { CommonModule } from '@angular/common';
-import { Login } from '../../Model/login.model';
 import { AssetsService } from '../../Service/assets.service';
 import { Asset } from '../../Model/asset.model';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -36,7 +35,7 @@ export class AssetsComponent implements OnInit {
   filters: Filter = new Filter();
   modalMode: 'edit' | 'view' | 'add' = 'add'; // Add modalMode property
   currentPage: number = 1; // Current page for pagination
-  itemsPerPage: number = 6; // Items per page
+  itemsPerPage: number = 9; // Items per page
   isLoading: boolean = false;
   selectedImage: string | null = null;
 
@@ -53,38 +52,9 @@ export class AssetsComponent implements OnInit {
       this.filteredassets = this.assets;
     });
   }
-  pageChanged(page: number): void {
-    this.currentPage = page; // Update current page when pagination changes
-  }
-  showLoader() {
-    this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 400); // 1000ms = 1 second
-  }
-  openModal(item: Asset | null = null, mode: 'edit' | 'view' | 'add') {
-    this.selectedItem = item || null;
-    this.modalMode = mode;
-    this.isModalOpen = true;
-  }
 
-  closeModal() {
-    this.isModalOpen = false;
-    this.ngOnInit();
-  }
-  toggleAll() {
-    this.assets.forEach((item) => (item.selected = this.selectAll));
-    this.updateSelection();
-  }
-  updateSelection() {
-    this.selectedItems = this.assets.filter((item) => item.selected);
-  }
-  clearSelection() {
-    this.assets.forEach((item) => (item.selected = false));
-    this.selectedItems = []; // Clear the selectedItems array
-    this.selectAll = false;
-  }
-  deleteassets(id?:number) {
+  //Delete selected assets one or multiple
+  deleteassets(id?: number) {
     Swal.fire({
       title: 'Confirm Deletion?',
       text: 'Are you sure you want to delete this Asset?',
@@ -93,33 +63,45 @@ export class AssetsComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#0d6efd',      
+      cancelButtonColor: '#0d6efd',
     }).then((result) => {
       if (result.isConfirmed) {
         // User confirmed, proceed with deletion
-        const idsToDelete = id ? [id] : this.selectedItems.map((item) => item.id);       
-       // const idsToDelete = this.selectedItems.map((item) => item.id);
-        this.assetsService.deleteAsset(idsToDelete).subscribe(response => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: 'The Asset has been deleted.',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#28a745'
-          });
-          this.ngOnInit();
-          this.selectedItems=[];
-        }, error => {
-          // Handle deletion failure
-          Swal.fire({
-            icon: 'warning',
-            title: 'Action Not Allowed',
-            text: 'Asset cannot be deleted.',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#dc3545'
-        });
-        
-        });
+        const idsToDelete = id
+          ? [id]
+          : this.selectedItems.map((item) => item.id);
+        // const idsToDelete = this.selectedItems.map((item) => item.id);
+        this.assetsService.deleteAsset(idsToDelete).subscribe(
+          (response) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'The Asset has been deleted.',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#28a745',
+            }).then((result) => {
+              this.toggleAll();
+              this.selectedItems = [];
+              this.selectAll = false;
+              this.ngOnInit();
+            });
+          },
+          (error) => {
+            // Handle deletion failure
+            Swal.fire({
+              icon: 'warning',
+              title: 'Action Not Allowed',
+              text: 'Asset cannot be deleted.',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#dc3545',
+            }).then((result) => {
+              this.toggleAll();
+              this.selectedItems = [];
+              this.selectAll = false;
+              this.ngOnInit();
+            });
+          }
+        );
       } else {
         // User cancelled, no action taken
         Swal.fire({
@@ -127,13 +109,45 @@ export class AssetsComponent implements OnInit {
           title: 'Cancelled',
           text: 'The Asset was not deleted.',
           confirmButtonText: 'OK',
-          confirmButtonColor: '#17a2b8'
+          confirmButtonColor: '#17a2b8',
+        }).then((result) => {
+          this.toggleAll();
+          this.selectedItems = [];
+          this.selectAll = false;
+          this.ngOnInit();
         });
       }
     });
-  
   }
-
+  //Model Open
+  openModal(item: Asset | null = null, mode: 'edit' | 'view' | 'add') {
+    this.selectedItem = item || null;
+    this.modalMode = mode;
+    this.isModalOpen = true;
+  }
+  //Image Model Open
+  openImageModal(imageSrc: string): void {
+    this.selectedImage = imageSrc;
+  }
+  //Model Close
+  closeModal() {
+    this.isModalOpen = false;
+    this.ngOnInit();
+  }
+  //Image Model Close
+  closeImageModal(): void {
+    this.selectedImage = null;
+  }
+  //Search assets
+  searchasset() {
+    this.showLoader();
+    this.filteredassets = this.commonService.filterAsset(
+      this.assets,
+      this.searchTerm
+    );
+    this.sortasset(); // Ensure the results are sorted
+  }
+  //sort assets
   sortBy(column: string) {
     if (this.sortColumn === column) {
       this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
@@ -143,14 +157,7 @@ export class AssetsComponent implements OnInit {
     }
     this.sortasset();
   }
-  searchasset() {
-    this.showLoader();
-    this.filteredassets = this.commonService.filterAsset(
-      this.assets,
-      this.searchTerm
-    );
-    this.sortasset(); // Ensure the results are sorted
-  }
+  //sort assets
   sortasset() {
     this.filteredassets = this.commonService.sortAsset(
       this.filteredassets,
@@ -158,6 +165,7 @@ export class AssetsComponent implements OnInit {
       this.sortOrder
     );
   }
+  //Advance Filter of assets
   applyFilters() {
     this.showLoader();
     this.filters.id = Number(localStorage.getItem('UserId'));
@@ -165,11 +173,24 @@ export class AssetsComponent implements OnInit {
       this.filteredassets = response;
     });
   }
-  openImageModal(imageSrc: string): void {
-    this.selectedImage = imageSrc;
+  // If `selectAll` is true, all items are selected; otherwise, all items are deselected.
+  toggleAll() {
+    this.assets.forEach((item) => (item.selected = this.selectAll));
+    this.updateSelection();
   }
-
-  closeImageModal(): void {
-    this.selectedImage = null;
+  // Filters the `assets` array to include only the items that are selected.
+  updateSelection() {
+    this.selectedItems = this.assets.filter((item) => item.selected);
+  }
+  // Updates the `currentPage` variable when the user navigates to a different page in pagination.
+  pageChanged(page: number): void {
+    this.currentPage = page; // Update current page when pagination changes
+  }
+  // Sets `isLoading` to true, and then resets it to false after the timeout.
+  showLoader() {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 400); // 1000ms = 1 second
   }
 }

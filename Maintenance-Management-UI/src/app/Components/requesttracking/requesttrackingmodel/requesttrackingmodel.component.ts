@@ -7,7 +7,6 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Login } from '../../../Model/login.model';
 import { UserService } from '../../../Service/user.service';
-import { response } from 'express';
 import { WorkOrderService } from '../../../Service/workorder.service';
 import { WorkRequestWithStatusDto } from '../../../Model/WorkRequestWithStatusDto';
 import { Notification } from '../../../Model/notification.model';
@@ -136,8 +135,7 @@ export class RequesttrackingmodelComponent implements OnInit {
     }
   }
 
-  approveRequest() {
-    
+  approveRequest() {    
     this.workorder.requestedId = this.workorder.id;
     this.workorder.id = 0;
     this.workorder.additionalWorkers = 'team';

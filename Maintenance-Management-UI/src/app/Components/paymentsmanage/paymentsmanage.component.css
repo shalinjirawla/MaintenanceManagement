@@ -39,6 +39,15 @@
   td {
     position: relative;  /* Ensure tooltip is positioned relative to td */
   }
+  .dropdown-menu{
+    width: 600px;
+  }
+  
+  @media (max-width: 768px) {
+    .dropdown-menu {
+      width: 220px;
+    }
+  }
   
   
   

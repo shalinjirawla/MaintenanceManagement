@@ -22,8 +22,6 @@ namespace MaintenanceManagementApi.Bussiness.IService
 
         // Delete Location
         Task<bool> Delete(List<int> id);
-
-        //Advance Filter location
-        Task<List<LocationDto>> GetFilteredlocation(FilterDto filter);
+        
     }
 }

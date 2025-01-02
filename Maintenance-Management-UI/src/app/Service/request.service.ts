@@ -28,6 +28,7 @@ export class RequestService {
   constructor(private http: HttpClient) {}
 
   createRequest(formData: FormData): Observable<any> {    
+    debugger;
     const options = {
       headers: new HttpHeaders({ 'Content-Type': 'multipart/form-data' }),
       withCredentials: true, // This may help with CORS issues
@@ -83,18 +84,6 @@ export class RequestService {
       .pipe(catchError(this.handleError));
   }
 
-  filterdata(item: Filter): Observable<WorkRequestWithStatusDto[]> {
-    let params = new HttpParams();
-    Object.entries(item).forEach(([key, value]) => {
-      // Append each key-value pair, including those with undefined or null values
-      params = params.append(key, value !== undefined ? value : '');
-    });
-    return this.http.get<WorkRequestWithStatusDto[]>(
-      `${this.apiUrl}/Filterdata`,
-      { params }
-    );
-  }
-
   completeworkorder(formData: CustomerFeedback): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}/Addfeedback`, formData)
@@ -125,6 +114,18 @@ export class RequestService {
   Getfeedback(id: number): Observable<CustomerFeedback[]> {
     return this.http.get<CustomerFeedback[]>(
       `${this.apiUrl}/getfeedbackbyadmin/${id}`
+    );
+  }
+
+  filterdata(item: Filter): Observable<WorkRequestWithStatusDto[]> {
+    let params = new HttpParams();
+    Object.entries(item).forEach(([key, value]) => {
+      // Append each key-value pair, including those with undefined or null values
+      params = params.append(key, value !== undefined ? value : '');
+    });
+    return this.http.get<WorkRequestWithStatusDto[]>(
+      `${this.apiUrl}/FilterRequest`,
+      { params }
     );
   }
 

@@ -2,6 +2,7 @@
 <div class="modal-overlay" tabindex="-1" [ngClass]="{ show: true }">
   <div class="modal-dialog"  *ngIf="!isQuotation">
     <div class="modal-content">
+      <!-- start model header -->
       <div class="modal-header">
         <h5 class="modal-title">
         Create New Request
@@ -10,7 +11,9 @@
           <span>&times;</span>
         </button>
       </div>
-      <form *ngIf="!isQuotation"  (ngSubmit)="onSubmit()" #requestForm="ngForm"  novalidate>
+       <!-- end model header -->
+       <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+      <!-- start model body -->
         <div class="modal-body">
           <div class="formdiv">
             <!-- Main content column -->
@@ -19,94 +22,76 @@
               <input
                 type="text"
                 id="title"
-                name="title"
+                formControlName="title"
+                class="form-control"
                 placeholder="Enter Title"
-                #title="ngModel"
-                class="form-control"
-                [(ngModel)]="workorder.title"
-                required
               />
-              <div *ngIf="title.invalid && title.touched" class="text-danger">
-                <small *ngIf="title.errors && title.errors['required']">Title is required.</small>
+              <div *ngIf="requestForm.get('title')?.invalid && requestForm.get('title')?.touched" class="text-danger">
+                <small *ngIf="requestForm.get('title')?.hasError('required')">Title is required.</small>
+                <small *ngIf="requestForm.get('title')?.hasError('whitespace')">Title cannot be just spaces.</small>
               </div>
             </div>
-            <div class="form-group">
-              <label for="description" class="form-label"
-                >Description<span class="text-danger">*</span></label
-              >
-              <input
-                type="text"
-                id="description"
-                name="description"
-                placeholder="Enter Description"
-                class="form-control"
-                [(ngModel)]="workorder.description"
-                #description="ngModel"
-                required
-                minlength="10"
-              />
-              <div *ngIf="description.invalid && description.touched" class="text-danger">
-                <small *ngIf="description.errors && description.errors['required']">
-                  Description is required.
-                </small>
-                <small *ngIf="description.errors && description.errors['minlength']">
-                  Description must be at least 10 characters long.
-                </small>
+        
+             <!-- Description -->
+              <div class="form-group">
+                <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  id="description"
+                  formControlName="description"
+                  class="form-control"
+                  placeholder="Enter Description"
+                />
+                <div *ngIf="requestForm.get('description')?.invalid && requestForm.get('description')?.touched" class="text-danger">
+                  <small *ngIf="requestForm.get('description')?.hasError('required')">Description is required.</small>
+                  <small *ngIf="requestForm.get('description')?.hasError('minlength')">Description must be at least 10 characters long.</small>
+                  <small *ngIf="requestForm.get('description')?.hasError('whitespace')">Description cannot be just spaces.</small>
+                </div>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="location" class="form-label">Location<span class="text-danger">*</span></label>                                   
-              <select id="location"  name="location" #locationModel="ngModel" required class="form-control" [(ngModel)]="workorder.location" required>
-                  <option [ngValue]="0" >Select Location</option>
-                  <option *ngFor="let location of location" [ngValue]="location.id">{{location.description}}</option>
-              </select>
-              <div *ngIf="locationModel.invalid && locationModel.touched" class="text-danger">
-                  <small *ngIf="locationModel.errors?.['required']">Location is required.</small>
+
+              <!-- Location -->
+              <div class="form-group">
+                <label for="location" class="form-label">Location<span class="text-danger">*</span></label>
+                <select id="location" formControlName="location" class="form-control">
+                  <option value="">Select Location</option>
+                  <option *ngFor="let loc of location" [value]="loc.id">{{ loc.description }}</option>
+                </select>
+                <div *ngIf="requestForm.get('location')?.invalid && requestForm.get('location')?.touched" class="text-danger">
+                  <small>Location is required.</small>
+                </div>
               </div>
-          </div>
-            <div class="form-group">
-              <label for="priority" class="form-label"
-                >Priority<span class="text-danger">*</span></label
-              >
-              <select
-                id="priority"
-                name="priority"
-                class="form-control"
-                [(ngModel)]="workorder.priority"
-                required
-                #priority="ngModel"
-              >
-              <option [ngValue]="''">Select Priority</option> 
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
-               <!-- Validation Messages -->
-               <div *ngIf="priority.invalid && priority.touched" class="text-danger">
-                <small *ngIf="priority.errors && priority.errors['required']">
-                  Priority is required.
-                </small>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Image<span class="text-danger">*</span></label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                class="form-control"
-                [(ngModel)]="workorder.image"
-                (change)="onFileSelected($event)"
-                required
-                #image="ngModel"
-              />
-               <!-- Validation Messages -->
-        <div *ngIf="!selectedFile && requestForm.submitted" class="text-danger">
-          <small>Image is required.</small>
-        </div>
-            </div>
+
+              <!-- Priority -->
+              <div class="form-group">
+                <label for="priority" class="form-label">Priority<span class="text-danger">*</span></label>
+                <select id="priority" formControlName="priority" class="form-control">
+                  <option value="">Select Priority</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+                <div *ngIf="requestForm.get('priority')?.invalid && requestForm.get('priority')?.touched" class="text-danger">
+                  <small>Priority is required.</small>
+                </div>
+              </div>           
+          
+                <!-- Image -->
+                <div class="form-group">
+                  <label for="image" class="form-label">Image<span class="text-danger">*</span></label>
+                  <input
+                    type="file"
+                    id="image"
+                    (change)="onFileSelected($event)"
+                    class="form-control"
+                  />
+                  <div *ngIf="requestForm.get('image')?.invalid && requestForm.get('image')?.touched" class="text-danger">
+                    <small>Image is required.</small>
+                  </div>
+                </div>             
           </div>
         </div>
+      <!-- end model body -->
+      <!-- start model footer -->
         <div class="modal-footer">
           <button
             type="button"
@@ -115,14 +100,17 @@
           >
             Cancel
           </button>
-          <button type="submit" class="btn btn-sm btn-success" [disabled]="requestForm.invalid">
-            Submit Request
+          <button type="submit" class="btn btn-sm btn-success"[disabled]="requestForm.invalid || isSubmitting">
+            Submit
           </button>
         </div>
+      <!-- end model footer -->
+
       </form>
     </div>
   </div>
 
+<!-- start model -->
 <div class="modal-dialog2" *ngIf="isQuotation">
   <div class="modal-content">
     <div class="modal-header">
@@ -178,5 +166,6 @@
           </button>
         </div>
     </div>
-  </div>
+</div>
+<!-- end model -->
 </div>

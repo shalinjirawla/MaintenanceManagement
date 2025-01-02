@@ -23,5 +23,8 @@ namespace MaintenanceManagementApi.Bussiness.IService
 
         //Update Status Purchase Order
         Task<bool> UpdatePurchaseOrderStatus(int id, string status);
+
+        //Check Exist PO number
+        Task<bool> CheckExist(string ponumber, int id, int uid);
     }
 }

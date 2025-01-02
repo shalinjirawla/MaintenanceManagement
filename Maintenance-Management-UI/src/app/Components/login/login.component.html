@@ -2,14 +2,28 @@
   class="container d-flex justify-content-center align-items-center vh-100 custombg"
 >
   <div
-    class="card custom card-shadow"
+    class="card custom card-shadow p-3"
     [ngClass]="{ 'animate-card': showModal }"
   >
-    <div class="card-header customtop">
-      <h4 class="card-title text-center pt-3">
-        {{ isSignUpMode ? "Sign Up" : "Sign in to your Account" }}
-      </h4>
+  <div class="card-header customtop pt-2" >
+    <div>
+      <!-- Tools Icon -->
+      <i class="la la-tools la-2x m-0 pl-4 text-primary"></i>
+      
+      <!-- CMMS Text with Colored Letters -->
+      <span class="icon-text">
+        <span class="text-danger">C</span>
+        <span class="text-success">M</span>
+        <span class="text-warning">M</span>
+        <span class="text-primary">S</span>
+      </span>
     </div>
+    
+    <h4 class="card-title pt-3 m-0">
+      {{ isSignUpMode ? "Sign Up" : "Sign in" }}
+    </h4>
+    <label class="form-label">to access Maintenance-management</label>
+  </div>  
     <div class="card-body pt-0">
       <div class="full-screen-loader" *ngIf="isLoading">
         <div class="spinner-border text-dark" role="status">
@@ -19,35 +33,44 @@
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="form-group mb-3">
-          <label for="username" class="form-label"
-            >Tenant</label
-          >
+          <div class="input-group">        
           <input
             type="text"
             id="adminname"
             formControlName="adminname"
             name="adminname"
             class="form-control"
-            placeholder="Enter tenant name"
-            
+            placeholder="Enter Tenant Name"            
           />
+          <div class="input-group-append">
+            <span class="input-group-text">
+              <i class="fa fa-network-wired text-muted"></i>
+            </span>
+          </div>
+        </div>
         </div>
 
         <div class="form-group mb-3">
-          <label for="username" class="form-label"
-            >Username<span class="text-danger">*</span></label
-          >
-          <input
-            type="text"
-            id="username"
-            formControlName="username"
-            name="username"
-            class="form-control"
-            placeholder="Enter your username"
-            required
-          />
+          <div class="input-group">
+            <!-- Text Input -->
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              name="username"
+              class="form-control"
+              placeholder="Enter Username"
+              required
+            />
+            <!-- User Icon on the Right -->
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-user text-muted"></i>
+              </span>
+            </div>
+          </div>
         </div>
-
+        
         <div *ngIf="isSignUpMode" class="form-group mb-3">
           <label for="email" class="form-label"
             >Email<span class="text-danger">*</span></label
@@ -63,30 +86,23 @@
           />
         </div>
         <div class="form-group mb-3">
-          <label for="password" class="form-label"
-            >Password<span class="text-danger">*</span></label
-          >
+          <div class="input-group">
           <input
             type="password"
             id="password"
             formControlName="password"
             name="password"
             class="form-control"
-            placeholder="Enter your password"
+            placeholder="Enter Password"
             required
           />
+          <div class="input-group-append">
+            <span class="input-group-text">
+              <i class="fa fa-eye text-muted"></i>
+            </span>
+          </div>
         </div>
-        <!-- <div class="form-group mb-3">
-          <label for="password" class="form-label"
-            >Select Company<span class="text-danger">*</span></label
-          >
-          <select class="form-select" formControlName="hadAdminId" required>
-            <option [ngValue]="null">Select Company</option>
-            <option *ngFor="let admin of admins" [value]="admin.userID">
-              {{ admin.username }}
-            </option>
-          </select>
-        </div> -->
+        </div>
 
         <div *ngIf="isSignUpMode" class="form-group mb-3">
           <label for="roleID" class="form-label"
@@ -109,21 +125,18 @@
         </div>
 
         <div class="text-center">
-          <button *ngIf="!isSignUpMode" type="submit" class="btn btn-them">
-            Log in
+          <button *ngIf="!isSignUpMode" type="submit" class="btn btn-themecolor w-100">
+           Sign in
           </button>
-          <button *ngIf="isSignUpMode" type="submit" class="btn btn-them">
+          <button *ngIf="isSignUpMode" type="submit" class="btn btn-success">
             Sign Up
           </button>
         </div>
 
         <div class="text-center p-2">
-          <!-- <ng-container *ngIf="!isSignUpMode">
-            <p>Don't have an account yet? <a (click)="switchToSignUp()" style="cursor: pointer;">Sign Up</a></p>
-          </ng-container> -->
           <ng-container *ngIf="isSignUpMode">
             Already have an account?
-            <a (click)="switchToLogin()" style="cursor: pointer">Log in</a>
+            <a (click)="switchToLogin()" >Log in</a>
           </ng-container>
         </div>
       </form>
@@ -135,91 +148,3 @@
     <span class="visually-hidden">Loading...</span>
   </div>
 </div>
-
-<!-- <div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ isSignUpMode ? 'Sign Up' : 'Login' }}</h5>
-        <button type="button" class="btn-close pb-2" aria-label="Close" (click)="closeModal()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="onSubmit()">
- 
-          <div class="form-group mb-2">
-            <label for="username" class="form-label">Username<span class="text-danger">*</span></label>
-            <input
-              type="text"
-              id="username"
-              [(ngModel)]="login.username"
-              name="username"
-              class="form-control"
-              placeholder="Enter your username"
-              required
-            />
-          </div>
-
-     
-          <div *ngIf="isSignUpMode" class="form-group mb-4">
-            <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-            <input
-              type="text"
-              id="email"
-              [(ngModel)]="login.email"
-              name="email"
-              class="form-control"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-
-     
-          <div class="form-group mb-4">
-            <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
-            <input
-              type="password"
-              id="password"
-              [(ngModel)]="login.password"
-              name="password"
-              class="form-control"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-
-          <div *ngIf="isSignUpMode" class="form-group mb-4">
-            <label for="roleID" class="form-label">Role<span class="text-danger">*</span></label>
-            <select class="form-control" name="role"  [(ngModel)]="login.roleID">
-              <option [value]="">Select Role</option>
-              <option [value]="3">Customer</option>
-              <option [value]="4">Worker</option>
-            </select>
-          </div>
-
-   
-          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-
-          <div class="d-grid">
-     
-            <button *ngIf="!isSignUpMode" type="submit" class="btn btn-sm btn-themcolor btn-block">Login</button>
-            <button *ngIf="isSignUpMode" type="submit" class="btn btn-themcolor btn-block">Sign Up</button>
-          </div>
-
-
-          <div class="text-center p-2">
-            <ng-container *ngIf="!isSignUpMode">
-              <p>Don't have an account yet? <a (click)="switchToSignUp()" style="cursor: pointer;">Sign Up</a></p>
-            </ng-container>
-            <ng-container *ngIf="isSignUpMode">
-              Already have an account? <a (click)="switchToLogin()">Login</a>
-            </ng-container>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
- -->

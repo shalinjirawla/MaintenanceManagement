@@ -17,7 +17,7 @@
                                     <div class="form-group row">
                                         <div class="col-lg-6 form-group m-0">
                                             <label for="name" class="form-label">Name</label>
-                                            <input type="text" id="name" name="name" [(ngModel)]="filters.name" class="form-control" />
+                                            <input type="text" id="name" name="name" [(ngModel)]="filters.name" class="form-control" autocomplete="name" />
                                         </div>
                                         <div class="col-lg-6 form-group m-0">
                                             <label for="assetName" class="form-label">Assets</label>
@@ -57,16 +57,17 @@
                 </div>
             </div>
             <div class="d-flex align-items-center">
-                <input type="text" class="search me-2"   [(ngModel)]="searchTerm"
-                (keyup)="searchPM()" placeholder="Search" style="width: 150px;" />
+                <input type="text" name="search" class="search me-2" [(ngModel)]="searchTerm"
+                (keyup)="searchPM()" placeholder="Search" />
                 <button class="btn btn-sm btn-themecolor d-none d-md-inline" (click)="openModal(null)">
                    <i class="fa fa-plus fa-xs"></i> New
                 </button>
             </div>
         </div>
 
+  <!-- start No Data found -->
       <div class="card card-body p-4 mx-2" *ngIf="!filteredPM || filteredPM.length === 0">
-      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
         <div class="">
           <h4 class="card-title mb-1"></h4>
         </div>
@@ -87,37 +88,39 @@
         </button>
       </div>
     </div>
-    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deletePreventiveMaintenance(0)"  style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
+  <!-- end No Data found -->
+
+    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deletePreventiveMaintenance(0)"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>      
     <div *ngIf="!isLoading">
         <div class="table-responsive d-none d-md-block" *ngIf="filteredPM && filteredPM.length > 0">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                      <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
-                        <th (click)="sortBy('title')" style="cursor: pointer;padding-left: 9px !important;">Name</th>
+                      <th class="pl-50"><input type="checkbox" name="select" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /> </th>                         
+                        <th class="point" (click)="sortBy('title')">Name</th>
                        
-                        <th (click)="sortBy('assetName')" style="cursor: pointer">
+                        <th class="point" (click)="sortBy('assetName')">
                             Assets
                         </th>
                         <!-- <th>Location</th> -->
-                        <th style="cursor: pointer;">
+                        <th class="point" class="point">
                             Schedules
                         </th>
-                        <th (click)="sortBy('category')" style="cursor: pointer">
+                        <th class="point" (click)="sortBy('category')">
                           Category
                         </th>
-                        <th (click)="sortBy('priority')" style="cursor: pointer">
+                        <th class="point" (click)="sortBy('priority')">
                           Priority
                         </th>
-                        <th (click)="sortBy('assignToName')" style="cursor: pointer">
+                        <th class="point" (click)="sortBy('assignToName')">
                             Assign To
                         </th>
                         <th class="text-center pr-50">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr  style="cursor: pointer; vertical-align: middle;" *ngFor="let item of filteredPM| paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
-                      <th class="pl-50"><input type="checkbox" [(ngModel)]="item.selected" (change)="updateSelection()" /> </th>                         
+                    <tr class="point vertical-align" *ngFor="let item of filteredPM| paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+                      <th class="pl-50"><input type="checkbox" name="select" [(ngModel)]="item.selected" (change)="updateSelection()" /> </th>                         
                         <td class="pl-9">{{item.title}}</td>
                         <td>{{item.assetName}}</td>
                         <!-- <td>{{item.location}}</td> -->
@@ -142,21 +145,6 @@
                         </td>
                         <td>{{item.assignToName}}</td>
                         <td class="text-center pr-50">                           
-                            <!-- <a
-                            class="topimport"
-                            id="assignedToDropdown"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            <i class=" text-themecolor fa fa-ellipsis-v actionicon"></i>
-                          </a>
-                          <ul class="dropdown-menu " aria-labelledby="assignedToDropdown">
-                            <li>
-                                <a class="dropdown-item" (click)="openViewModal(item)"> <i class="fa fa-eye text-primary  pe-2"></i>View</a>
-                              <a class="dropdown-item" (click)="openModal(item)"> <i class="fa fa-pen text-success pe-2" ></i>Edit</a>
-                              <a class="dropdown-item" (click)="deletePreventiveMaintenance(item.id)"> <i class="fa fa-trash text-danger pe-2"></i>Delete</a>
-                            </li>
-                          </ul> -->
                           <button class="btn btn-sm2 btn-primary me-1" (click)="openViewModal(item)"> <i class="fa fa-eye"></i></button>
                           <button class="btn btn-sm2 btn-success me-1"  (click)="openModal(item)"> <i class="fa fa-pen" ></i></button>
                           <button class="btn btn-sm2 btn-danger me-1"  (click)="deletePreventiveMaintenance(item.id)"> <i class="fa fa-trash"></i></button>
@@ -172,13 +160,11 @@
             ></pagination-controls>
         </div>
 </div>
+
         <ul class="list-group mt-3 d-block d-md-none">
             <li
               *ngFor="let item of filteredPM"
-              class="list-group-item d-flex justify-content-between align-items-start border rounded shadow-sm mb-2"
-          
-              style="cursor: pointer; background-color: #f8f9fa"
-            >
+              class="list-group-item d-flex justify-content-between align-items-start border rounded shadow-sm mb-2 point">
            
               <div class="flex-grow-1 me-2">            
                 <div class="form-group row">                 

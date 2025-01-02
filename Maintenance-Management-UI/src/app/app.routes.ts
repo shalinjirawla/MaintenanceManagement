@@ -36,7 +36,7 @@ export const routes: Routes = [
     { path : 'complaint', component:ComplaintComponent, data: { title: 'Complaint' }},
     { path : 'support', component:SupportComponent, data: { title: 'Support' }},
     { path : 'assets', component:AssetsComponent, data: { title: 'Assets' },canActivate: [AdminGuard]},
-    { path : 'settings', component:SettingsComponent, data: { title: 'Settings' },canActivate: [AdminGuard]},
+    { path : 'settings', component:SettingsComponent, data: { title: 'All Settings' },canActivate: [AdminGuard]},
     { path : 'preventive-maintenance', component:PreventivemaintenanceComponent,data:{title:'Preventive Maintenance'},canActivate: [AdminGuard]},
     { path : 'payments', component:PaymentsmanageComponent, data: { title: 'Payments' },canActivate: [AdminGuard]},
     { path : 'inventory', component:InventoryComponent, data: { title: 'Inventory' },canActivate: [AdminGuard]},

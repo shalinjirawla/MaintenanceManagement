@@ -1,17 +1,12 @@
 <div class="container px-90">
   <div class="pt-3">
-    <!-- <p class="modal-title h6">Add New</p> -->
-    <!-- <div class="d-flex text-end"> -->
-    <!-- <i class="fa fa-arrow-right"  (click)="closeModal()"></i> -->
-  <!-- </div> -->
   </div>
   <form [formGroup]="purchaseorderForm" (ngSubmit)="onSubmit()">
     <div class="modal-body">
       <input type="text" id="id" formControlName="id" hidden />
       <div class="form-group row">
         <label for="title" class="form-label col-lg-2"
-          >Title<span class="text-danger">*</span></label
-        >
+          >Title<span class="text-danger">*</span></label>
         <div class="col-lg-4">
           <input
             type="text"
@@ -19,54 +14,76 @@
             formControlName="title"
             class="form-control"
             placeholder="Enter title"
-          />
+          />         
           <div
             *ngIf="
-              purchaseorderForm.get('title')?.invalid &&
-              purchaseorderForm.get('title')?.touched
-            "
-            class="text-danger"
-          >
-            <label class="form-label-invalid"> title is required.</label>
+              purchaseorderForm.get('title')?.touched &&
+              purchaseorderForm.get('title')?.hasError('required')
+            "class="text-danger">
+            <label class="form-label-invalid"> Title is required.</label>
+          </div>
+          <div
+          *ngIf="
+            purchaseorderForm.get('title')?.hasError('whitespace')
+          "class="text-danger">
+          <label class="form-label-invalid"> Title is not only space.</label>
           </div>
         </div>
 
         <label for="orderNumber" class="form-label col-lg-2"
-          >PO Number<span class="text-danger">*</span></label
-        >
+          >PO Number<span class="text-danger">*</span></label>
         <div class="col-lg-4">
+          <div class="input-group">
           <input
             type="text"
             id="orderNumber"
             formControlName="orderNumber"
             class="form-control"
-            placeholder="Enter po number"
+            placeholder="Enter PO number e.g. PO-2024-0001"
+            (input)="checkPoNoExists($event)"
           />
+          <div class="input-group-append"  *ngIf="ponumberStatus === 'valid'">
+            <span class="input-group-text valid">
+              <i class="fa fa-check text-white   "></i>
+            </span>
+        </div>
+        <div class="input-group-append" *ngIf="ponumberStatus === 'invalid'" >
+            <span class="input-group-text invalid">
+              <i class="fa fa-times text-white"></i>
+            </span>
+        </div>
+        </div>
           <div
             *ngIf="
-              purchaseorderForm.get('orderNumber')?.invalid &&
-              purchaseorderForm.get('orderNumber')?.touched
-            "
-            class="text-danger"
-          >
+              purchaseorderForm.get('orderNumber')?.touched &&
+              purchaseorderForm.get('orderNumber')?.hasError('required')
+            "class="text-danger">
             <label class="form-label-invalid"> Order Number is required.</label>
+          </div>
+          <div
+          *ngIf="
+            purchaseorderForm.get('orderNumber')?.hasError('whitespace')
+          "class="text-danger">
+          <label class="form-label-invalid"> Order Number is not only space.</label>
           </div>
         </div>
       </div>
       <div class="form-group row">
         <label for="vendorId" class="form-label col-lg-2"
-          >Vendor<span class="text-danger">*</span></label
-        >
+          >Vendor<span class="text-danger">*</span></label>
         <div class="col-lg-4">
           <select  class="form-control" formControlName="vendorId">
-            <option value=null>Select Vendor</option>
+            <option [ngValue]="null">Select Vendor</option>
             <option *ngFor="let item of vendor" [value]="item.id">{{item.name}}</option>
           </select>
+          <div *ngIf="purchaseorderForm.get('vendorId')?.invalid &&
+            purchaseorderForm.get('vendorId')?.touched" class="text-danger">
+          <label class="form-label-invalid"> Vendor is required.</label>
+        </div>
         </div>
 
         <label for="expectedDeliveryDate" class="form-label col-lg-2"
-          >Due Date<span class="text-danger">*</span></label
-        >
+          >Due Date<span class="text-danger">*</span></label>
         <div class="col-lg-4">
           <input
             type="date"
@@ -74,15 +91,20 @@
             formControlName="expectedDeliveryDate"
             class="form-control"
             placeholder="Enter po number"
+            [min]="minDate"
           />
           <div
             *ngIf="
-              purchaseorderForm.get('expectedDeliveryDate')?.invalid &&
-              purchaseorderForm.get('expectedDeliveryDate')?.touched
-            "
-            class="text-danger"
-          >
-            <label class="form-label-invalid"> expected Delivery Date is required.</label>
+              purchaseorderForm.get('expectedDeliveryDate')?.touched &&
+              purchaseorderForm.get('expectedDeliveryDate')?.hasError('required')
+            "class="text-danger">
+            <label class="form-label-invalid">Expected Delivery Date required</label>
+          </div>
+          <div
+            *ngIf="
+                purchaseorderForm.get('expectedDeliveryDate')?.hasError('pastDate')
+            "class="text-danger">
+            <label class="form-label-invalid">Expected Delivery Date must be today or in the future.</label>
           </div>
         </div>
       </div>
@@ -93,19 +115,15 @@
         >
         <div class="col-lg-4 ">
           <button type="button" class="btn btn-sm btn-secondary" (click)="openpart()">
-            Add Parts</button
-          >&nbsp;
+            Add Parts</button>&nbsp;
 
           <button type="button" class="btn btn-sm btn-secondary" (click)="openaddpart()">
             Create Parts
           </button>
-        </div>        
-       
-      </div>
-   
+        </div>               
+      </div>   
         
         <div *ngIf="selectedItems && selectedItems.length > 0">
-      
           <div class="form-group row pt-4">
             <label class="form-label col-lg-4">Item</label>
             <label class="form-label col-lg-2">Cost</label>
@@ -120,22 +138,22 @@
           
           <div formArrayName="selectedItems">
             <div *ngFor="let item of selectedItems.controls; let i = index" [formGroupName]="i" class="form-group row pt-2 pb-2">
-              <label class="form-label col-lg-4">{{ item.get('name')?.value }}</label>
+              <label class="form-label col-lg-4" for="cost">{{ item.get('name')?.value }}</label>
               <div class="col-lg-2">
-                <input type="text" formControlName="cost"  class="form-control text-end" />
+                <input type="text" formControlName="cost" (input)="onCostInput($event)" maxlength="5" class="form-control text-end"  />               
               </div>
               <div class="col-lg-1">
-                <input type="text" formControlName="taxes"  class="form-control text-end" />
+                <input type="text" maxlength="2" formControlName="taxes" (input)="onCostInput($event)"  class="form-control text-end"  />
               </div>
               <div class="col-lg-2">
-                <input type="text" formControlName="quantity" class="form-control" />
+                <input type="text" maxlength="3" formControlName="quantity" (input)="onCostInput($event)" class="form-control" />
               </div>
               <div class="col-lg-3 row">
-              <label class="form-label text-end col-lg-10" style="padding-right: 25px;">{{ (item.get('cost')?.value * item.get('quantity')?.value) || 0 }}</label>
-              <div class="col-lg-2 text-end p-0">
-                <i class="fa fa-trash" style="cursor: pointer;"(click)="removeItem(i)"></i>
-              </div>              
-              <label class="form-label col-lg-4" [hidden]="true">{{ item.get('inventoryItemId')?.value }}</label>
+                <label class="form-label text-end col-lg-10" style="padding-right: 25px;">{{ (item.get('cost')?.value * item.get('quantity')?.value) || 0 }}</label>
+                <div class="col-lg-2 text-end p-0">
+                  <i class="fa fa-trash point" (click)="removeItem(i)"></i>
+                </div>              
+                <label class="form-label" [hidden]="true">{{ item.get('inventoryItemId')?.value }}</label>
             </div>
             </div>
           </div>
@@ -146,8 +164,7 @@
             <div class="col-lg-4"></div>
             <label class="form-label col-lg-3">Subtotal</label>
             <label class="form-label col-lg-1 p-0 text-end" 
-              >{{ subtotal | currency : 'INR': 'symbol'}}</label
-            >
+              >{{ subtotal | currency : 'INR': 'symbol'}}</label>
           </div>
           <div class="form-group row">
             <div class="col-lg-3"></div>
@@ -163,7 +180,7 @@
             <label class="form-label col-lg-2">Shipping</label>
 
             <div class="col-lg-2 text-end" style="margin-left: 21px;">
-              <input type="text"  formControlName="shipping" class="form-control text-end" />
+              <input type="text" maxlength="4" (input)="onCostInput($event)" formControlName="shipping" class="form-control text-end" />
             </div>
           </div>
           <div class="form-group row">
@@ -171,24 +188,21 @@
             <div class="col-lg-3"></div>
             <label class="form-label col-lg-2">Other Costs</label>
             <div class="col-lg-2 text-end" style="margin-left: 21px;">
-              <input type="text"  formControlName="otherCost" value="0.00" class="form-control text-end" />
+              <input type="text" maxlength="4" (input)="onCostInput($event)" formControlName="otherCost" value="0.00" class="form-control text-end" />
             </div>
           </div>
           <div class="form-group row">
+            <div class="col-lg-4"></div>
             <div class="col-lg-3"></div>
-            <div class="col-lg-3"></div>
-            <label class="form-label col-lg-4"><b>Total</b></label>
+            <label class="form-label col-lg-3"><b>Total</b></label>
             <label class="form-label col-lg-1 p-0 text-end"  for="totalAmount"> {{ totalAmount | currency : 'INR': 'symbol'}}</label>
-            
           </div>
         </div>
 
         <div *ngIf="!selectedItems || selectedItems.length === 0" class="text-center">
             <hr>
-            <p class="pt-3">No line items have been added yet</p>
-         
-        </div>
-     
+            <p class="pt-3">No line items have been added yet</p>         
+        </div>     
     </div>
     <div class="modal-footer">
       <button
@@ -198,13 +212,14 @@
   >
     Cancel
   </button>&nbsp;
-  <button type="submit" class="btn btn-success btn-sm btn-block">
+  <button type="submit" class="btn btn-success btn-sm btn-block" [disabled]="purchaseorderForm.invalid || isSubmitting || subtotal===0">
    Save
   </button>
     </div>
   </form>
 </div>
 
+<!-- start inventory item model -->
 <div class="modal-overlay" *ngIf="Openpart">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -213,8 +228,7 @@
         <button
           type="button"
           class="btn-close col-1"
-          (click)="closepartModal()"
-        >
+          (click)="closepartModal()">
           <span>&times;</span>
         </button>
       </div>
@@ -222,10 +236,12 @@
         <div class="modal-body">
           <div class="d-flex align-items-center pb-2">
             <input
+              name="search"
               type="text"
               class="search me-2"
               placeholder="Search"
-              style="width: 150px"
+              [(ngModel)]="searchTerm"
+              (keyup)="searchitem()"
             />
           </div>
           <table class="table">
@@ -234,8 +250,7 @@
                 <th class="">
                   <input
                     type="checkbox"
-                    (change)="toggleAll()"
-                    (change)="updateSelection()"
+                    (change)="toggleAll($event)"
                     class="me-2"
                   />
                 </th>
@@ -245,8 +260,7 @@
                 <th>Available Qty</th>
                 <th>Category</th>
                 <th>Unit</th>
-                <th>Status</th>
-                
+                <th>Status</th>                
               </tr>
             </thead>
             <tbody>
@@ -267,6 +281,13 @@
                 <td>{{item.status}}</td>                
               </tr>
             </tbody>
+            <!-- Loader Controls -->
+            <div class="full-screen-loader" *ngIf="isLoading">
+            <div class="spinner-border text-dark" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            </div>
+            <!-- Loader Controls -->
           </table>
         </div>
       </form>
@@ -274,16 +295,18 @@
         <button
           type="button"
           class="btn btn-danger btn-sm btn-block"
-          (click)="closepartModal()"
-        >
+          (click)="closepartModal()">
           Cancel
         </button>
-        <button type="button" class="btn btn-success btn-sm btn-block" (click)="SelectItem(selectedItemss)">
+        <button type="button" [disabled]="selectedItemss.length===0 " class="btn btn-success btn-sm btn-block" (click)="SelectItem(selectedItemss)">
           Add
         </button>
-      </div>
+      </div>     
     </div>
   </div>
 </div>
+<!-- end inventory item model -->
+<!-- start Add inventory item model -->
 <app-inventoryitemsmodel *ngIf="isModalOpen"  (close)="closeModal($event)">
 </app-inventoryitemsmodel>
+<!-- end Add inventory item model -->

@@ -87,8 +87,8 @@
                                         <option [ngValue]="''">Select assets</option>
                                         <option *ngFor="let asset of assets" [ngValue]="asset.assetName">{{ asset.assetName }}</option>
                                     </select>
-                                    <!-- <div *ngIf="assetsmodel.invalid && assetsmodel.touched" class="text-danger">
-                                        <small *ngIf="assetsmodel.errors?.['required']">Assets is required.</small>
+                                    <!-- <div *ngIf="asset.invalid && asset.touched" class="text-danger">
+                                        <small *ngIf="asset.errors?.['required']">Assets is required.</small>
                                     </div> -->
                                 </div>
                                 <div class="form-group">
@@ -118,31 +118,7 @@
         </div>
     </div>
 
-    <!-- Confirmation Modal -->
-<!-- <div *ngIf="declineModalOpen" class="modal-overlay" tabindex="-1" [ngClass]="{'show': true}">
-    <div class="modal-dialog2">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Decline Request</h5>
-                <button type="button" class="btn-close col-1" (click)="closeDeclineModal()">
-                    <span>&times;</span>
-                </button>   
-            </div>
-            <div class="modal-body">
-                <b class="text-muted form-label">Enter a reason<span class="text-danger">*</span></b>
-                <textarea class="form-control custom-textarea" required="" rows="6" #declineReasonField="ngModel"  [(ngModel)]="declineReason"></textarea>
-                <div *ngIf="declineReasonField.invalid && declineReasonField.touched" class="text-danger">
-                    <small *ngIf="declineReasonField.errors?.['required']">Reason is required.</small>
-                    <small *ngIf="declineReasonField.errors?.['minlength']">Reason must be at least 10 characters long.</small>
-                  </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" (click)="closeDeclineModal()">Cancel</button>&nbsp;
-                <button type="button" class="btn btn-sm btn-danger" [disabled]="declineReasonField.invalid" (click)="confirmDecline(workorder.id,declineReason)">Decline</button>
-            </div>
-        </div>  
-    </div>
-</div> -->
+
 
 
 

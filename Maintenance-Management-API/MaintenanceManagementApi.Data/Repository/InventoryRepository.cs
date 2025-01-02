@@ -7,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MaintenanceManagementApi.Data.Repository
 {
@@ -132,6 +134,7 @@ namespace MaintenanceManagementApi.Data.Repository
             return true;
         }
 
+        //Inventory Quantity Update 
         public async Task<bool> UpdateQuantity(InventoryQuantityDto payload)
         {
             var inventoryItem = await _context.InventoryItems.FirstOrDefaultAsync(i => i.Id == payload.Id);
@@ -195,67 +198,6 @@ namespace MaintenanceManagementApi.Data.Repository
             return data;
         }
 
-        //Advance Filter Inventory Item 
-        public async Task<List<InventoryItem>> GetFilteredItems(FilterDto filter)
-        {
-            // Start with a base query.
-            var query = _context.InventoryItems
-                         .Include(item => item.InventoryCategory) // Include the related category
-                         .AsQueryable();
-
-            // Filter by admin ID.
-            if (filter.Id != null)  // Assuming Id is nullable in FilterDto
-            {
-                query = query.Where(item => item.HadAdminId == filter.Id);
-            }
-
-            if (!string.IsNullOrEmpty(filter.Name))
-            {
-                query = query.Where(w => w.Name.Contains(filter.Name));
-            }
-            if (!string.IsNullOrEmpty(filter.Sku))
-            {
-                query = query.Where(w => w.SKU == filter.Sku);
-
-            }
-            if (!string.IsNullOrEmpty(filter.Unit))
-            {
-                query = query.Where(w => w.Unit == filter.Unit);
-
-            }
-            if (!string.IsNullOrEmpty(filter.Category))
-            {
-                query = query.Where(w => w.InventoryCategory.CategoryName == filter.Category);
-
-            }
-
-            return await query.ToListAsync();
-        }
-
-        //Advance Filter Inventory Item category 
-        public async Task<List<InventoryCategory>> GetInventorycategory(FilterDto filter)
-        {
-            // Start with a base query.
-            var query = _context.InventoryCategorys.AsQueryable();
-
-            // Filter by admin ID.
-            if (filter.Id != null)  // Assuming Id is nullable in FilterDto
-            {
-                query = query.Where(item => item.HadAdminId == filter.Id);
-            }
-
-            if (!string.IsNullOrEmpty(filter.Name))
-            {
-                query = query.Where(w => w.CategoryName.Contains(filter.Name));
-            }
-            if (!string.IsNullOrEmpty(filter.Description))
-            {
-                query = query.Where(w => w.Description == filter.Description);
-
-            }
-
-            return await query.ToListAsync();
-        }
 
         //Get inventory item count for dashboard
         public async Task<List<DashbordCountsDto>> GetInventorycount(int id)
@@ -272,6 +214,23 @@ namespace MaintenanceManagementApi.Data.Repository
                               }).ToListAsync();
 
             return data;
+        }
+
+        //Check Exist Category
+        public async Task<bool> CheckExist(string category, int adminid, int id)
+        {
+            if (id == 0)
+            {
+                return await _context.InventoryCategorys.AnyAsync(u => u.CategoryName == category && u.HadAdminId == adminid);
+            }
+            else
+            {
+                return await _context.InventoryCategorys.AnyAsync(u =>
+                    u.CategoryName == category &&
+                    u.HadAdminId == adminid &&
+                    u.Id != id
+                );
+            }
         }
 
     }

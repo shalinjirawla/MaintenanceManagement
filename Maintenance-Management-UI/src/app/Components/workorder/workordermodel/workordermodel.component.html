@@ -2,15 +2,16 @@
 <div class="modal-overlay" tabindex="-1" [ngClass]="{ show: true }">
   <div class="modal-dialog">
     <div class="modal-content">
-
+      <!-- start Model header -->
       <div class="modal-header">
         <h5 class="modal-title">WO#00{{ item.id }}</h5>
         <button type="button" class="btn-close col-1" (click)="closeModal()">
           <span>&times;</span>
         </button>
       </div>
-
+      <!-- end Model header -->
       <form #requestForm="ngForm">
+        <!-- start Model body -->
         <div class="modal-body formdiv">
           <div class="" *ngIf="!employee">
             <!-- Main content column -->
@@ -68,10 +69,11 @@
             </select>
             </div>
             <div class="form-group">
-              <label class="form-label"
+              <label class="form-label" for="startDateTime"
                 >Start Date & Time<span class="text-danger">*</span></label
               >
               <input
+              id="startDateTime"
                 type="datetime-local"
                 class="form-control"
                 [(ngModel)]="item.startDate"
@@ -79,16 +81,17 @@
               />
             </div>
             <div class="form-group">
-              <label class="form-label"
+              <label class="form-label" for="dueDateTime"
                 >Due Date & Time<span class="text-danger">*</span></label
               >
               <input
+              id="dueDateTime"
                 type="datetime-local"
                 class="form-control"
                 [(ngModel)]="item.dueDate"
                 name="dueDateTime"
                 [min]="workorder.startDate"
-                (change)="Checkawailable()"
+                (change)="Checkavailable()"
               />
             </div>
             <div class="form-group">
@@ -102,6 +105,7 @@
                 [(ngModel)]="item.category"
                 required
               >
+              <option value="''">Select Category</option>
                 <option value="1">Damage</option>
                 <option value="2">Electrical</option>
                 <option value="3">Inspection</option>
@@ -123,9 +127,8 @@
               <label for="assignedTo" class="form-label"
                 >Primary Employee<span class="text-danger">* </span
                 ><span
-                  class="form-label"
-                  (click)="Checkawailable()"
-                  style="cursor: pointer"
+                  class="form-label point"
+                  (click)="Checkavailable()"                  
                   >&nbsp;assignedTo another</span
                 ></label
               >
@@ -157,7 +160,8 @@
           </div>
 
         </div>
-
+        <!-- end Model body -->
+        <!-- start Model footer -->
         <div class="modal-footer mt-3">
           <ng-container>
             <button
@@ -173,13 +177,11 @@
               (click)="editworkorder()" *ngIf="!employee"
             >
               Save Changes
-            </button>
-           
+            </button>           
           </ng-container>
-        </div>
-     
+        </div>     
+        <!-- end Model footer -->
       </form>
     </div>
   </div>
-
 </div>

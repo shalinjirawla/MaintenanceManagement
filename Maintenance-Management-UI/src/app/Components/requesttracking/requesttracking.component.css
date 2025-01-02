@@ -33,4 +33,9 @@
   .image-modal:hover {
     cursor: pointer;
   }
-  
+  .h-10{
+    height: 50px !important;
+  }
+  .w-10{
+    width:50px !important;
+  }

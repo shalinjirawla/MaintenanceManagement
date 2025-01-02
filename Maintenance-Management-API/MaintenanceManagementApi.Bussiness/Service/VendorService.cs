@@ -44,13 +44,5 @@ namespace MaintenanceManagementApi.Bussiness.Service
             return result;
         }
 
-        //Advance Filter Vendore
-        public async Task<List<VendorDto>> GetVendore(FilterDto filter)
-        {
-            var data = await _vendorRepository.GetVendore(filter);
-            var vendore = _mapper.Map<List<VendorDto>>(data);
-            return vendore;
-        }
-
     }
 }

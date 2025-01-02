@@ -1,61 +1,106 @@
 <div class="modal-overlay" [ngClass]="{'show': true}">
     <div class="modal-dialog">
         <div class="modal-content">
+            <!-- start model header -->
             <div class="modal-header">
                 <h5 class="modal-title">{{ mode === 'edit' ? 'Edit Asset' : mode === 'add' ? 'Register Asset' : 'Asset Details' }}</h5>
                 <button type="button" class="btn-close col-1" (click)="closeModal()">
                     <span>&times;</span>
                 </button>
             </div>
+            <!-- end model header -->
             <form [formGroup]="assetsForm" (ngSubmit)="onSubmit()">
+                <!-- start model body -->
                 <div class="modal-body formdiv"  *ngIf="mode === 'edit' || mode === 'add'">            
                     <input type="text" id="id" formControlName="id" hidden />            
                     <div class="form-group">
                         <label for="assetName" class="form-label">Asset Name <span class="text-danger">*</span></label>
                         <input type="text" id="assetName" formControlName="assetName" class="form-control" placeholder="Enter asset name" />
-                        <div *ngIf="assetsForm.get('assetname')?.invalid && assetsForm.get('assetname')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Asset name is required.</label>
-                        </div>
+                        <div *ngIf="assetsForm.get('assetName')?.invalid && assetsForm.get('assetName')?.touched" class="text-danger">
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="assetsForm.get('assetName')?.hasError('required')">
+                                Asset name is required.
+                              </ng-container>
+                              <ng-container *ngIf="assetsForm.get('assetName')?.hasError('whitespace')">
+                                Asset name cannot be just spaces.
+                              </ng-container>
+                            </label>
+                          </div>                        
                     </div>
             
                     <div class="form-group">
                         <label for="description" class="form-label">Asset Description <span class="text-danger">*</span></label>
                         <input type="text" id="description" formControlName="description" class="form-control" placeholder="Enter asset description" />
                         <div *ngIf="assetsForm.get('description')?.invalid && assetsForm.get('description')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Asset description is required.</label>
-                        </div>
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="assetsForm.get('description')?.hasError('required')">
+                                Asset description is required.
+                              </ng-container>
+                              <ng-container *ngIf="assetsForm.get('description')?.hasError('whitespace')">
+                                Asset description cannot be just spaces.
+                              </ng-container>
+                            </label>
+                          </div> 
                     </div>
             
                     <div class="form-group">
                         <label for="model" class="form-label">Model <span class="text-danger">*</span></label>
                         <input type="text" id="model" formControlName="model" class="form-control" placeholder="Enter asset model" />
                         <div *ngIf="assetsForm.get('model')?.invalid && assetsForm.get('model')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Model is required.</label>
-                        </div>
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="assetsForm.get('model')?.hasError('required')">
+                                Model is required.
+                              </ng-container>
+                              <ng-container *ngIf="assetsForm.get('model')?.hasError('whitespace')">
+                                Model cannot be just spaces.
+                              </ng-container>
+                            </label>
+                          </div>
                     </div>
             
                     <div class="form-group">
                         <label for="serialNumber" class="form-label">Serial Number <span class="text-danger">*</span></label>
                         <input type="text" id="serialNumber" formControlName="serialNumber" class="form-control" placeholder="Enter serial number" />
                         <div *ngIf="assetsForm.get('serialNumber')?.invalid && assetsForm.get('serialNumber')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Serial number is required.</label>
-                        </div>
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="assetsForm.get('serialNumber')?.hasError('required')">
+                                SerialNumber is required.
+                              </ng-container>
+                              <ng-container *ngIf="assetsForm.get('serialNumber')?.hasError('whitespace')">
+                                SerialNumber cannot be just spaces.
+                              </ng-container>
+                            </label>
+                          </div> 
                     </div>
             
                     <div class="form-group">
                         <label for="category" class="form-label">Category<span class="text-danger">*</span></label>
                         <input type="text" id="category" formControlName="category" class="form-control" placeholder="Enter asset category" />
                         <div *ngIf="assetsForm.get('category')?.invalid && assetsForm.get('category')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Category is required.</label>
-                        </div>
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="assetsForm.get('category')?.hasError('required')">
+                                Category is required.
+                              </ng-container>
+                              <ng-container *ngIf="assetsForm.get('category')?.hasError('whitespace')">
+                                Category cannot be just spaces.
+                              </ng-container>
+                            </label>
+                          </div> 
                     </div>
             
                     <div class="form-group">
                         <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
                         <input type="text" id="location" formControlName="location" class="form-control" placeholder="Enter location" />
                         <div *ngIf="assetsForm.get('location')?.invalid && assetsForm.get('location')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Location is required.</label>
-                        </div>
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="assetsForm.get('location')?.hasError('required')">
+                                Asset location is required.
+                              </ng-container>
+                              <ng-container *ngIf="assetsForm.get('location')?.hasError('whitespace')">
+                                Asset location cannot be just spaces.
+                              </ng-container>
+                            </label>
+                        </div> 
                     </div>
                 
             
@@ -79,13 +124,20 @@
                         <label for="condition" class="form-label">Condition <span class="text-danger">*</span></label>
                         <input type="text" id="condition" formControlName="condition" class="form-control" placeholder="Enter asset condition" />
                         <div *ngIf="assetsForm.get('condition')?.invalid && assetsForm.get('condition')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Condition is required.</label>
-                        </div>
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="assetsForm.get('condition')?.hasError('required')">
+                                Asset condition is required.
+                              </ng-container>
+                              <ng-container *ngIf="assetsForm.get('condition')?.hasError('whitespace')">
+                                Asset condition cannot be just spaces.
+                              </ng-container>
+                            </label>
+                          </div> 
                     </div>
             
                     <!-- New field for Asset Image -->
                     <div class="form-group">
-                        <label for="assetImage" class="form-label">Asset Image <span class="text-danger">*</span></label>
+                        <label for="assetImage" class="form-label">Asset Image</label>
                         <!-- Image preview for existing or selected image -->
                         <div class="mt-2">
                             <img [src]="previewImage" alt=" No Image chosen" style="height: 100px; width: 100px;">
@@ -94,30 +146,38 @@
                         <div *ngIf="assetsForm.get('assetImage')?.invalid && assetsForm.get('assetImage')?.touched" class="text-danger">
                             <label class="form-label-invalid">Asset image is required.</label>
                         </div>                        
-                    </div>
-
-            
-                    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                    </div>                   
                 </div>
-            
+                <!-- end model body -->
+                <!-- start model footer -->
                 <div class="modal-footer"  *ngIf="mode === 'edit' || mode === 'add'">
                     <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-success btn-sm btn-block">Save</button>
                 </div>
+                <!-- end model footer -->
             </form>
+
+            <!-- start view model -->
             <div class="modal-body formdiv" *ngIf="mode === 'view'">
                 <!-- Labels for viewing mode -->
-                <h5 class=" ">{{ assetsForm.get('assetName')?.value }}</h5>
-                <p class="form-labelp">{{ assetsForm.get('description')?.value }}</p>
-                <div *ngIf="previewImage" class="mt-3 col-lg-3">                
-                    <img [src]="previewImage" alt="Asset Image" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
-                </div><hr>
+                 <div class="form-group row">
+                    <div class="col-lg-9">
+                        <p class="h6">{{ assetsForm.get('assetName')?.value }}</p>
+                        <p class="form-label">{{ assetsForm.get('description')?.value }}</p>
+                    </div>
+                    <div class="col-lg-3">
+                        <div *ngIf="previewImage" class="mt-3 col-lg-3">                
+                            <img [src]="previewImage" alt="Asset Image" class="viewimg">
+                        </div>
+                    </div>
+                 </div>
+                <hr>
                 <b>Details</b>
                 <div class="form-group row">
                 <div class="col-lg-9 mt-3">
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label">Name</label>
+                        <p class="form-label">Name</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp">{{ assetsForm.get('assetName')?.value }}</p>
@@ -126,7 +186,7 @@
                 
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label">Description</label>
+                        <p class="form-label">Description</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp">{{ assetsForm.get('description')?.value }}</p>
@@ -135,7 +195,7 @@
             
                 <div class="row ">
                     <div class="col-md-4">
-                        <label class="form-label">Model</label>
+                        <p class="form-label">Model</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp">{{ assetsForm.get('model')?.value }}</p>
@@ -144,7 +204,7 @@
             
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label">Serial Number</label>
+                        <p class="form-label">Serial Number</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp">{{ assetsForm.get('serialNumber')?.value }}</p>
@@ -153,7 +213,7 @@
             
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label">Category</label>
+                        <p class="form-label">Category</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp">{{ assetsForm.get('category')?.value }}</p>
@@ -162,7 +222,7 @@
             
                 <div class="row ">
                     <div class="col-md-4">
-                        <label class="form-label">Location</label>
+                        <p class="form-label">Location</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp">{{ assetsForm.get('location')?.value }}</p>
@@ -171,7 +231,7 @@
             
                 <div class="row">
                     <div class="col-md-4">
-                        <label class="form-label">Purchase Date</label>
+                        <p class="form-label">Purchase Date</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp">{{ assetsForm.get('purchaseDate')?.value | date }}</p>
@@ -180,7 +240,7 @@
             
                 <div class="row ">
                     <div class="col-md-4">
-                        <label class="form-label">Warranty Expiration</label>
+                        <p class="form-label">Warranty Expiration</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp">{{ assetsForm.get('warrantyExpiration')?.value | date }}</p>
@@ -189,7 +249,7 @@
             
                 <div class="row ">
                     <div class="col-md-4">
-                        <label class="form-label">Condition</label>
+                        <p class="form-label">Condition</p>
                     </div>
                     <div class="col-md-8">
                         <p class="form-labelp"  >{{ assetsForm.get('condition')?.value }}</p>
@@ -199,7 +259,7 @@
         </div>
               
             </div>
-            
+            <!-- end view model -->
         </div>
     </div>
 </div>

@@ -1,13 +1,7 @@
 <div class="mt-2">
-    <!-- <div class="full-screen-loader" *ngIf="isLoading">
-      <div class="spinner-border text-dark" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div> -->
-    <!-- Data Content-->
-    <div
-      class="d-flex justify-content-between align-items-center pb-2 px-2"
-    >
+    <!-- start header content-->
+    <div class="d-flex justify-content-between align-items-center pb-2 px-2">
+      <!-- start advance filter -->
       <div class="d-flex">
         <div class="dropdown me-2">
           <button
@@ -18,37 +12,86 @@
             aria-expanded="false"
           >
             Filters
-          </button>
+          </button>     
           <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
             <li>
               <div>
-                <!-- <form #filterForm="ngForm">
+                <form #filterForm="ngForm">
                   <div class="form-group row">
-                    <div class="col-lg-6 form-group">
-                      <label for="id" class="form-label">WO#</label>
+                    <div class="col-lg-6 form-group m-0">
+                      <label for="paymentId" class="form-label"
+                        >Transaction ID</label
+                      >
                       <input
                         type="text"
-                        id="id"
-                        name="id"
+                        id="paymentId"
+                        name="paymentId"
                         class="form-control"
-                        [(ngModel)]="filters.id"
+                        [(ngModel)]="filters.paymentId"
                       />
                     </div>
-  
-                    <div class="col-lg-6 form-group">
-                      <label for="title" class="form-label">Title</label>
+
+                    <div class="col-lg-6 form-group m-0">
+                      <label for="amount" class="form-label">Amount</label>
                       <input
+                        id="amount"
                         type="text"
-                        id="title"
-                        name="title"
                         class="form-control"
-                        [(ngModel)]="filters.title"
+                        [(ngModel)]="filters.amount"
+                        name="amount"
                       />
                     </div>
                   </div>
-  
                   <div class="form-group row">
-                    <div class="col-lg-6 form-group">
+                    <div class="col-lg-6 form-group m-0">
+                      <label for="startDate" class="form-label">	Date</label>
+                      <input
+                        type="date"
+                        id="startDate"
+                        name="startDate"
+                        class="form-control"
+                        [(ngModel)]="filters.startDate"
+                      />
+                    </div>
+
+                    <div class="col-lg-6 form-group m-0">
+                      <label for="email" class="form-label">Email</label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="text"
+                        class="form-control"
+                        autocomplete="email"
+                        [(ngModel)]="filters.email"                       
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-lg-6 form-group m-0">
+                      <label for="requestId" class="form-label">	Request ID</label>
+                      <input
+                        type="text"
+                        id="requestId"
+                        name="requestId"
+                        class="form-control"
+                        [(ngModel)]="filters.requestId"
+                      />
+                    </div>
+
+                    <div class="col-lg-6 form-group m-0">
+                      <label for="workorderId" class="form-label">Work Order ID</label>
+                      <input
+                        type="text"
+                        id="workorderId"
+                        name="workorderId"
+                        class="form-control"
+                        [(ngModel)]="filters.workorderId"
+                      />
+                    </div>
+
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-lg-6 form-group m-0">
                       <label for="status" class="form-label">Status</label>
                       <input
                         type="text"
@@ -58,90 +101,42 @@
                         [(ngModel)]="filters.status"
                       />
                     </div>
-                    <div class="col-lg-6 form-group">
-                      <label for="dueDate" class="form-label">Due Date</label>
-                      <input
-                        type="date"
-                        id="dueDate"
-                        class="form-control"
-                        [(ngModel)]="filters.dueDate"
-                        name="dueDate"
-                      />
-                    </div>
-                  </div>
-  
-                  <div class="form-group row">
-                    <div class="col-lg-6 form-group">
-                      <label for="startDate" class="form-label"
-                        >Start Date</label
-                      >
-                      <input
-                        type="date"
-                        id="startDate"
-                        class="form-control"
-                        [(ngModel)]="filters.startDate"
-                        name="startDate"
-                      />
-                    </div>
-                    <div class="col-lg-6 form-group">
-                      <label for="priority" class="form-label">Priority</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        [(ngModel)]="filters.priority"
-                        name="priority"
-                      />
-                    </div>
-                  </div>
-  
-                  <div class="form-group row">
-                    <div class="form-group col-lg-6">
-                      <label for="assignedTo" class="form-label"
-                        >Assigned To</label
-                      >
-                      <input
-                        type="text"
-                        id="assignedTo"
-                        class="form-control"
-                        [(ngModel)]="filters.assignedTo"
-                        name="assignedTo"
-                      />
-                    </div>
-                    <div class="form-group col-lg-6">
-                     <p></p>                  
+
+                    <div class="col-lg-6 form-group pt-4">
                       <button
                         type="button"
-                        class="btn btn-sm btn-primary mt-3"
+                        class="btn btn-sm btn-primary mt-2"
                         (click)="applyFilters()"
                       >
                         Apply Filters
                       </button>
                     </div>
-                  </div>
-                </form> -->
+                  </div>                 
+                </form>
               </div>
             </li>
-          </ul>
+          </ul>   
         </div>
       </div>
-      <div class="d-flex align-items-center">
-       
-     
+      <!-- end advance filter -->
+      <!-- start search payment -->
+      <div class="d-flex align-items-center">      
         <input
+          name="search"
           type="text"
           class="search"
           placeholder="Search"
-          style="width: 150px"
-          
+          [(ngModel)]="searchTerm"
+          (keyup)="searchpayment()"         
         />
       </div>
+      <!-- end search payment -->
     </div>
-    <div
-        class="card card-body p-4 mx-2"
-        *ngIf="!filteredpayment || filteredpayment.length === 0"
-      >
+    <!-- end header content-->
+    <!-- start No data found -->
+    <div class="card card-body p-4 mx-2"
+        *ngIf="!filteredpayment || filteredpayment.length === 0">
         <div class="d-flex justify-content-between align-items-center">
-          <!-- Work Order Title and Status -->
           <div class="">
             <h4 class="card-title mb-1"></h4>
           </div>
@@ -149,58 +144,51 @@
         <div class="pt-2 text-center">
           <p class="text-muted h5">No Data Found !</p>
         </div>
-        <div class="pt-5 text-center">
-        
-        </div>
-       
-      </div>
-    <div  *ngIf="payment && payment.length > 0">    
-      <div>
+        <div class="pt-5 text-center">        
+        </div>       
+    </div>
+    <!-- end No data found -->
+    <!-- start table content-->
+    <div  *ngIf="payment && filteredpayment.length > 0">  
       <div class="table-responsive d-none d-md-block">
         <div class="table-scroll">
+          <!-- start table payment -->
           <table class="table table-hover">
             <thead>
               <tr>                                   
-                <th style="cursor: pointer;" class="pl-50">
-                  Transaction ID                  
+                <th (click)="sortBy('paymentId')" class="pl-50 point">
+                  Transaction ID <i *ngIf="sortColumn === 'paymentId'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>               
                 </th>
-                <th   style="cursor: pointer">
-                  Amount                 
+                <th (click)="sortBy('amount')" class="point">
+                  Amount <i *ngIf="sortColumn === 'amount'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>              
                 </th>
-                <th  style="cursor: pointer">
-                  Date                  
+                <th (click)="sortBy('datetime')" class="point">
+                  Date <i *ngIf="sortColumn === 'datetime'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>                                
                 </th>               
-                <!-- <th style="cursor: pointer">
-                  Payment Method                  
-                </th> -->
-                <th  style="cursor: pointer">
-                  Email        
+                <th (click)="sortBy('email')" class="point">
+                  Email <i *ngIf="sortColumn === 'email'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>                                       
                 </th>              
-                <th  style="cursor: pointer">
-                  Request ID           
+                <th (click)="sortBy('requestId')" class="point">
+                  Request ID  <i *ngIf="sortColumn === 'requestId'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>                                         
                 </th>
-                <th  style="cursor: pointer">
-                  Work Order ID           
+                <th  (click)="sortBy('workorderId')" class="point">
+                  Work Order ID <i *ngIf="sortColumn === 'workorderId'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>                                          
                 </th>
-                <th class="pr-50" style="cursor: pointer">
-                  Status                  
-                </th>
-                
+                <th (click)="sortBy('status')" class="point">
+                  Status  <i *ngIf="sortColumn === 'status'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc','fa-sort-down': sortOrder === 'desc'}"></i>                                                
+                </th>                
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of payment">
-                <!-- <td style="cursor: pointer; padding-left: 10px !important;">{{ item.paymentId | slice:0:12 }}...</td> -->
-                <td class="pl-50"
-                style="cursor: pointer;"
+              <tr *ngFor="let item of filteredpayment | paginate
+        : { itemsPerPage: itemsPerPage, currentPage: currentPage }">               
+                <td class="pl-50 point"         
                    (click)="copyToClipboard(item.paymentId)"
                    (mouseenter)="hover = true"
-                   (mouseleave)="hover = false"
-                 >
+                   (mouseleave)="hover = false">
                   {{ item.paymentId | slice:0:12 }}...
                    <span *ngIf="hover" class="tooltip">{{ copied ? 'Copied' : 'Copy' }}</span>
                 </td> 
-
                 <td> {{item.amount | currency: 'INR': 'symbol' }}</td>                
                 <td class="pl-9">
                  {{item.datetime  | date : "dd-MM-yyyy hh:mm a"}}
@@ -214,19 +202,26 @@
               </td>
               </tr>
             </tbody>
-            <!-- Pagination Controls -->
           </table>
-          <!-- <pagination-controls
-          (pageChange)="pageChanged($event)"
-          [maxSize]="5"
-          [directionLinks]="true"
-          [autoHide]="true"
-          ></pagination-controls> -->
+          <!-- end table payment -->
+          <!-- Pagination Controls -->
+          <pagination-controls
+              (pageChange)="pageChanged($event)"
+              [maxSize]="5"
+              [directionLinks]="true"
+              [autoHide]="true"
+              ></pagination-controls>
+          <!-- Pagination Controls -->
+          <!-- Loader Controls -->
+          <div class="full-screen-loader" *ngIf="isLoading">
+            <div class="spinner-border text-dark" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <!-- Loader Controls -->
         </div>
-      </div>
-      </div>
-        
+      </div>         
     </div>
-
-  </div>
+    <!-- end table content-->
+</div>
   

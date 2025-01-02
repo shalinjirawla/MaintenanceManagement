@@ -32,7 +32,14 @@ namespace MaintenanceManagementApi.Common.ViewModel
         public string? Description { get; set; }
         public string? Sku { get; set; }
         public string? Unit { get; set; }
-        public string? companyname { get; set; }
-        public string? contact { get; set; }
+        public string? Companyname { get; set; }
+        public string? Contact { get; set; }
+        public string? PaymentId { get; set; }
+        public string? Amount { get; set; }
+        public int? RequestId { get; set; }
+        public int? WorkorderId { get; set; }
+        public int? Totalcost { get; set; }
+        public string? Vendor { get; set; }
+        public string? Ponumber { get; set; }
     }
 }

@@ -50,7 +50,15 @@ export class UserService {
       // Append each key-value pair, including those with undefined or null values
       params = params.append(key, value !== undefined ? value : '');
     });
-    return this.http.get<Login[]>(`${this.apiUrl}/Filterdata`, { params });
+    return this.http.get<Login[]>(`${this.apiUrl}/FilterPeople`, { params });
+  }
+
+
+  checkUsernameExists(username: string, id: number,uid:number): Observable<boolean> {
+    debugger;
+    return this.http.get<boolean>(
+      `${this.apiUrl}/exists?username=${username}&id=${id}&uid=${uid}`
+    );
   }
 
   // Error handling method

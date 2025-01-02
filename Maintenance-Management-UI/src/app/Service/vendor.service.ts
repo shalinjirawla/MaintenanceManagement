@@ -32,6 +32,7 @@ export class VendorService {
       // Append each key-value pair, including those with undefined or null values
       params = params.append(key, value !== undefined ? value : '');
     });
-    return this.http.get<Vendor[]>(`${this.apiUrl}/Filterdata`, { params });
+    return this.http.get<Vendor[]>(`${this.apiUrl}/FilterVendor`, { params });
   }
+ 
 }

@@ -20,7 +20,7 @@
                       
                           <div class="col-lg-6 form-group m-0">
                             <label for="priority" class="form-label">Priority</label>
-                            <input type="text" class="form-control" [(ngModel)]="filters.priority" name="priority">
+                            <input type="text" id="priority" class="form-control" [(ngModel)]="filters.priority" name="priority">
                           </div>
                                                               
                         </div>
@@ -62,11 +62,11 @@
         </div>
         <div class="d-flex align-items-center">       
           
-          <input type="text" class="search" placeholder="Search" style="width: 150px;" [(ngModel)]="searchTerm" 
+          <input type="text" class="search" name="search" placeholder="Search" [(ngModel)]="searchTerm" 
           (keyup)="searchRequests()">                     
         </div>  
     </div>    
-    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deleteSelected()" style="cursor: pointer;"><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>
+    <button class="btn btn-sm2 btn-danger mb-2 ml-8 font" *ngIf="selectedItems.length > 0" (click)="deleteSelected()" ><i class="fa fa-trash"></i>&nbsp;Delete Selected &nbsp;</button>
          <!-- No Data Found -->
         <div class="card card-body p-4 mx-2"  *ngIf="!filteredWorkRequests || filteredWorkRequests.length === 0">
             <div class="d-flex justify-content-between align-items-center">
@@ -75,8 +75,7 @@
             <div class="pt-2 text-center">
                 <p class="text-muted h5">No Data Found !</p>
             </div>
-            <div class="pt-5 text-center">
-                <!-- <button class="btn btn-outline-themecolor d-none d-md-inline" (click)="openModal()">Create Request</button> -->
+            <div class="pt-5 text-center">               
                 <button class="btn btn-sm btn-outline-themecolor d-md-none"  (click)="openModal()"><i class="fa fa-plus"></i></button>
             </div>
         </div>
@@ -88,31 +87,36 @@
                 <table class="table table-hover">    
                     <thead>
                         <tr>
-                          <th class="pl-50"><input type="checkbox" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /></th>
-                            <th (click)="sortBy('title')" style="cursor: pointer;"> Title
+                          <th class="pl-50"><input type="checkbox" name="select" [(ngModel)]="selectAll" (change)="toggleAll()" (change)="updateSelection()" /></th>
+                            <th class="point" (click)="sortBy('title')" > Title
                               <i *ngIf="sortColumn === 'title'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i></th>
-                            <th>Image</th>
-                            <th (click)="sortBy('createdDate')" style="cursor: pointer;">Created Date
+                            <th class="text-center">Image</th>
+                            <th class="point" (click)="sortBy('createdDate')" >Created Date
                               <i *ngIf="sortColumn === 'createdDate'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i>
                             </th>
-                            <th (click)="sortBy('createdByUser.username')" style="cursor: pointer;">Created by
+                            <th class="point" (click)="sortBy('createdByUser.username')" >Created by
                               <i *ngIf="sortColumn === 'createdByUser.username'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i>
                             </th>  
-                            <th (click)="sortBy('priority')" style="cursor: pointer;">Priority
+                            <th class="point" (click)="sortBy('priority')" >Priority
                               <i *ngIf="sortColumn === 'priority'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i>
                             </th>
-                            <th (click)="sortBy('status')" style="cursor: pointer;">Status
+                            <th class="point" (click)="sortBy('status')" >Status
                               <i *ngIf="sortColumn === 'status'" class="fas" [ngClass]="{'fa-sort-up': sortOrder === 'asc', 'fa-sort-down': sortOrder === 'desc'}"></i>
                             </th>
                             <th class="fwidth text-center pr-50">Service Estimate</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let item of filteredWorkRequests | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" 
-                        style=" vertical-align: middle;">
-                        <td class="pl-50"><input type="checkbox" [(ngModel)]="item.workRequest.selected" (change)="updateSelection()" (click)="$event.stopPropagation()"  /></td>
-                            <td style="padding-left: 10px !important;"> {{ item.workRequest.title.length > 25 ? (item.workRequest.title | slice: 0: 25) + '...' : item.workRequest.title }}</td>
-                            <td style="cursor: pointer;"> <img [src]="item.workRequest.image"style="width: 50px; height: 50px;" *ngIf="item.workRequest.image" (click)="openImageModal(item.workRequest.image)"  /></td>                        
+                        <tr class="align-middle" *ngFor="let item of filteredWorkRequests | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" >
+                        <td class="pl-50"><input type="checkbox" name="select" [(ngModel)]="item.workRequest.selected" (change)="updateSelection()" (click)="$event.stopPropagation()"  /></td>
+                            <td> {{ item.workRequest.title.length > 25 ? (item.workRequest.title | slice: 0: 25) + '...' : item.workRequest.title }}</td>
+                            <td class="point text-center">
+                              <ng-container *ngIf="item.workRequest.image; else noImage">
+                                <img [src]="item.workRequest.image" class="w-10 h-10" (click)="openImageModal(item.workRequest.image)" />
+                              </ng-container>
+                              <ng-template #noImage>-</ng-template>
+                            </td>
+                            
                             <td>{{ item.workRequest.createdDate | date:'dd-MM-yyyy' }}</td>
                             <td>{{ item.createdByUser.username}}</td>
                             <td>

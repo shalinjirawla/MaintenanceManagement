@@ -71,40 +71,7 @@ namespace MaintenanceManagementApi.Data.Repository
             return true;
         }
 
-
-        //Advance Filter Vendore
-        public async Task<List<Vendor>> GetVendore(FilterDto filter)
-        {
-            var query = _context.Vendors.AsQueryable();
-
-            // Filter by admin ID.
-            if (filter.Id != null)  // Assuming Id is nullable in FilterDto
-            {
-                query = query.Where(item => item.HadAdminId == filter.Id);
-            }
-
-            if (!string.IsNullOrEmpty(filter.Name))
-            {
-                query = query.Where(w => w.Name.Contains(filter.Name));
-            }
-            if (!string.IsNullOrEmpty(filter.companyname))
-            {
-                query = query.Where(w => w.CompanyName == filter.companyname);
-            }
-            if (filter.contact != null)
-            {
-                query = query.Where(w => w.ContactNumber == filter.contact);
-            }
-            if (!string.IsNullOrEmpty(filter.Email))
-            {
-                query = query.Where(w => w.Email == filter.Email);
-            }
-            if (!string.IsNullOrEmpty(filter.Username))
-            {
-                query = query.Where(w => w.ContactPerson == filter.Username);
-            }
-
-            return await query.ToListAsync();
-        }
+        
     }
 }
+    

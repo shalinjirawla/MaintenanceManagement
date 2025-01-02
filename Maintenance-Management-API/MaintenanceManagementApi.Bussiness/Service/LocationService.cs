@@ -54,12 +54,5 @@ namespace MaintenanceManagementApi.Bussiness.Service
             return await _locationRepository.Delete(id);
         }
 
-        //Advance Filter location
-        public async Task<List<LocationDto>> GetFilteredlocation(FilterDto filter)
-        {
-            var data= await _locationRepository.GetFilteredlocation(filter);
-            return _mapper.Map<List<LocationDto>>(data);
-        }
-
     }
 }

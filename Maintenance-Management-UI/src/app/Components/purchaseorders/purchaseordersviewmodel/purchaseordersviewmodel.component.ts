@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PurchaseOrderService } from '../../../Service/purchaseOrder.service';
 import { PurchaseOrder } from '../../../Model/purchaseOrder.model';
-import { response } from 'express';
 import { InventoryService } from '../../../Service/inventory.service';
 import Swal from 'sweetalert2';
 
@@ -29,7 +28,6 @@ export class PurchaseordersviewmodelComponent implements OnInit {
         .getByIdpurchaseOrder(this.item)
         .subscribe((response) => {
           this.purchaseorder = response;
-          console.log(response);
         });
     }
   }
@@ -40,8 +38,9 @@ export class PurchaseordersviewmodelComponent implements OnInit {
       }, 0) || 0
     );
   }
+  //Change purchase order status
   PurchaseOrderStatus(status: string, id: number) {
-    
+    debugger;
     if (status == 'Awaiting') {
       this.purchaseOrderService
         .UpdatePurchseorderStatus('Approved', id)
@@ -58,10 +57,24 @@ export class PurchaseordersviewmodelComponent implements OnInit {
         });
     } else if (status == 'Approved') {
       this.Openfulfill = true;
+    } else {
+      this.purchaseOrderService
+        .UpdatePurchseorderStatus('Decline', id)
+        .subscribe((response) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'successfully Decline.',
+            text: 'Purchase Order successfully Decline.',
+            confirmButtonColor: '#3085d6',
+          }).then(() => {
+            // Close the modal after the user clicks "OK"
+            this.closeModal();
+          });
+        });
     }
   }
+  //Accept Items Fulfill Model
   onFulfill() {
-    
     // Prepare the array of objects to send to the backend
     const dataToSend = this.purchaseorder?.purchaseOrderItems.map((item) => ({
       id: item.inventoryItemId,
@@ -69,12 +82,10 @@ export class PurchaseordersviewmodelComponent implements OnInit {
     }));
 
     this.inventoryService.FulfillQuantity(dataToSend).subscribe((response) => {
-      
       console.log(response);
       this.purchaseOrderService
         .UpdatePurchseorderStatus('Fulfilled', this.item)
         .subscribe((response) => {
-          
           Swal.fire({
             icon: 'success',
             title: 'successfully Fulfill.',
@@ -85,13 +96,14 @@ export class PurchaseordersviewmodelComponent implements OnInit {
             this.closefulfillModal();
             this.closeModal();
           });
-          
         });
     });
   }
+  //Accept Items Fulfill Model Close
   closefulfillModal() {
     this.Openfulfill = false;
   }
+  //Model Close
   closeModal() {
     this.close.emit(); // Emit close event
   }

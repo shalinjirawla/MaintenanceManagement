@@ -1,18 +1,37 @@
 <div class="modal-overlay" [ngClass]="{'show': true}">
     <div class="modal-dialog">
         <div class="modal-content">
+            <!-- start model header -->
             <div class="modal-header">
                 <h5 class="modal-title">{{ isedit ? 'Edit People' : 'Add People' }}</h5>
                 <button type="button" class="btn-close col-1" (click)="closeModal()">
                     <span>&times;</span>
                 </button>
             </div>
+             <!-- end model header -->
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- start model body -->
             <div class="modal-body">
                     <input type="text" id="userID" formControlName="userID" hidden />
                     <div class="form-group">
                         <label for="username" class="form-label">Username<span class="text-danger">*</span></label>
-                        <input type="text" id="username" formControlName="username" class="form-control" placeholder="Enter your username" />
+                        <div class="input-group">
+                        <input type="text" id="username" formControlName="username" autocomplete="username" class="form-control" placeholder="Enter your username" (input)="checkUsernameExists($event)"/>
+                        <div class="input-group-append"  *ngIf="usernameStatus === 'valid'">
+                            <span class="input-group-text valid">
+                              <i class="fa fa-check text-white   "></i>
+                            </span>
+                        </div>
+                        <div class="input-group-append" *ngIf="usernameStatus === 'invalid'" >
+                            <span class="input-group-text invalid">
+                              <i class="fa fa-times text-white"></i>
+                            </span>
+                        </div>
+                          </div>
+                          <div *ngIf="loginForm.get('username')?.errors?.['whitespace']" class="text-danger">                            
+                            <!-- <label class="form-label-invalid"> </label> -->
+                          </div>
+                        
                         <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="text-danger">
                            <label class="form-label-invalid"> Username is required.</label>
                         </div>
@@ -20,7 +39,7 @@
 
                     <div class="form-group">
                         <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-                        <input type="text" id="email" formControlName="email" class="form-control" placeholder="Enter your email" />
+                        <input type="text" id="email" formControlName="email" autocomplete="email" class="form-control" placeholder="Enter your email" />
                         <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
                             <label class="form-label-invalid">A valid email is required.</label>
                         </div>
@@ -28,29 +47,49 @@
 
                     <div class="form-group" *ngIf="!isedit">
                         <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
-                        <input type="password" id="password" formControlName="password" class="form-control" placeholder="Enter your password" />
-                        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Password must be at least 6 characters.</label>
+                        <div class="input-group">
+                        <input  [type]="passwordVisible ? 'text' : 'password'"  id="password" minlength="8" formControlName="password" class="form-control" placeholder="Enter your password" />
+                        <div class="input-group-append">
+                            <span class="input-group-text" (click)="togglePasswordVisibility()">
+                              <!-- Use 'fa fa-eye' and 'fa fa-eye-slash' classes explicitly -->
+                              <i [class]="passwordVisible ? 'fa fa-eye-slash text-muted' : 'fa fa-eye text-muted'"></i>
+                            </span>
+                          </div>      
                         </div>
+                        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+                            <!-- Check for minimum length error -->
+                            <div *ngIf="loginForm.get('password')?.errors?.['minlength']">
+                              <label class="form-label-invalid">Password must be at least 8 characters.</label>
+                            </div>
+                        
+                            <!-- Check for password strength error -->
+                            <div *ngIf="loginForm.get('password')?.errors?.['passwordStrength']">
+                              <label class="form-label-invalid">
+                                Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.
+                              </label>
+                            </div>
+                          </div>
                     </div>
 
                     <div class="form-group">
                         <label for="roleID" class="form-label">Role<span class="text-danger">*</span></label>
-                        <select class="form-control" formControlName="roleID">
-                            <option [value]="null">Select Role</option>
+                        <select id="roleID" class="form-control" formControlName="roleID">
+                            <option [ngValue]="null">Select Role</option>
                             <option *ngFor="let role of roles" [value]="role.roleID">{{ role.roleName }}</option>
                         </select>
                         <div *ngIf="loginForm.get('roleID')?.invalid && loginForm.get('roleID')?.touched" class="text-danger">
                             <label class="form-label-invalid">Role selection is required.</label>
                         </div>
-                    </div>                    
-
+                    </div>                   
                     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-                </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
-                        <button type="submit" class="btn btn-success btn-sm btn-block" >Save</button>
-                    </div>
+            </div>
+            <!-- end model body -->
+            <!-- start model footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
+                <button type="submit" class="btn btn-success btn-sm btn-block" [disabled]="loginForm.invalid || isSubmitting">Save</button>
+            </div>
+            <!-- end model footer -->
             </form>
         </div>
     </div>

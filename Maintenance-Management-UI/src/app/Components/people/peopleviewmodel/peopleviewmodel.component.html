@@ -1,33 +1,39 @@
 <div class="modal-overlay" [ngClass]="{'show': true}">
     <div class="modal-dialog">
         <div class="modal-content">
+            <!-- start model header -->
             <div class="modal-header">
                 <h5 class="modal-title">View People</h5>
                 <button type="button" class="btn-close col-1" (click)="closeModal()">
                     <span>&times;</span>
                 </button>
             </div>
+            <!-- end model header -->
             <form >
+            <!-- start model body -->
             <div class="modal-body">
-                    <input type="text" id="userID" formControlName="userID" hidden />
-                    <div class="form-group row">
-                        <label for="username" class="form-label col-lg-3">Username :</label>
-                        <label for="username" class="form-labelp col-lg-3">{{item.username}}</label>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="username" class="form-label col-lg-3">Email :</label>
-                        <label for="username" class="form-labelp col-lg-3">{{item.email}}</label>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="username" class="form-label col-lg-3">Role :</label>
-                        <label for="username" class="form-labelp col-lg-3">{{item.roleName}}</label>
-                    </div>                   
+                <input type="text" id="userID" formControlName="userID" hidden />
+                <div class="form-group row">
+                    <p class="form-label col-lg-3">Username :</p>
+                    <p class="form-labelp col-lg-3 m-0">{{item.username}}</p>
                 </div>
-                    <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
-                    </div>
+
+                <div class="form-group row">
+                    <p class="form-label col-lg-3">Email :</p>
+                    <p class="form-labelp col-lg-3 m-0">{{item.email}}</p>
+                </div>
+
+                <div class="form-group row">
+                    <p class="form-label col-lg-3">Role :</p>
+                    <p class="form-labelp col-lg-3 m-0">{{item.roleName}}</p>
+                </div>                   
+            </div>
+            <!-- end model body -->
+            <!-- start model footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm btn-block" (click)="closeModal()">Cancel</button>
+            </div>
+            <!-- end model footer -->
             </form>
         </div>
     </div>

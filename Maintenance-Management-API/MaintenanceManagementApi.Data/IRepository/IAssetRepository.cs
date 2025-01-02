@@ -19,7 +19,5 @@ namespace MaintenanceManagementApi.Data.IRepository
         //Delete Assets
         Task<int> DeleteAssets(List<int> id);
 
-        //Advance Filter Assets 
-        Task<IEnumerable<Asset>> GetFilteredAssets(FilterDto filter);
     }
 }

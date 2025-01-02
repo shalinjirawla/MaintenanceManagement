@@ -4,10 +4,10 @@
         <i class="fa fa-arrow-left ml-8" (click)="closeModal()"></i>
         <div>
         <button
-        *ngIf="purchaseorder?.status!='Fulfilled'"
+        *ngIf="purchaseorder?.status!='Fulfilled' && purchaseorder?.status!=='Decline' "
         type="button"
         class="btn btn-danger btn-sm btn-block"
-        (click)="closeModal()"
+        (click)="PurchaseOrderStatus('Decline',purchaseorder?.id ?? 0)"
       >
         Decline
       </button>&nbsp;
@@ -24,8 +24,7 @@
       class="btn btn-success btn-sm btn-block"
       (click)="PurchaseOrderStatus(purchaseorder?.status??'',purchaseorder?.id ?? 0)"
     > Fulfill</button>
-   
-    
+
     </div>
     </div>
     </div>
@@ -113,10 +112,10 @@
             </div>                      
             </div>
       </div>
-
     </form>
   </div>
   
+  <!--start Item Fulfill Model -->
   <div class="modal-overlay" *ngIf="Openfulfill">
     <div class="modal-dialog" style="width: 550px !important;">
       <div class="modal-content">
@@ -175,6 +174,6 @@
       </div>
     </div>
   </div> 
-
+  <!--end Item Fulfill Model -->
 
   

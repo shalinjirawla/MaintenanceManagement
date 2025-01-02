@@ -13,10 +13,12 @@ namespace MaintenanceManagementApi.Controllers
     public class AssetController : ControllerBase
     {
         private readonly IAssetService _assetService;
+        private readonly IGenericFilterService<AssetDto> _iGenericFilterService;
 
-        public AssetController(IAssetService assetService)
+        public AssetController(IAssetService assetService, IGenericFilterService<AssetDto> iGenericFilterService)
         {
             _assetService = assetService;
+            _iGenericFilterService = iGenericFilterService;
         }
 
         // Add new asset
@@ -72,10 +74,10 @@ namespace MaintenanceManagementApi.Controllers
         }
 
         //Advance Filter Assets 
-        [HttpGet("Filterdata")]
+        [HttpGet("FilterAssets")]
         public async Task<ActionResult<IEnumerable<AssetDto>>> GetUsers([FromQuery] FilterDto filter)
         {
-            var assets = await _assetService.GetFilteredassets(filter);
+            var assets = await _iGenericFilterService.GetFilteredData(filter);
             return Ok(assets);
         }
     }

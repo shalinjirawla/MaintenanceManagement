@@ -36,7 +36,5 @@ namespace MaintenanceManagementApi.Data.IRepository
 
         DateTime? GetCompletionDate(int? woId);
 
-        //Advance Filter PM 
-        Task<IEnumerable<PreventiveMaintenanceDto>> GetFilteredPM(FilterDto filter);
     }
 }

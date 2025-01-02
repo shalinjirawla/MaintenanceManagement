@@ -12,22 +12,36 @@
                     <input type="text" id="id" formControlName="id" hidden />            
                     <div class="form-group">
                         <label for="name" class="form-label">Location Name <span class="text-danger">*</span></label>
-                        <input type="text" id="name" formControlName="name" class="form-control" placeholder="Enter location name" />
+                        <input type="text" id="name" formControlName="name" autocomplete="name" class="form-control" placeholder="Enter location name" />
                         <div *ngIf="locationForm.get('name')?.invalid && locationForm.get('name')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Location name is required.</label>
-                        </div>
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="locationForm.get('name')?.hasError('required')">
+                                Name is required.
+                              </ng-container>
+                              <ng-container *ngIf="locationForm.get('name')?.hasError('whitespace')">
+                                Name cannot be just spaces.
+                              </ng-container>
+                            </label>
+                          </div>
                     </div>
             
                     <div class="form-group">
                         <label for="description" class="form-label">Location Description <span class="text-danger">*</span></label>
                         <input type="text" id="description" formControlName="description" class="form-control" placeholder="Enter location description" />
                         <div *ngIf="locationForm.get('description')?.invalid && locationForm.get('description')?.touched" class="text-danger">
-                            <label class="form-label-invalid">Location description is required.</label>
-                        </div>
+                            <label class="form-label-invalid">
+                              <ng-container *ngIf="locationForm.get('description')?.hasError('required')">
+                                Description is required.
+                              </ng-container>
+                              <ng-container *ngIf="locationForm.get('description')?.hasError('whitespace')">
+                                Description cannot be just spaces.
+                              </ng-container>
+                            </label>
+                          </div>
                     </div>
                     <div class="form-group row">
                         <label for="status" class="form-label col-lg-2">Status</label>                  
-                      <div class="col-lg-2"><input type="checkbox" formControlName="status"></div> 
+                      <div class="col-lg-2"><input type="checkbox" id="status" formControlName="status"></div> 
                     </div>                    
                 </div>
             

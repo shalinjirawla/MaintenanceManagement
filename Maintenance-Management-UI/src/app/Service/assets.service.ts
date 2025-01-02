@@ -35,9 +35,10 @@ export class AssetsService {
         // Append each key-value pair, including those with undefined or null values
         params = params.append(key, value !== undefined ? value : '');
       });
-      return this.http.get<Asset[]>(`${this.apiUrl}/Filterdata`, { params });
+      return this.http.get<Asset[]>(`${this.apiUrl}/FilterAssets`, { params });
     }
 
+    
  // Error handling method
  private handleError(error: any) {
   let errorMessage = 'An unknown error occurred!'; // Default error message

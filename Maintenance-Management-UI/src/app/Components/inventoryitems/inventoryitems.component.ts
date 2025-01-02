@@ -8,11 +8,18 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { InventoryitemsviewmodelComponent } from './inventoryitemsviewmodel/inventoryitemsviewmodel.component';
 import { Filter } from '../../Model/filter.model';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-inventoryitems',
   standalone: true,
-  imports: [CommonModule, InventoryitemsmodelComponent,FormsModule,InventoryitemsviewmodelComponent],
+  imports: [
+    CommonModule,
+    InventoryitemsmodelComponent,
+    FormsModule,
+    InventoryitemsviewmodelComponent,
+    NgxPaginationModule,
+  ],
   templateUrl: './inventoryitems.component.html',
   styleUrl: './inventoryitems.component.css',
 })
@@ -29,10 +36,14 @@ export class InventoryitemsComponent implements OnInit {
   filters: Filter = new Filter();
   sortColumn: string = '';
   sortOrder: 'asc' | 'desc' = 'asc'; // Ascending by default
+  currentPage: number = 1; // Current page for pagination
+  itemsPerPage: number = 10; // Items per page
 
-  constructor(private inventoryService: InventoryService,private commonService: CommonService) {}
+  constructor(
+    private inventoryService: InventoryService,
+    private commonService: CommonService
+  ) {}
   ngOnInit(): void {
-    
     this.showLoader();
     const UserId = Number(localStorage.getItem('UserId'));
     this.inventoryService.getinventoryitems(UserId).subscribe((response) => {
@@ -40,8 +51,8 @@ export class InventoryitemsComponent implements OnInit {
       this.filteredinventoryItems = this.inventoryItems;
     });
   }
-  DeleteItems(id?:number){
-Swal.fire({
+  DeleteItems(id?: number) {
+    Swal.fire({
       title: 'Confirm Deletion?',
       text: 'Are you sure you want to delete this Item?',
       icon: 'warning',
@@ -52,36 +63,55 @@ Swal.fire({
       cancelButtonColor: '#0d6efd',
     }).then((result) => {
       if (result.isConfirmed) {
-        
         // User confirmed, proceed with deletion
         const idsToDelete = id
           ? [id]
           : this.selectedItems.map((item) => item.id);
-        this.inventoryService
-          .Deleteinventoryitem(idsToDelete)
-          .subscribe(
-            (response) => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Deleted!',
-                text: 'The Item has been deleted.',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#28a745',
-              });
+        this.inventoryService.Deleteinventoryitem(idsToDelete).subscribe(
+          (response) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'The Item has been deleted.',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#28a745',
+            }).then((result) => {
+              this.toggleAll();
+              this.selectedItems = [];
+              this.selectAll = false;
               this.ngOnInit();
-              this.selectedItems.length = 0;
-            },
-            (error) => {
-              // Handle deletion failure
-              Swal.fire({
-                icon: 'warning',
-                title: 'Action Not Allowed',
-                text: 'Item can not deleted.',
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#dc3545',
-              });
-            }
-          );
+            });
+          },
+          (error) => {
+            // Handle deletion failure
+            Swal.fire({
+              icon: 'warning',
+              title: 'Action Not Allowed',
+              text: 'Item can not deleted.',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#dc3545',
+            }).then((result) => {
+              this.toggleAll();
+              this.selectedItems = [];
+              this.selectAll = false;
+              this.ngOnInit();
+            });
+          }
+        );
+      } else {
+        // User cancelled, no action taken
+        Swal.fire({
+          icon: 'info',
+          title: 'Cancelled',
+          text: 'The Item was not deleted.',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#17a2b8',
+        }).then((result) => {
+          this.toggleAll();
+          this.selectedItems = [];
+          this.selectAll = false;
+          this.ngOnInit();
+        });
       }
     }); // Close Swal.fire
   }
@@ -93,11 +123,10 @@ Swal.fire({
     });
   }
   openModal(item?: InventoryItem) {
-    
     this.isModalOpen = true;
     this.selectedItem = item || null;
   }
-  ViewItem(item?: InventoryItem){
+  ViewItem(item?: InventoryItem) {
     this.isViewModalOpen = true;
     this.selectedItem = item || null;
   }
@@ -136,6 +165,11 @@ Swal.fire({
       this.sortOrder
     );
   }
+  // Updates the `currentPage` variable when the user navigates to a different page in pagination.
+  pageChanged(page: number): void {
+    this.currentPage = page; // Update current page when pagination changes
+  }
+  // Sets `isLoading` to true, and then resets it to false after the timeout.
   showLoader() {
     this.isLoading = true;
     setTimeout(() => {

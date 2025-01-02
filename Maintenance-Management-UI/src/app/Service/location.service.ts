@@ -31,16 +31,20 @@ export class LocationService {
   deleteLocation(id: number[]): Observable<any> {
     return this.http.delete<void>(`${this.apiUrl}/delete`, { body: id });
   }
-  filterdata(item: Filter): Observable<Location[]> { 
-         
-    // Create HttpParams
-    let params = new HttpParams();
-    // Iterate over properties in the Filter object
-    Object.entries(item).forEach(([key, value]) => {
-      // Append each key-value pair, including those with undefined or null values
+  // filterdata(item: Filter): Observable<Location[]> {          
+  //   let params = new HttpParams();    
+  //   Object.entries(item).forEach(([key, value]) => {      
+  //     params = params.append(key, value !== undefined ? value : '');
+  //   });
+  //   return this.http.get<Location[]>(`${this.apiUrls}/Filterdata`, { params });
+  // }
+  filterdata(item: Filter): Observable<Location[]> {  
+    debugger;        
+    let params = new HttpParams();    
+    Object.entries(item).forEach(([key, value]) => {      
       params = params.append(key, value !== undefined ? value : '');
     });
-    return this.http.get<Location[]>(`${this.apiUrl}/Filterdata`, { params });
+    return this.http.get<Location[]>(`https://localhost:7025/api/Location/FilterLocations`, { params });
   }
 
   // Error handling method

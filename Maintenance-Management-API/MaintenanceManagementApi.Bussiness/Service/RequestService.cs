@@ -122,23 +122,6 @@ namespace MaintenanceManagementApi.Bussiness.Service
             return true;
         }
 
-        //Advance filter of the request
-        public async Task<IEnumerable<WorkRequestWithStatusDto>> GetFilteredWorkRequest(FilterDto filter)
-        {
-            var data = await _requestRepository.GetFilteredWorkRequest(filter);
-            string baseUrl = "https://localhost:7025/wwwroot/Uploads/";
-            var requestdata = _mapper.Map<IEnumerable<WorkRequestWithStatusDto>>(data);
-            foreach (var message in requestdata)
-            {
-                if (!string.IsNullOrEmpty(message.WorkRequest.Image))
-                {
-                    var imageNames = message.WorkRequest.Image.Split(',');
-                    message.WorkRequest.Image = string.Join(",", imageNames.Select(name => $"{baseUrl}{name}"));
-                }
-            }
-            return requestdata;
-        }
-
         //Get requests By Admin
         public async Task<List<WorkRequestWithStatusDto>> GetByRoleId(int id)
         {

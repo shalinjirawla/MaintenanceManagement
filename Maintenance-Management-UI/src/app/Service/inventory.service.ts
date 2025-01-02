@@ -61,7 +61,7 @@ export class InventoryService {
         // Append each key-value pair, including those with undefined or null values
         params = params.append(key, value !== undefined ? value : '');
       });
-      return this.http.get<InventoryItem[]>(`${this.apiUrl}/Filterdata`, { params });
+      return this.http.get<InventoryItem[]>(`${this.apiUrl}/FilterInventory`, { params });
     }
     filtercategorydata(item: Filter): Observable<Inventorycategories[]> {
       // Create HttpParams
@@ -71,7 +71,15 @@ export class InventoryService {
         // Append each key-value pair, including those with undefined or null values
         params = params.append(key, value !== undefined ? value : '');
       });
-      return this.http.get<Inventorycategories[]>(`${this.apiUrl}/Filtercategorydata`, { params });
+      return this.http.get<Inventorycategories[]>(`${this.apiUrl}/FilterCategory`, { params });
+    }
+
+
+    checkCategoryExists(category: string, adminid: number,id:number): Observable<boolean> {
+      debugger;
+      return this.http.get<boolean>(
+        `${this.apiUrl}/exists?category=${category}&adminid=${adminid}&id=${id}`
+      );
     }
   
 }

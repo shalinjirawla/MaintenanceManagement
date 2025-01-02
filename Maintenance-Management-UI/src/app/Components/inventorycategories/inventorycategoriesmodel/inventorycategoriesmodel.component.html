@@ -12,16 +12,35 @@
                     <input type="text" id="id" formControlName="id" hidden />
                     <div class="form-group">
                         <label for="categoryName" class="form-label">Category Name<span class="text-danger">*</span></label>
-                        <input type="text" id="categoryName" formControlName="categoryName" class="form-control" placeholder="Enter categoryName" />
-                        <div *ngIf="categoryForm.get('categoryName')?.invalid && categoryForm.get('categoryName')?.touched" class="text-danger">
-                           <label class="form-label-invalid"> Category Name is required.</label>
+                        <div class="input-group">
+                        <input type="text" id="categoryName" formControlName="categoryName" (input)="checkCategoryExists($event)" class="form-control" placeholder="Enter categoryName" />
+                        <div class="input-group-append"  *ngIf="categoryStatus === 'valid'">
+                            <span class="input-group-text valid">
+                              <i class="fa fa-check text-white   "></i>
+                            </span>
                         </div>
+                        <div class="input-group-append" *ngIf="categoryStatus === 'invalid'" >
+                            <span class="input-group-text invalid">
+                              <i class="fa fa-times text-white"></i>
+                            </span>
+                        </div>
+                    </div>
+                        <div *ngIf="categoryForm.get('categoryName')?.touched && categoryForm.get('categoryName')?.hasError('required') "class="text-danger">
+                        <label class="form-label-invalid"> Category Name is required.</label>
+                    </div>
+                    <div *ngIf="categoryForm.get('categoryName')?.hasError('whitespace') "class="text-danger">
+                        <label class="form-label-invalid">Category Name cannot be just spaces.</label>
+                    </div>
                     </div>
                     <div class="form-group">
                         <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
-                        <input type="text" id="description" formControlName="description" class="form-control" placeholder="Enter your description" />
-                        <div *ngIf="categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched" class="text-danger">
-                           <label class="form-label-invalid"> Description is required.</label>
+                        <textarea type="text" id="description" formControlName="description" class="form-control" placeholder="Enter your description"></textarea>
+
+                        <div *ngIf="categoryForm.get('description')?.touched && categoryForm.get('categoryName')?.hasError('required') "class="text-danger">
+                            <label class="form-label-invalid"> Description is required.</label>
+                        </div>
+                        <div *ngIf="categoryForm.get('description')?.hasError('whitespace') "class="text-danger">
+                            <label class="form-label-invalid"> Description cannot be just spaces.</label>
                         </div>
                     </div>
                         

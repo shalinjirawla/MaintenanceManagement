@@ -15,9 +15,9 @@
                       <div class="d-flex align-items-center">
                         <input
                           type="text"
+                          name="search"
                           class="search me-2"
                           placeholder="Search"
-                          style="width: 150px"
                           [(ngModel)]="searchTerm"
                           (keyup)="searchWorkOrder()"
                         />                     
@@ -57,7 +57,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="cursor: pointer;" *ngFor="let item of feedback">                                           
+                        <tr class="point" *ngFor="let item of feedback">                                           
                             <td class="pl-50">{{item.customerID}}</td>
                             <td>{{item.workRequestID}}</td>
                             <td>{{item.satisfied}}</td>

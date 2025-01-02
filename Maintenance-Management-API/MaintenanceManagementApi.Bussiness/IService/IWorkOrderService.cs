@@ -27,9 +27,6 @@ namespace MaintenanceManagementApi.Bussiness.IService
         //Update WorkOrder 
         Task<int> UpdateWorkOrder(WorkOrderDto workorderdto);
 
-        //Advance Filter Workorder
-        Task<IEnumerable<WorkOrderDto>> GetFilteredWorkOrders(FilterDto filter);
-
         // Complate workorder
         Task<int> InsertCompleteworkorder(CompletedWorkOrderDto completedWorkOrderDto);
 

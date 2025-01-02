@@ -195,70 +195,7 @@ namespace MaintenanceManagementApi.Data.Repository
             return true;
         }
 
-        //Advance filter of the request
-        public async Task<IEnumerable<WorkRequestWithStatus>> GetFilteredWorkRequest(FilterDto filter)
-        {
-            var query = from w in _context.WorkRequests
-                        join q in _context.Quotations on w.Id equals q.RequestId into quotations
-                        from q in quotations.DefaultIfEmpty() // Left join
-                        join u in _context.Users on w.CreatedBy equals u.UserID
-                        select new WorkRequestWithStatus
-                        {
-                            WorkRequest = w,
-                            Status = q.Status, // This can be null if there is no matching quotation
-                            Body = q.Body,
-                            CreatedByUser = new User
-                            {
-                                Username = u.Username,
-                                Email = u.Email
-                            }
-                        };
-            if (filter.CreatedBy.HasValue) // Check if Id has a value
-            {
-                query = query.Where(w => w.WorkRequest.CreatedBy == filter.CreatedBy.Value); // Use equality for filtering
-            }
-            if (filter.Id.HasValue) // Check if Id has a value
-            {
-                query = query.Where(w => w.WorkRequest.HadAdminId == filter.Id.Value); // Use equality for filtering
-            }
-
-            if (!string.IsNullOrEmpty(filter.Title))
-            {
-                query = query.Where(w => w.WorkRequest.Title.Contains(filter.Title));
-            }
-            if (!string.IsNullOrEmpty(filter.Priority))
-            {
-                query = query.Where(w => w.WorkRequest.Priority == filter.Priority);
-            }
-            if (!string.IsNullOrEmpty(filter.Status))
-            {
-                query = query.Where(w => w.WorkRequest.Status == filter.Status);
-            }
-            // Process DueDate
-            if (!string.IsNullOrEmpty(filter.CreatedDate))
-            {
-                // Try parsing full date
-                if (DateTime.TryParse(filter.CreatedDate, out DateTime dueDateValue))
-                {
-                    query = query.Where(w => w.WorkRequest.CreatedDate.Date == dueDateValue.Date);
-                }
-            }
-            if (!string.IsNullOrEmpty(filter.Username))
-            {
-                // Find the user ID based on the provided username
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Username == filter.Username);
-
-                if (user != null)
-                {
-                    // Filter WorkOrders by the found user ID
-                    query = query.Where(w => w.WorkRequest.CreatedBy == user.UserID);
-                }
-            }
-
-            return await query.ToListAsync();
-        }
-
+        
         //Get requests By Admin
         public async Task<List<WorkRequestWithStatusDto>> GetByRoleId(int id)
         {
@@ -364,7 +301,6 @@ namespace MaintenanceManagementApi.Data.Repository
             //.ToListAsync();
 
         }
-
 
         //update complaint status
         public async Task<bool> Updatecomplaintstatus(int id, int status)

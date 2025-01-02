@@ -25,12 +25,12 @@ namespace MaintenanceManagementApi.Data.IRepository
         //Delete User
         Task<bool> DeleteUsers(List<int> ids);
 
-        //Advance Filter User 
-        Task<IEnumerable<UserDto>> GetFilteredUsers(FilterDto filter);
-
+        
         // Get All emplyee count by admin
         Task<int> GetAllEmployeeallcount(int id);
 
-    
+        //Check Exist User
+        Task<bool> CheckExist(string username, int id, int uid);
+
     }
 }
